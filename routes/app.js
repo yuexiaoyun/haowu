@@ -44,14 +44,7 @@ module.exports = function *() {
         ],
         url: conf.site + this.originalUrl
     };
-    var params = yield new Promise((resolve, reject) => {
-        api.getJsConfig(param, (err, data) => {
-            if (err)
-                reject(err);
-            else
-                resolve(data);
-        });
-    });
+    var params = yield *api.getJsConfig(param);
     this.render('base', {
         js_params: JSON.stringify(params)
     });
