@@ -19,10 +19,15 @@ module.exports = function *() {
             }
         });
     });
-    var doc = yield User.findOne({openid: userInfo.openId});
+    var doc = yield User.findOne({openid: userInfo.openid});
+    console.log(doc);
     if (!doc)
         doc = new User();
     Object.assign(doc, userInfo);
+    console.log(doc);
     yield doc.save();
-    this.body = userInfo;
+    this.session.openid = userInfo.openid;
+    this.session.userInfo = userInfo;
+    console.log(this.query.target);
+    this.redirect(this.query.target);
 }
