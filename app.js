@@ -1,7 +1,7 @@
 var koa = require('koa');
 var serve = require('koa-static');
 var mount = require('koa-mount');
-var logger = require('koa-log');
+var logger = require('koa-logger');
 var conf = require('./conf');
 var app = koa();
 var session = require('koa-generic-session');
@@ -18,6 +18,7 @@ app.use(session({
         url: conf.mongodb
     })
 }));
+app.use(logger());
 app.use(mount('/login', require('./routes/login')));
 app.use(function *(next) {
     if (!this.session.openid) {

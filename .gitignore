@@ -35,12 +35,7 @@ native_lib/build
 
 localconf.js
 pid
-static/scripts/mm__node.bundle*
-static/styles/mm__node.bootstrap*
-static/scripts/bundle.pc*
-static/styles/bootstrap.pc*
-static/scripts/bundle.client*
-static/mm__node.bundle.zip
+static/scripts/bundle.min.js
 assets/
 front_end/dist/
 front_end/images/build/
