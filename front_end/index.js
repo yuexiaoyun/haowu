@@ -9,3 +9,7 @@ try {
 } catch(err) {
     alert(err);
 }
+
+wx.error(function (res) {
+    alert(res.errMsg);
+});

@@ -8,6 +8,7 @@ var session = require('koa-generic-session');
 var MongoStore = require('koa-generic-session-mongo');
 var oauth = require('./utility/wechat').oauth;
 var qs = require('querystring');
+var gzip = require('koa-gzip');
 
 require('koa-qs')(app);
 require('babel-core/register')();
@@ -33,6 +34,7 @@ app.use(function *(next) {
         yield *next;
     }
 });
+app.use(gzip());
 app.use(mount('/static', serve('static')));
 app.use(function *() {
     this.body = this.query.echostr;
