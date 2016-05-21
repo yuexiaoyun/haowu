@@ -28,6 +28,9 @@ app.use(session({
     })
 }));
 app.use(logger());
+app.use(mount('/agent', function *() {
+    this.body = this.query.echostr;
+}));
 app.use(mount('/login', require('./routes/login')));
 app.use(function *(next) {
     if (!this.session.openid) {
@@ -46,7 +49,4 @@ app.use(mount('/app', require('./routes/app')));
 app.use(mount('/api', require('./routes/api')));
 app.use(gzip());
 app.use(mount('/static', serve('static')));
-app.use(function *() {
-    this.body = this.query.echostr;
-});
 app.listen(8080);
