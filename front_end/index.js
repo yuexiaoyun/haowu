@@ -10,6 +10,7 @@ import Pub from './routes/Pub'
 import Post from './routes/Post'
 
 try {
+    hashHistory.replace(window.location.pathname.substring(4));
     render(
         <Router history={hashHistory}>
             <Route path="/" component={App}>
@@ -22,8 +23,6 @@ try {
 } catch(err) {
     alert(err);
 }
-
-hashHistory.replace('pub');
 
 wx.error(function (res) {
     alert(res.errMsg);

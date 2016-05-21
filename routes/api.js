@@ -1,5 +1,6 @@
 var router = require('koa-router')();
 
+var User = require('../mongodb_models/user').Model;
 var Post = require('../mongodb_models/post').Model;
 
 router.get('/pub_post', function *() {
@@ -16,7 +17,10 @@ router.get('/fetch_post', function *() {
     var post = yield Post.findOne({
         _id: this.query._id
     }).exec();
-    this.body = { result: 'ok', post: post };
+    var user = yield User.findOne({
+        openid: post.openid
+    }).exec();
+    this.body = { result: 'ok', post: post, user: user };
 });
 
 module.exports = router.routes();
