@@ -1,0 +1,15 @@
+{
+  "name": "haowu",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "koa": "1.2.0",
+    "koa-log": "2.0.0",
+    "koa-mount": "1.3.0",
+    "koa-qs": "2.0.0",
+    "koa-session": "3.3.1",
+    "koa-static": "2.0.0",
+    "wechat-api": "^1.27.1",
+    "wechat-oauth": "1.1.1"
+  }
+}
