@@ -43,7 +43,7 @@ app.use(function *(next) {
     }
 });
 app.use(mount('/app', require('./routes/app')));
-app.use(mount('/sdk', require('./routes/sdk')));
+app.use(mount('/api', require('./routes/api')));
 app.use(gzip());
 app.use(mount('/static', serve('static')));
 app.use(function *() {

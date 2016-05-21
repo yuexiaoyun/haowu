@@ -1,6 +1,7 @@
 import React from 'react';
 import qs from 'querystring';
 import { parse_online_json } from '../utility/fetch_utils';
+import { hashHistory } from 'react-router';
 
 export default class Pub extends React.Component {
     constructor() {
@@ -52,14 +53,14 @@ export default class Pub extends React.Component {
                     localId: pic_id,
                     success: res => {
                         var pic_server_id = res.serverId;
-                        var url = '/sdk/post?' + qs.stringify({
+                        var url = '/api/pub_post?' + qs.stringify({
                             pic_id: pic_server_id,
                             audio_id: audio_server_id
                         });
                         fetch(url, {credentials: 'same-origin'})
                             .then(parse_online_json)
-                            .then(() => {
-                                alert('上传成功');
+                            .then(data => {
+                                hashHistory.push('post/' + data.post._id);
                             });
                     },
                     fail: res => {}
