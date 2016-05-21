@@ -9,6 +9,14 @@ var MongoStore = require('koa-generic-session-mongo');
 var oauth = require('./utility/wechat').oauth;
 var qs = require('querystring');
 var gzip = require('koa-gzip');
+var Jade = require('koa-jade')
+var jade = new Jade({
+    viewPath: './front_end/templates',
+    debug: false,
+    pretty: false,
+    compileDebug: false,
+    app: app // equals to jade.use(app) and app.use(jade.middleware)
+})
 
 require('koa-qs')(app);
 require('babel-core/register')();
@@ -34,6 +42,7 @@ app.use(function *(next) {
         yield *next;
     }
 });
+app.use(mount('/app', require('./routes/app')));
 app.use(gzip());
 app.use(mount('/static', serve('static')));
 app.use(function *() {
