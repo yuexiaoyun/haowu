@@ -1,3 +1,6 @@
+require('es6-promise').polyfill();
+require('whatwg-fetch');
+
 import React from 'react';
 import { render, findDOMNode } from 'react-dom';
 import Pub from './routes/Pub'
