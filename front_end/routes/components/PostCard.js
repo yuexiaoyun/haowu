@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, hashHistory } from 'react-router';
+import fconf from '../../fconf';
 
 export default class PostCard extends React.Component {
     constructor() {
@@ -8,44 +9,20 @@ export default class PostCard extends React.Component {
     }
     componentDidMount() {
         var data = this.props;
-        wx.ready(() => {
-            wx.downloadImage({
-                serverId: data.post.pic_id,
-                isShowProgressTips: 0,
-                success: res => {
-                    this.setState({pic_id: res.localId});
-                },
-                fail: res => {
-                    alert(JSON.stringify(res));
-                }
-            });
-
-            /*
-            wx.onMenuShareAppMessage({
-                title: data.user.nickname + '分享的私物',
-                desc: '某产品经理的设计里面既没有标题也没有描述',
-                link: 'http://haowu.tunnel.qydev.com/app/post/' + data.post._id
-            });
-            */
-        });
     }
     play_audio = () => {
-        var data = this.props;
-        wx.downloadVoice({
-            serverId: data.post.audio_id,
-            success: res => {
-                wx.playVoice({
-                    localId: res.localId
-                });
-            },
-            fail: res => {
-                alert(JSON.stringify(res));
-            }
+        this.refs.audio.play();
+    }
+    preview = () => {
+        var { post } = this.props;
+        wx.previewImage({
+            current: fconf.qiniu.site + post.pic_id,
+            urls: [fconf.qiniu.site + post.pic_id]
         });
     }
     render() {
         var { user, post } = this.props;
-        var { audio, pic_id } = this.state;
+        var { audio } = this.state;
         return (
             <div className="card facebook-card">
               <div className="card-header no-border">
@@ -57,7 +34,7 @@ export default class PostCard extends React.Component {
               </div>
               <div className="card-content">
                 <div className="livePlayBox">
-                  <img src={pic_id} className="bgTranslate"/>
+                  <img src={fconf.qiniu.site + post.pic_id} className="bgTranslate" onClick={this.preview}/>
                 </div>
               </div>
               <div className="card-footer no-border">
@@ -65,6 +42,7 @@ export default class PostCard extends React.Component {
                 <span className="link"></span>
                 <span className="link">赞</span>
               </div>
+              <audio src={fconf.qiniu.site + post.audio_id} ref="audio" />
             </div>
         );
     }

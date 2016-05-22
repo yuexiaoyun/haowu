@@ -3,12 +3,18 @@ var router = require('koa-router')();
 var User = require('../mongodb_models/user').Model;
 var Post = require('../mongodb_models/post').Model;
 
+var qiniu = require('../utility/qiniu');
+
 router.get('/pub_post', function *() {
     console.log('here');
     var post = new Post();
     Object.assign(post, this.query);
     post.openid = this.session.openid;
     yield post.save();
+    yield [
+        qiniu.sync(post.audio_id),
+        qiniu.sync(post.pic_id)
+    ];
     this.body = { result: 'ok', post: post };
 });
 
