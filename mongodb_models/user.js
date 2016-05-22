@@ -11,6 +11,7 @@ var schema = new mongoose.Schema({
     province: { type: String },
     city: { type: String },
     country: { type: String },
+    headimgurl: { type: String },
     privilege: [{ type: String }]
 });
 

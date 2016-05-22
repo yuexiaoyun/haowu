@@ -72,17 +72,15 @@ export default class Pub extends React.Component {
     render() {
         var { recording, pic_id, audio_id } = this.state;
         return (
-            <div className="wxapi_container">
-                <div className="lbox_close wxapi_form">
-                    { pic_id && <img id="pic_show" src={pic_id} width="100%"/> }
-                    <button className="btn btn_primary" onClick={this.get_pic}>{pic_id ? '重新拍照' : '拍照'}</button>
-                    <span className="desc">添加一段语音描述</span>
-                    { audio_id && <button className="btn btn_primary" onClick={this.play_audio}>播放刚才录制的语音</button>}
-                    <button className="btn btn_primary" onClick={this.get_audio}>
-                        {recording ? '停止录音' : (audio_id ? '重新录音' : '录音')}
-                    </button>
-                    { pic_id && audio_id && <button className="btn btn_primary" style={{marginTop: 30}} onClick={this.pub}>发布</button> }
-                </div>
+            <div className="container-fluid">
+                { pic_id && <img id="pic_show" src={pic_id} width="100%"/> }
+                <button className="btn btn-primary btn-block" onClick={this.get_pic}>{pic_id ? '重新拍照' : '拍照'}</button>
+                <span className="desc">添加一段语音描述</span>
+                { audio_id && <button className="btn btn-primary btn-block" onClick={this.play_audio}>播放刚才录制的语音</button>}
+                <button className="btn btn-primary btn-block" onClick={this.get_audio}>
+                    {recording ? '停止录音' : (audio_id ? '重新录音' : '录音')}
+                </button>
+                { pic_id && audio_id && <button className="btn btn_primary" style={{marginTop: 30}} onClick={this.pub}>发布</button> }
             </div>
         );
     }

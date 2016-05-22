@@ -13,7 +13,6 @@ router.get('/pub_post', function *() {
 });
 
 router.get('/fetch_post', function *() {
-    console.log('here');
     var post = yield Post.findOne({
         _id: this.query._id
     }).exec();
@@ -21,6 +20,21 @@ router.get('/fetch_post', function *() {
         openid: post.openid
     }).exec();
     this.body = { result: 'ok', post: post, user: user };
+});
+
+router.get('/fetch_posts', function *() {
+    var ps = yield Post.find().sort({_id: -1}).exec();
+    var posts = [];
+    for (var post of ps) {
+        var user = yield User.findOne({
+            openid: post.openid
+        }).exec();
+        post = post.toObject();
+        post.user = user;
+        posts.push(post);
+    }
+    console.log(posts);
+    this.body = { result: 'ok', posts: posts };
 });
 
 module.exports = router.routes();
