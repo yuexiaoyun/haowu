@@ -30,6 +30,7 @@ export default class PostCard extends React.Component {
         });
     }
     play_audio = () => {
+        var data = this.props;
         wx.downloadVoice({
             serverId: data.post.audio_id,
             success: res => {

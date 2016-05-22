@@ -17,7 +17,7 @@ try {
         <Router history={hashHistory}>
             <Route path="/" component={App}>
                 <Route path="home" component={Home} />
-                <Route path="pub" component={Pub} />
+                <Route path="pub/:id" component={Pub} />
                 <Route path="me" component={Me} />
                 <Route path="post/:id" component={Post} />
             </Route>

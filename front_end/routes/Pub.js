@@ -8,14 +8,7 @@ export default class Pub extends React.Component {
         super();
         this.state = {};
     }
-    get_pic = () => {
-        wx.chooseImage({
-            count: 1,
-            success: res => {
-                this.setState({pic_id: res.localIds[0]});
-            }
-        });
-    }
+
     get_audio = () => {
         var { recording } = this.state;
         if (!recording) {
@@ -44,7 +37,8 @@ export default class Pub extends React.Component {
     }
     // 上传：目前只能上传到微信的服务器上
     pub = () => {
-        var { audio_id, pic_id } = this.state;
+        var { audio_id } = this.state;
+        var pic_id = 'weixin://resourceid/' + this.props.params.id;
         wx.uploadVoice({
             localId: audio_id,
             success: res => {
@@ -60,7 +54,7 @@ export default class Pub extends React.Component {
                         fetch(url, {credentials: 'same-origin'})
                             .then(parse_online_json)
                             .then(data => {
-                                hashHistory.push('post/' + data.post._id);
+                                hashHistory.replace('/home');
                             });
                     },
                     fail: res => {}
@@ -70,17 +64,18 @@ export default class Pub extends React.Component {
         });
     }
     render() {
-        var { recording, pic_id, audio_id } = this.state;
+        var pic_id = 'weixin://resourceid/' + this.props.params.id;
+        var { recording, audio_id } = this.state;
         return (
-            <div className="container-fluid">
-                { pic_id && <img id="pic_show" src={pic_id} width="100%"/> }
-                <button className="btn btn-primary btn-block" onClick={this.get_pic}>{pic_id ? '重新拍照' : '拍照'}</button>
-                <span className="desc">添加一段语音描述</span>
+                <div className="container-fluid">
+                <div className="livePlayBox">
+                  <img src={pic_id} className="bgTranslate"/>
+                </div>
                 { audio_id && <button className="btn btn-primary btn-block" onClick={this.play_audio}>播放刚才录制的语音</button>}
                 <button className="btn btn-primary btn-block" onClick={this.get_audio}>
                     {recording ? '停止录音' : (audio_id ? '重新录音' : '录音')}
                 </button>
-                { pic_id && audio_id && <button className="btn btn_primary" style={{marginTop: 30}} onClick={this.pub}>发布</button> }
+                { audio_id && <button className="btn btn_primary" style={{marginTop: 30}} onClick={this.pub}>发布</button> }
             </div>
         );
     }
