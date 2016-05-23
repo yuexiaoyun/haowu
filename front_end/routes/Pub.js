@@ -80,7 +80,8 @@ class Pub extends React.Component {
                         var pic_server_id = res.serverId;
                         var url = '/api/pub_post?' + qs.stringify({
                             pic_id: pic_server_id,
-                            audio_id: audio_server_id
+                            audio_id: audio_server_id,
+                            length: this.state.d
                         });
                         fetch(url, {credentials: 'same-origin'})
                             .then(parse_online_json)

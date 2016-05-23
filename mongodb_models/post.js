@@ -5,7 +5,8 @@ var mongo = require('../utility/mongo');
 var schema = new mongoose.Schema({
     openid: { type: String },
     pic_id: { type: String },
-    audio_id: { type: String }
+    audio_id: { type: String },
+    length: { type: Number }
 });
 
 schema.index({ openid: 1 });
