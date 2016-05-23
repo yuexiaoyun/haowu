@@ -11,7 +11,11 @@ export default class PostCard extends React.Component {
         var data = this.props;
     }
     play_audio = () => {
-        this.refs.audio.play();
+        try {
+            this.refs.audio.play();
+        } catch(err) {
+            alert(err);
+        }
     }
     preview = () => {
         var { post } = this.props;
@@ -42,7 +46,7 @@ export default class PostCard extends React.Component {
                 <span className="link"></span>
                 <span className="link">赞</span>
               </div>
-              <audio src={fconf.qiniu.site + post.audio_id} ref="audio" />
+              <audio ref="audio"><source src={fconf.qiniu.site + post.audio_id} /></audio>
             </div>
         );
     }
