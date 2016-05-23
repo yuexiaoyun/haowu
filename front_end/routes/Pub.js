@@ -2,32 +2,31 @@ import React from 'react';
 import qs from 'querystring';
 import { parse_online_json } from '../utility/fetch_utils';
 import { hashHistory } from 'react-router';
+import { connect } from 'react-redux';
 
-export default class Pub extends React.Component {
+class Pub extends React.Component {
     constructor() {
         super();
         this.state = {};
     }
 
     get_audio = () => {
-        var { recording } = this.state;
-        if (!recording) {
-            wx.startRecord({
-                cancel: () => {
-                    this.setState({recording: false});
-                }
-            });
-            this.setState({recording: true, audio_id: null});
-        } else {
-            wx.stopRecord({
-                success: res => {
-                    this.setState({recording: false, audio_id: res.localId});
-                },
-                fail: res => {
-                    alert(JSON.stringify(res));
-                }
-            });
-        }
+        wx.startRecord({
+            cancel: () => {
+                this.setState({recording: false});
+            }
+        });
+        this.setState({recording: true, audio_id: null});
+    }
+    stop_audio = () => {
+        wx.stopRecord({
+            success: res => {
+                this.setState({recording: false, audio_id: res.localId});
+            },
+            fail: res => {
+                alert(JSON.stringify(res));
+            }
+        });
     }
     play_audio = () => {
         var { audio_id } = this.state;
@@ -38,7 +37,7 @@ export default class Pub extends React.Component {
     // 上传：目前只能上传到微信的服务器上
     pub = () => {
         var { audio_id } = this.state;
-        var pic_id = 'weixin://resourceid/' + this.props.params.id;
+        var pic_id = this.props.local_pic_id;
         wx.uploadVoice({
             localId: audio_id,
             success: res => {
@@ -64,19 +63,29 @@ export default class Pub extends React.Component {
         });
     }
     render() {
-        var pic_id = 'weixin://resourceid/' + this.props.params.id;
+        var pic_id = this.props.local_pic_id;
         var { recording, audio_id } = this.state;
         return (
-                <div className="container-fluid">
-                <div className="livePlayBox">
-                  <img src={pic_id} className="bgTranslate"/>
+                <div className="content">
+                    <div className="content-block">
+                        <div className="livePlayBox">
+                            <img src={pic_id} className="bgTranslate"/>
+                        </div>
+                        { !recording && <p><a className="button button-fill button-big" onClick={this.get_audio}>
+                            {audio_id ? '重录' : '添加语音'}
+                        </a></p> }
+                        { recording && <p><a className="button button-fill button-big" onClick={this.stop_audio}>正在录音...点击停止</a></p> }
+                        { false && <button className="btn btn-primary btn-block" onClick={this.play_audio}>播放刚才录制的语音</button>}
+                        <p><a
+                            className={"button button-success button-fill button-big" + (audio_id ? '' : ' disabled')}
+                            style={{marginTop: 30}}
+                            onClick={this.pub}>
+                            发布
+                        </a></p>
+                    </div>
                 </div>
-                { audio_id && <button className="btn btn-primary btn-block" onClick={this.play_audio}>播放刚才录制的语音</button>}
-                <button className="btn btn-primary btn-block" onClick={this.get_audio}>
-                    {recording ? '停止录音' : (audio_id ? '重新录音' : '录音')}
-                </button>
-                { audio_id && <button className="btn btn_primary" style={{marginTop: 30}} onClick={this.pub}>发布</button> }
-            </div>
         );
     }
 }
+
+module.exports = connect(state=>(state))(Pub);
