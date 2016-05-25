@@ -34,16 +34,14 @@ var App = ({children, dispatch}) => {
                     <h1 className="title">物我</h1>
                 </header>
                 { (is_home || is_me) && <nav className="bar bar-tab">
-                    <a className={"tab-item" + (is_home ? ' active' : '')} href="#/home">
-                        <span className="icon icon-home"></span>
-                        <span className="tab-label">首页</span>
+                    <a className={"tab-item"} href="#/home">
+                        <span className={"setting-icon imacss imacss-btn_tabbar_home" + (is_home ? '_selected' : '')} />
                     </a>
                     <span className={"tab-item"} onClick={take_photo}>
-                        <span className="icon icon-edit"></span>
+                        <span className="setting-icon imacss imacss-btn_tabbar_photo"></span>
                     </span>
-                    <a className={"tab-item" + (is_me ? ' active' : '')} href="#/home">
-                        <span className="icon icon-me"></span>
-                        <span className="tab-label">我</span>
+                    <a className={"tab-item"} href="#/me">
+                        <span className={"setting-icon imacss imacss-btn_tabbar_me" + (is_me ? '_selected' : '')} />
                     </a>
                 </nav> }
                 <div className='content'>

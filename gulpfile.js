@@ -11,9 +11,16 @@ var less = require('gulp-less');
 var cssmin = require('gulp-cssmin');
 var postcss = require('gulp-postcss');
 var rename = require('gulp-rename');
+var imacss = require('gulp-imacss');
 var _ = require('underscore');
 
-gulp.task('css', function() {
+gulp.task('imacss', function() {
+    return gulp.src('front_end/images/*.png')
+        .pipe(imacss('images.less'))
+        .pipe(gulp.dest('front_end/images/build/'));
+});
+
+gulp.task('css', ['imacss'], function() {
     var autoprefixerBrowsers = [
         "Android >= 4",
         "iOS >= 7",

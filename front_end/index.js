@@ -10,7 +10,6 @@ import { createStore } from 'redux'
 import App from './routes/App'
 import Pub from './routes/Pub'
 import Home from './routes/Home'
-import Post from './routes/Post'
 import Me from './routes/Me'
 
 import reducers from './reducers'
@@ -26,7 +25,6 @@ try {
                     <Route path="home" component={Home} />
                     <Route path="pub" component={Pub} />
                     <Route path="me" component={Me} />
-                    <Route path="post/:id" component={Post} />
                 </Route>
             </Router>
         </Provider>,
