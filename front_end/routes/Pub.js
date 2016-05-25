@@ -3,6 +3,7 @@ import qs from 'querystring';
 import { parse_online_json } from '../utility/fetch_utils';
 import { hashHistory } from 'react-router';
 import { connect } from 'react-redux';
+import BottomButton from './components/BottomButton';
 
 class Pub extends React.Component {
     constructor() {
@@ -102,29 +103,26 @@ class Pub extends React.Component {
         d = Math.floor(d / 1000 + 0.5);
         return (
                 <div className="content">
-                    <div className="content-block">
-                        <div className="livePlayBox">
+                    <div className="pub">
+                        <div className="dummy" />
+                        <div className="pubBox">
+                            <span className="pubBoxSpan"/>
                             <img src={pic_id} className="bgTranslate"/>
                         </div>
-                        { audio_id && !playing && <p><a className="button button-fill button-big" onClick={this.play_audio}>
-                            播放({ d }秒)
-                        </a></p> }
-                        { audio_id && playing && <p><a className="button button-fill button-big" onClick={this.stop_play}>
-                            播放中...
-                        </a></p> }
-                        { !recording && <p><a className="button button-fill button-big" onClick={this.get_audio}>
-                            {audio_id ? '重录' : '添加语音'}
-                        </a></p> }
-                        { recording && <p><a className="button button-fill button-big" onClick={this.stop_audio}>
-                            正在录音{ d && '(' + d  + '秒)' || null }...点击停止</a></p>
-                        }
-                        <p><a
-                            className={"button button-success button-fill button-big" + (audio_id ? '' : ' disabled')}
-                            style={{marginTop: 30}}
-                            onClick={this.pub}>
-                            发布
-                        </a></p>
                     </div>
+                    { audio_id && !playing && <p><a className="button button-fill button-big" onClick={this.play_audio}>
+                        播放({ d }秒)
+                    </a></p> }
+                    { audio_id && playing && <p><a className="button button-fill button-big" onClick={this.stop_play}>
+                        播放中...
+                    </a></p> }
+                    { !recording && <p><a className="button button-fill button-big" onClick={this.get_audio}>
+                        {audio_id ? '重录' : '添加语音'}
+                    </a></p> }
+                    { recording && <p><a className="button button-fill button-big" onClick={this.stop_audio}>
+                        正在录音{ d && '(' + d  + '秒)' || null }...点击停止</a></p>
+                    }
+                    <BottomButton txt='发布' disabled={!audio_id} onClick={this.pub}/>
                 </div>
         );
     }

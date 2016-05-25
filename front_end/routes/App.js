@@ -30,9 +30,6 @@ var App = ({children, dispatch}) => {
     return (
         <div className="page-group">
             <div className="page page-current">
-                <header className="bar bar-nav">
-                    <h1 className="title">物我</h1>
-                </header>
                 { (is_home || is_me) && <nav className="bar bar-tab">
                     <a className={"tab-item"} href="#/home">
                         <span className={"setting-icon imacss imacss-btn_tabbar_home" + (is_home ? '_selected' : '')} />
