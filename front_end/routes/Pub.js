@@ -1,6 +1,7 @@
 import React from 'react';
 import qs from 'querystring';
 import { parse_online_json } from '../utility/fetch_utils';
+import showProgress from '../utility/show_progress';
 import { hashHistory } from 'react-router';
 import { connect } from 'react-redux';
 import BottomButton from './components/BottomButton';
@@ -95,34 +96,41 @@ class Pub extends React.Component {
         var { audio_id } = this.state;
         if (audio_id) {
             var pic_id = this.props.local_pic_id;
-            wx.uploadVoice({
-                localId: audio_id,
-                success: res => {
-                    var audio_server_id = res.serverId;
-                    wx.uploadImage({
-                        localId: pic_id,
-                        success: res => {
-                            var pic_server_id = res.serverId;
-                            var url = '/api/pub_post?' + qs.stringify({
-                                pic_id: pic_server_id,
-                                audio_id: audio_server_id,
-                                length: this.state.d
-                            });
-                            fetch(url, {credentials: 'same-origin'})
-                                .then(parse_online_json)
-                                .then(data => {
-                                    hashHistory.replace('/home');
+            showProgress('发布中', new Promise((resolve, reject) => {
+                wx.uploadVoice({
+                    localId: audio_id,
+                    isShowProgressTips: 0,
+                    success: res => {
+                        var audio_server_id = res.serverId;
+                        wx.uploadImage({
+                            localId: pic_id,
+                            isShowProgressTips: 0,
+                            success: res => {
+                                var pic_server_id = res.serverId;
+                                var url = '/api/pub_post?' + qs.stringify({
+                                    pic_id: pic_server_id,
+                                    audio_id: audio_server_id,
+                                    length: this.state.d
                                 });
-                        },
-                        fail: res => {
-                            alert(JSON.stringify(res));
-                        }
-                    });
-                },
-                fail: res => {
-                    alert(JSON.stringify(res));
-                }
-            });
+                                fetch(url, {credentials: 'same-origin'})
+                                    .then(parse_online_json)
+                                    .then(data => {
+                                        hashHistory.replace('/home');
+                                        resolve('发布成功');
+                                    }).catch(e => {
+                                        reject(e);
+                                    });
+                            },
+                            fail: res => {
+                                reject(JSON.stringify(res));
+                            }
+                        });
+                    },
+                    fail: res => {
+                        reject(JSON.stringify(res));
+                    }
+                });
+            }));
         }
     }
     canvasClick = () => {
