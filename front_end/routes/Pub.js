@@ -20,6 +20,11 @@ class Pub extends React.Component {
         this.updateProgress(0);
         setTimeout(this.refresh, 200);
     }
+    clear = () => {
+        if (this.state.audio_id && !this.state.playing) {
+            this.setState({recording: false, audio_id: null, d: 0});
+        }
+    }
     refresh = () => {
         try {
             if (this.state.recording) {
@@ -47,10 +52,13 @@ class Pub extends React.Component {
             success: res => {
                 if (this.state.d <= 4500) {
                     alert('录音时间小于5秒，请重新录音');
-                    this.setState({recording: null, audio_id: null});
+                    this.setState({recording: null, audio_id: null, d: 0});
+                    this.updateProgress(0);
                 }
-                else
+                else {
                     this.setState({recording: null, audio_id: res.localId});
+                    this.updateProgress(0);
+                }
             },
             fail: res => {
                 alert(JSON.stringify(res));
@@ -84,31 +92,37 @@ class Pub extends React.Component {
     // 上传：目前只能上传到微信的服务器上
     pub = () => {
         var { audio_id } = this.state;
-        var pic_id = this.props.local_pic_id;
-        wx.uploadVoice({
-            localId: audio_id,
-            success: res => {
-                var audio_server_id = res.serverId;
-                wx.uploadImage({
-                    localId: pic_id,
-                    success: res => {
-                        var pic_server_id = res.serverId;
-                        var url = '/api/pub_post?' + qs.stringify({
-                            pic_id: pic_server_id,
-                            audio_id: audio_server_id,
-                            length: this.state.d
-                        });
-                        fetch(url, {credentials: 'same-origin'})
-                            .then(parse_online_json)
-                            .then(data => {
-                                hashHistory.replace('/home');
+        if (audio_id) {
+            var pic_id = this.props.local_pic_id;
+            wx.uploadVoice({
+                localId: audio_id,
+                success: res => {
+                    var audio_server_id = res.serverId;
+                    wx.uploadImage({
+                        localId: pic_id,
+                        success: res => {
+                            var pic_server_id = res.serverId;
+                            var url = '/api/pub_post?' + qs.stringify({
+                                pic_id: pic_server_id,
+                                audio_id: audio_server_id,
+                                length: this.state.d
                             });
-                    },
-                    fail: res => {}
-                });
-            },
-            fail: res => {}
-        });
+                            fetch(url, {credentials: 'same-origin'})
+                                .then(parse_online_json)
+                                .then(data => {
+                                    hashHistory.replace('/home');
+                                });
+                        },
+                        fail: res => {
+                            alert(JSON.stringify(res));
+                        }
+                    });
+                },
+                fail: res => {
+                    alert(JSON.stringify(res));
+                }
+            });
+        }
     }
     canvasClick = () => {
         var { recording, playing, audio_id } = this.state;
@@ -130,29 +144,22 @@ class Pub extends React.Component {
             context.moveTo(32, 32);
             context.arc(32, 32, 32, 0, Math.PI * 2, false);
             context.closePath();
-            context.fillStyle = '#ddd';
+            context.fillStyle = '#ff9999';
             context.fill();
 
             context.beginPath();
             context.moveTo(32, 32);
-            context.arc(32, 32, 32, 0, Math.PI * 2 * progress / 100, false);
+            context.arc(32, 32, 32, 1.5*Math.PI, 1.5*Math.PI + Math.PI * 2 * progress / 100, false);
             context.closePath();
-            context.fillStyle = '#e74c3c';
+            context.fillStyle = '#ff3333';
             context.fill();
 
             context.beginPath();
             context.moveTo(32, 32);
             context.arc(32, 32, 28, 0, Math.PI * 2, true);
             context.closePath();
-            context.fillStyle = 'rgba(255,255,255,1)';
+            context.fillStyle = '#ff3333';
             context.fill();
-
-            context.beginPath();
-            context.arc(32, 32, 25, 0, Math.PI * 2, true);
-            context.closePath();
-                // 与画实心圆的区别,fill是填充,stroke是画线
-            context.strokeStyle = '#ddd';
-            context.stroke();
         } catch(err) {
             alert(err);
         }
@@ -174,12 +181,54 @@ class Pub extends React.Component {
                             <img src={pic_id} className="bgTranslate"/>
                         </div>
                     </div>
-                    <div style={{textAlign: 'center', marginTop: 30}}>
-                        <canvas ref='progress' width="64px" height="64px" onClick={this.canvasClick}></canvas>
+                    <div style={styles.d1}>
+                        <div style={{...styles.d2, color:'#ff3333'}}>
+                            { d > 0 && d + '"' }
+                        </div>
+                        <div style={styles.d2}>
+                            <canvas ref='progress' width="64px" height="64px" onClick={this.canvasClick}></canvas>
+                        </div>
+                        <div style={styles.d2}>
+                            <button
+                                className={"button button-dark button-round" + (!audio_id ? ' disabled' : '')}
+                                onClick={this.clear}
+                                >
+                            重录
+                            </button>
+                        </div>
                     </div>
+                    { !audio_id && !recording && <div style={{textAlign: 'center'}}>
+                        <div className="text-secondary">来段有温度的声音吧！</div>
+                        <div className="text-secondary">最多可录制60秒</div>
+                    </div> }
+                    { recording && <div style={{textAlign: 'center'}}>
+                        <div className="text-secondary">点击停止录音</div>
+                    </div> }
+                    { playing && <div style={{textAlign: 'center'}}>
+                        <div className="text-secondary">点击停止播放</div>
+                    </div> }
+                    { audio_id && !playing && <div style={{textAlign: 'center'}}>
+                        <div className="text-secondary">点击播放</div>
+                    </div> }
                     <BottomButton txt='发布' disabled={!audio_id} onClick={this.pub}/>
                 </div>
         );
+    }
+}
+
+var styles = {
+    d1: {
+        display: 'table',
+        marginTop: 15,
+        tableLayout: 'fixed',
+        width: '100%'
+    },
+    d2: {
+        display: 'table-cell',
+        textAlign: 'center',
+        align: 'center',
+        width: '100%',
+        verticalAlign: 'middle'
     }
 }
 
