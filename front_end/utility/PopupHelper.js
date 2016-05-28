@@ -1,6 +1,7 @@
 var PopupWrapper = require('../routes/components/PopupWrapper');
 var React = require('react');
 var ReactDOM = require('react-dom');
+var LoadingView = require('../routes/components/LoadingView');
 
 //deprecated, use popup 2
 module.exports.popup = function (content, hide, modal) {
@@ -37,13 +38,22 @@ module.exports.toast = function(text, timeout) {
 }
 
 module.exports.showProgressDialog = function(tips) {
-    var progressView = <div style={progressStyle}><img style={{width:'20px', height:'20px', marginRight:'10px'}}
-                                                       src='/static/images/loading.gif'/>{tips}</div>;
-
-    var popup = <PopupWrapper onClose={()=>{}}>
-        {progressView}
-    </PopupWrapper>;
-    ReactDOM.render(popup, document.getElementById('progress_container'));
+    var progressView = (
+        <div style={progressStyle}>
+            <div style={{marginBottom:10}}>
+                <LoadingView />
+            </div>
+            {tips}
+        </div>
+    );
+    try {
+        var popup = <PopupWrapper onClose={()=>{}}>
+            {progressView}
+        </PopupWrapper>;
+        ReactDOM.render(popup, document.getElementById('progress_container'));
+    } catch(err) {
+        alert(err);
+    }
 }
 
 module.exports.hideProgressDialog = function() {
