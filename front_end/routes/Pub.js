@@ -20,7 +20,6 @@ class Pub extends React.Component {
             }
         });
         this.setState({recording: new Date(), audio_id: null, d: 0});
-        this.updateProgress(0);
         setTimeout(this.refresh, 200);
     }
     clear = () => {
@@ -36,16 +35,12 @@ class Pub extends React.Component {
                 if (d > 59500)
                     this.stop_audio();
                 else {
-                    var progress = d * 100 / 60000;
-                    this.updateProgress(progress);
-                    setTimeout(this.refresh, 200);
+                    setTimeout(this.refresh, 1);
                 }
             } else if (this.state.playing) {
                 var f = new Date() - this.state.playing;
                 this.setState({f: f});
-                var progress = f * 100 / this.state.d;
-                this.updateProgress(progress);
-                setTimeout(this.refresh, 10);
+                setTimeout(this.refresh, 1);
             }
         } catch(err) {
             alert(err);
@@ -57,18 +52,15 @@ class Pub extends React.Component {
                 if (this.state.d <= 4500) {
                     PopupHelper.toast('录音时间小于5秒，请重新录音');
                     this.setState({recording: null, audio_id: null, d: 0});
-                    this.updateProgress(0);
                 }
                 else {
                     this.setState({recording: null, audio_id: res.localId});
-                    this.updateProgress(0);
                 }
             },
             fail: res => {
                 alert(JSON.stringify(res));
             }
         });
-        this.updateProgress(0);
     }
     play_audio = () => {
         var { audio_id } = this.state;
@@ -76,12 +68,10 @@ class Pub extends React.Component {
             localId: audio_id
         });
         this.setState({playing: new Date()});
-        this.updateProgress(0);
         setTimeout(this.refresh, 10);
         wx.onVoicePlayEnd({
             success: res => {
-                this.setState({playing: null});
-                this.updateProgress(0);
+                this.setState({playing: null, f: 0});
             }
         });
     }
@@ -90,8 +80,7 @@ class Pub extends React.Component {
         wx.stopVoice({
             localId: audio_id
         });
-        this.setState({playing: null});
-        this.updateProgress(0);
+        this.setState({playing: null, f: 0});
     }
     // 上传：目前只能上传到微信的服务器上
     pub = () => {
@@ -135,32 +124,6 @@ class Pub extends React.Component {
             }));
         }
     }
-    canvasClick = () => {
-        var { recording, playing, audio_id } = this.state;
-        if (recording) {
-            this.stop_audio();
-        } else if (audio_id) {
-            playing ? this.stop_play() : this.play_audio();
-        } else {
-            this.get_audio();
-        }
-    }
-    updateProgress = (progress) => {
-        var canvas = this.refs.progress;
-        try {
-            var context = canvas.getContext('2d');
-            context.clearRect(0, 0, 60, 60);
-            context.lineWidth = 2;
-            context.beginPath();
-            context.arc(30, 30, 30, 1.5*Math.PI, 1.5*Math.PI + Math.PI * 2 * progress / 100, false);
-            context.strokeStyle = '#ff3333';
-            context.stroke();
-        } catch(err) {
-        }
-    }
-    componentDidMount() {
-        this.updateProgress(0);
-    }
     render() {
         var pic_id = this.props.local_pic_id;
         var { recording, audio_id, playing, d } = this.state;
@@ -173,65 +136,56 @@ class Pub extends React.Component {
         else if (recording)
             progress = Math.floor(this.state.d * 100 / 60000 + 0.5);
         return (
-                <div className="content">
-                    <div className="pub" style={{marginBottom:0}}>
-                        <div className="dummy" />
-                        <div className="pubBox" style={{marginBottom:0}}>
-                            <span className="pubBoxSpan"/>
-                            <img src={pic_id} className="bgTranslate"/>
-                        </div >
-                    </div>
-                    <div style={{backgroundColor:'#ff3333',width:''+ progress + '%',height:3,marginTop:-8}}></div>
-                    <div style={styles.d1}>
-                        <div style={styles.d2}>
-                            { d > 0 && d + '"' }
-                        </div>
-                        <div style={styles.d2}>
-                            { !audio_id && !recording && <CssButton
-                                className='image-btn_tape_start'
-                                onClick={this.get_audio}
-                                width={60}
-                                height={60}/> }
-                            { recording && <CssButton
-                                className='image-btn_tape_stop'
-                                onClick={this.stop_audio}
-                                width={60}
-                                height={60}/> }
-                            { playing && <CssButton
-                                className='image-btn_play_stop'
-                                onClick={this.stop_play}
-                                width={60}
-                                height={60}/> }
-                            { audio_id && !playing && <CssButton
-                                className='image-btn_play_start'
-                                onClick={this.play_audio}
-                                width={60}
-                                height={60}/> }
-                        </div>
-                        <div style={styles.d2}>
-                            <CssButton
-                                className='image-btn_play_again'
-                                disabled={!audio_id || !!playing}
-                                onClick={this.clear}
-                                width={44}
-                                height={44}/>
-                        </div>
-                    </div>
-                    { !audio_id && !recording && <div style={{textAlign: 'center'}}>
-                        <div className="text-secondary">来段有温度的声音吧！</div>
-                        <div className="text-secondary">最多可录制60秒</div>
-                    </div> }
-                    { recording && <div style={{textAlign: 'center'}}>
-                        <div className="text-secondary">点击停止录音</div>
-                    </div> }
-                    { playing && <div style={{textAlign: 'center'}}>
-                        <div className="text-secondary">点击停止播放</div>
-                    </div> }
-                    { audio_id && !playing && <div style={{textAlign: 'center'}}>
-                        <div className="text-secondary">点击播放</div>
-                    </div> }
-                    <BottomButton txt='发布' disabled={!audio_id} onClick={this.pub}/>
+            <div className="content">
+                <div className="pub" style={{marginBottom:0}}>
+                    <div className="dummy" />
+                    <div className="pubBox" style={{marginBottom:0}}>
+                        <span className="pubBoxSpan"/>
+                        <img src={pic_id} className="bgTranslate"/>
+                    </div >
                 </div>
+                <div style={{backgroundColor:'#ff3333',width:''+ progress + '%',height:3,marginTop:-8}}></div>
+                <div style={styles.d1}>
+                    <div style={styles.d2}>
+                        { d > 0 && d + '"' }
+                    </div>
+                    <div style={styles.d2}>
+                        { !audio_id && !recording && <CssButton
+                            className='image-btn_tape_start'
+                            onClick={this.get_audio}
+                            width={60}
+                            height={60}/> }
+                        { recording && <CssButton
+                            className='image-btn_tape_stop'
+                            onClick={this.stop_audio}
+                            width={60}
+                            height={60}/> }
+                        { playing && <CssButton
+                            className='image-btn_play_stop'
+                            onClick={this.stop_play}
+                            width={60}
+                            height={60}/> }
+                        { audio_id && !playing && <CssButton
+                            className='image-btn_play_start'
+                            onClick={this.play_audio}
+                            width={60}
+                            height={60}/> }
+                    </div>
+                    <div style={styles.d2}>
+                        <CssButton
+                            className='image-btn_play_again'
+                            disabled={!audio_id || !!playing}
+                            onClick={this.clear}
+                            width={44}
+                            height={44}/>
+                    </div>
+                </div>
+                <div style={{textAlign: 'center'}}>
+                    <div className="text-secondary">用声音记录</div>
+                    <div className="text-secondary">它的故事 你的生活</div>
+                </div>
+                <BottomButton txt='发布' disabled={!audio_id} onClick={this.pub}/>
+            </div>
         );
     }
 }
