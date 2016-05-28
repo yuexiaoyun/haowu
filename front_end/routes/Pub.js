@@ -4,6 +4,7 @@ import { parse_online_json } from '../utility/fetch_utils';
 import { hashHistory } from 'react-router';
 import { connect } from 'react-redux';
 import BottomButton from './components/BottomButton';
+import PopupHelper from '../utility/PopupHelper';
 
 class Pub extends React.Component {
     constructor() {
@@ -51,7 +52,7 @@ class Pub extends React.Component {
         wx.stopRecord({
             success: res => {
                 if (this.state.d <= 4500) {
-                    alert('录音时间小于5秒，请重新录音');
+                    PopupHelper.toast('录音时间小于5秒，请重新录音');
                     this.setState({recording: null, audio_id: null, d: 0});
                     this.updateProgress(0);
                 }

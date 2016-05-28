@@ -7,6 +7,9 @@ html
     link(rel='stylesheet', href='/static/styles/bundle.min.css?1')
   body(ontouchstart='')
     #app(onclick='')
+    #popup_container(onclick='')
+    #progress_container
+    #toast_container
   script(src='/static/scripts/jweixin.js')
   script.
     wx.config(!{ js_params });
