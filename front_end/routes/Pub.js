@@ -87,7 +87,7 @@ class Pub extends React.Component {
         var { audio_id } = this.state;
         if (audio_id) {
             var pic_id = this.props.local_pic_id;
-            showProgress('发布中', new Promise((resolve, reject) => {
+            showProgress(new Promise((resolve, reject) => {
                 wx.uploadVoice({
                     localId: audio_id,
                     isShowProgressTips: 0,

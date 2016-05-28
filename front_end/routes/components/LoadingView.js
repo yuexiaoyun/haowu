@@ -20,7 +20,7 @@ export default class LoadingView extends React.Component {
         this.mounted = false;
     }
     render() {
-        var i = Math.floor((new Date() - this.state.begin) / 200) % 4 + 1;
+        var i = Math.floor((new Date() - this.state.begin) / 100) % 4 + 1;
         var style = {
             display: 'inline-block',
             width: 60,
