@@ -20,7 +20,7 @@ var App = ({children, dispatch}) => {
                     dispatch(takePic(path));
                     hashHistory.push('pub');
                 } catch(err) {
-                    alert(err);
+                    alert('haha' + err);
                 }
             }
         });
@@ -32,13 +32,13 @@ var App = ({children, dispatch}) => {
             <div className="page page-current">
                 { (is_home || is_me) && <nav className="bar bar-tab">
                     <a className={"tab-item"} href="#/home">
-                        <span className={"setting-icon imacss imacss-btn_tabbar_home" + (is_home ? '_selected' : '')} />
+                        <span className={"setting-icon image-btn_tabbar_home" + (is_home ? '_selected' : '')} />
                     </a>
                     <span className={"tab-item"} onClick={take_photo}>
-                        <span className="setting-icon imacss imacss-btn_tabbar_photo"></span>
+                        <span className="setting-icon image-btn_tabbar_photo"></span>
                     </span>
                     <a className={"tab-item"} href="#/me">
-                        <span className={"setting-icon imacss imacss-btn_tabbar_me" + (is_me ? '_selected' : '')} />
+                        <span className={"setting-icon image-btn_tabbar_me" + (is_me ? '_selected' : '')} />
                     </a>
                 </nav> }
                 <div className='content'>

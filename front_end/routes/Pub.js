@@ -5,6 +5,7 @@ import showProgress from '../utility/show_progress';
 import { hashHistory } from 'react-router';
 import { connect } from 'react-redux';
 import BottomButton from './components/BottomButton';
+import CssButton from './components/CssButton';
 import PopupHelper from '../utility/PopupHelper';
 
 class Pub extends React.Component {
@@ -41,6 +42,7 @@ class Pub extends React.Component {
                 }
             } else if (this.state.playing) {
                 var f = new Date() - this.state.playing;
+                this.setState({f: f});
                 var progress = f * 100 / this.state.d;
                 this.updateProgress(progress);
                 setTimeout(this.refresh, 10);
@@ -147,30 +149,13 @@ class Pub extends React.Component {
         var canvas = this.refs.progress;
         try {
             var context = canvas.getContext('2d');
-            context.clearRect(0, 0, 64, 64);
-
+            context.clearRect(0, 0, 60, 60);
+            context.lineWidth = 2;
             context.beginPath();
-            context.moveTo(32, 32);
-            context.arc(32, 32, 32, 0, Math.PI * 2, false);
-            context.closePath();
-            context.fillStyle = '#ff9999';
-            context.fill();
-
-            context.beginPath();
-            context.moveTo(32, 32);
-            context.arc(32, 32, 32, 1.5*Math.PI, 1.5*Math.PI + Math.PI * 2 * progress / 100, false);
-            context.closePath();
-            context.fillStyle = '#ff3333';
-            context.fill();
-
-            context.beginPath();
-            context.moveTo(32, 32);
-            context.arc(32, 32, 28, 0, Math.PI * 2, true);
-            context.closePath();
-            context.fillStyle = '#ff3333';
-            context.fill();
+            context.arc(30, 30, 30, 1.5*Math.PI, 1.5*Math.PI + Math.PI * 2 * progress / 100, false);
+            context.strokeStyle = '#ff3333';
+            context.stroke();
         } catch(err) {
-            alert(err);
         }
     }
     componentDidMount() {
@@ -181,29 +166,55 @@ class Pub extends React.Component {
         var { recording, audio_id, playing, d } = this.state;
         var duration;
         d = Math.floor(d / 1000 + 0.5);
+        var progress = 0;
+        if (playing) {
+            progress = Math.floor(this.state.f * 100 / this.state.d + 0.5);
+        }
+        else if (recording)
+            progress = Math.floor(this.state.d * 100 / 60000 + 0.5);
         return (
                 <div className="content">
-                    <div className="pub">
+                    <div className="pub" style={{marginBottom:0}}>
                         <div className="dummy" />
-                        <div className="pubBox">
+                        <div className="pubBox" style={{marginBottom:0}}>
                             <span className="pubBoxSpan"/>
                             <img src={pic_id} className="bgTranslate"/>
-                        </div>
+                        </div >
                     </div>
+                    <div style={{backgroundColor:'#ff3333',width:''+ progress + '%',height:3,marginTop:-8}}></div>
                     <div style={styles.d1}>
-                        <div style={{...styles.d2, color:'#ff3333'}}>
+                        <div style={styles.d2}>
                             { d > 0 && d + '"' }
                         </div>
                         <div style={styles.d2}>
-                            <canvas ref='progress' width="64px" height="64px" onClick={this.canvasClick}></canvas>
+                            { !audio_id && !recording && <CssButton
+                                className='image-btn_tape_start'
+                                onClick={this.get_audio}
+                                width={60}
+                                height={60}/> }
+                            { recording && <CssButton
+                                className='image-btn_tape_stop'
+                                onClick={this.stop_audio}
+                                width={60}
+                                height={60}/> }
+                            { playing && <CssButton
+                                className='image-btn_play_stop'
+                                onClick={this.stop_play}
+                                width={60}
+                                height={60}/> }
+                            { audio_id && !playing && <CssButton
+                                className='image-btn_play_start'
+                                onClick={this.play_audio}
+                                width={60}
+                                height={60}/> }
                         </div>
                         <div style={styles.d2}>
-                            <button
-                                className={"button button-dark button-round" + (!audio_id ? ' disabled' : '')}
+                            <CssButton
+                                className='image-btn_play_again'
+                                disabled={!audio_id || !!playing}
                                 onClick={this.clear}
-                                >
-                            重录
-                            </button>
+                                width={44}
+                                height={44}/>
                         </div>
                     </div>
                     { !audio_id && !recording && <div style={{textAlign: 'center'}}>
@@ -229,8 +240,10 @@ var styles = {
     d1: {
         display: 'table',
         marginTop: 15,
+        marginBottom: 15,
         tableLayout: 'fixed',
-        width: '100%'
+        width: '100%',
+        height: 64
     },
     d2: {
         display: 'table-cell',
