@@ -15,6 +15,7 @@ router.get('/pub_post', function *() {
         qiniu.sync(post.audio_id),
         qiniu.sync(post.pic_id)
     ];
+    yield qiniu.pfop(post.audio_id);
     this.body = { result: 'ok', post: post };
 });
 

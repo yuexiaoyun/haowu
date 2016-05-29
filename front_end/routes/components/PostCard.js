@@ -4,7 +4,8 @@ import fconf from '../../fconf';
 import CssButton from './CssButton'
 import Sound from 'react-sound'
 import { connect } from 'react-redux'
-import { playSound, stopPlay } from '../../actions';
+import { playSound, stopPlay } from '../../actions'
+import { soundManager } from 'soundmanager2'
 
 class PostCard extends React.Component {
     constructor() {
@@ -57,7 +58,7 @@ class PostCard extends React.Component {
                     <span style={styles.name}><strong>{user.nickname}</strong></span>
                 </div> }
                 { this.props.sound_id == post._id && <Sound
-                    url={fconf.qiniu.site + post.audio_id}
+                    url={fconf.qiniu.site + post.audio_id + '_mp3'}
                     playStatus={Sound.status.PLAYING}
                     onFinishedPlaying={this.stop_play}
                     /> }
