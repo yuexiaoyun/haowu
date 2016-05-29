@@ -4,19 +4,19 @@ import CssButton from './CssButton';
 module.exports = ({user}) => {
     return (
         <div>
-            <div style={styles.d0}>
+            { false && <div style={styles.d0}>
                 可以将好物清单分享给微信好友、朋友圈
                 <span style={styles.arrow}>
                     <CssButton className='image-icon_me_up' width={9} height={12}/>
                 </span>
-            </div>
-            <div style={styles.d1}>
+            </div> }
+            { false && <div style={styles.d1}>
                 <div style={styles.d11}></div>
                 <div style={styles.d12}>
                     <div>长按识别二维码，关注“物我”公众号</div>
                     <div>朋友互动不遗漏</div>
                 </div>
-            </div>
+            </div> }
             <div style={styles.d2}>
                 <img src={user.headimgurl} style={styles.avatar}></img>
                 <div style={styles.n}>{user.nickname}</div>
