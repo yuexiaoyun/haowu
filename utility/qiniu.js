@@ -24,7 +24,7 @@ module.exports = {
         var saveas_key = qiniu.util.urlsafeBase64Encode(conf.qiniu.bucket+':'+media_id + '_mp3');
         var fops = 'avthumb/mp3|saveas/' + saveas_key;
         var ret = yield new Promise((resolve, reject) => {
-            qiniu.fop.pfop(conf.qiniu.bucket, media_id, fops, null, function(err, ret) {
+            qiniu.fop.pfop(conf.qiniu.bucket, media_id, fops, {pipeline: conf.qiniu.pipeline}, function(err, ret) {
                 if (err)
                     reject(err);
                 else
