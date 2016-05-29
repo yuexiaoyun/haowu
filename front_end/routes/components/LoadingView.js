@@ -4,23 +4,25 @@ import _ from 'underscore'
 export default class LoadingView extends React.Component {
     constructor() {
         super();
-        this.state = {begin: new Date(), i: 0};
+        this.state = {begin: new Date(), i: 1};
     }
     refresh = () => {
         if (this.mounted) {
-            this.setState({now: new Date()})
-            setTimeout(this.refresh, 20);
+            var i = Math.floor((new Date() - this.state.begin) / 100) % 4 + 1;
+            this.setState({i: i})
+        } else {
+            clearInterval(this.timer);
         }
     }
     componentDidMount() {
         this.mounted = true;
-        this.refresh();
+        this.timer = setInterval(this.refresh, 1);
     }
     componentWillUnmount() {
         this.mounted = false;
     }
     render() {
-        var i = Math.floor((new Date() - this.state.begin) / 100) % 4 + 1;
+        var { i } = this.state;
         var style = {
             display: 'inline-block',
             width: 60,
@@ -31,7 +33,7 @@ export default class LoadingView extends React.Component {
             backgroundPosition: 'left center'
         };
         return (
-            <span style={style} className={"image-image_loading" + (i + 1)} />
+            <span style={style} className={"image-image_loading" + i} />
         );
     }
 }

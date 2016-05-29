@@ -12,7 +12,13 @@ import PopupHelper from '../utility/PopupHelper';
 class Pub extends React.Component {
     constructor() {
         super();
-        this.state = {};
+        this.state = {progress: 0};
+    }
+    componentDidMount() {
+        this.timer = setInterval(this.refresh, 10);
+    }
+    componentWillUnmount() {
+        clearInterval(this.timer);
     }
     get_audio = () => {
         wx.startRecord({
@@ -21,7 +27,6 @@ class Pub extends React.Component {
             }
         });
         this.setState({recording: new Date(), audio_id: null, d: 0});
-        setTimeout(this.refresh, 200);
     }
     clear = () => {
         if (this.state.audio_id && !this.state.playing) {
@@ -29,23 +34,23 @@ class Pub extends React.Component {
         }
     }
     refresh = () => {
+        var progress = 0;
         try {
             if (this.state.recording) {
                 var d = new Date() - this.state.recording;
                 this.setState({d: d});
                 if (d > 59500)
                     this.stop_audio();
-                else {
-                    setTimeout(this.refresh, 1);
-                }
+                else
+                    progress = (d * 100 / 60000).toFixed(2);
             } else if (this.state.playing) {
                 var f = new Date() - this.state.playing;
-                this.setState({f: f});
-                setTimeout(this.refresh, 1);
+                progress = (f * 100 / this.state.d).toFixed(2);
             }
         } catch(err) {
             alert(err);
         }
+        this.setState({progress: progress});
     }
     stop_audio = () => {
         wx.stopRecord({
@@ -69,7 +74,6 @@ class Pub extends React.Component {
             localId: audio_id
         });
         this.setState({playing: new Date()});
-        setTimeout(this.refresh, 10);
         wx.onVoicePlayEnd({
             success: res => {
                 this.setState({playing: null, f: 0});
@@ -127,15 +131,9 @@ class Pub extends React.Component {
     }
     render() {
         var pic_id = this.props.local_pic_id;
-        var { recording, audio_id, playing, d } = this.state;
+        var { recording, audio_id, playing, d, progress } = this.state;
         var duration;
         d = Math.floor(d / 1000 + 0.5);
-        var progress = 0;
-        if (playing) {
-            progress = Math.floor(this.state.f * 100 / this.state.d + 0.5);
-        }
-        else if (recording)
-            progress = Math.floor(this.state.d * 100 / 60000 + 0.5);
         return (
             <div className="content">
                 <div className="pub" style={{marginBottom:0}}>
