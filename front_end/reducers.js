@@ -10,7 +10,8 @@ module.exports = function(state = initialState, action) {
     } else if (action.type == 'play_sound') {
         return {
             ...state,
-            sound_id: action.id
+            sound_id: action.id,
+            sound_playing: new Date()
         }
     } else if (action.type == 'stop_play') {
         if (action.id == state.sound_id) {

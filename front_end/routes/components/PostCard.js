@@ -10,13 +10,27 @@ import { soundManager } from 'soundmanager2'
 class PostCard extends React.Component {
     constructor() {
         super();
-        this.state = {};
+        this.state = {i: 3};
     }
     componentDidMount() {
         var data = this.props;
     }
     play_audio = () => {
-        this.props.dispatch(playSound(this.props.post._id));
+        var playing = this.props.sound_id == this.props.post._id;
+        if (playing) {
+            this.stop_play();
+        } else {
+            this.props.dispatch(playSound(this.props.post._id));
+            this.timer = setInterval(this.refresh, 10);
+        }
+    }
+    refresh = () => {
+        var playing = this.props.sound_id == this.props.post._id;
+        var d = playing ? (new Date() - this.props.sound_playing) : 250;
+        var i = Math.floor(d / 100) % 3 + 1;
+        this.setState({i : i});
+        if (!playing)
+            clearInterval(this.timer);
     }
     stop_play = () => {
         this.props.dispatch(stopPlay(this.props.post._id));
@@ -34,8 +48,9 @@ class PostCard extends React.Component {
     }
     render() {
         var { user, post } = this.props;
-        var { audio } = this.state;
+        var { i } = this.state;
         var length = Math.floor(post.length / 1000 + 0.5);
+        var playing = this.props.sound_id == post._id;
         return (
             <div className="card facebook-card">
                 <div className="card-content">
@@ -46,7 +61,10 @@ class PostCard extends React.Component {
                 </div>
                 <div style={styles.d1}>
                     <span style={styles.audio} onClick={this.play_audio}>
-                        <CssButton className="image-btn_home_play3" width={16} height={16}/>
+                        <CssButton
+                            className={"image-btn_home_play"+i}
+                            width={16}
+                            height={16}/>
                         <span style={styles.audio_length}>{`${length}"`}</span>
                     </span>
                     <span style={styles.praise}>
@@ -57,7 +75,7 @@ class PostCard extends React.Component {
                     <img src={user.headimgurl} width="34" height="34" style={styles.avatar}/>
                     <span style={styles.name}><strong>{user.nickname}</strong></span>
                 </div> }
-                { this.props.sound_id == post._id && <Sound
+                { playing && <Sound
                     url={fconf.qiniu.site + post.audio_id + '_mp3'}
                     playStatus={Sound.status.PLAYING}
                     onFinishedPlaying={this.stop_play}

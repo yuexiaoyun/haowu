@@ -7,7 +7,12 @@ co.wrap(function *() {
     var docs = yield Post.find().exec();
     for (var i in docs) {
         var d = docs[i];
-        yield qiniu.pfop(d.audio_id);
+        try {
+            yield qiniu.pfop(d.audio_id);
+        } catch(err) {
+            console.log(err);
+            console.log(err.stack);
+        }
     }
     //yield qiniu.pfop("6LosLa4BqzYwnef8oYVMXTUuMkf6LwHuM1GzbdMOMVm_Iq2N3ttvYwZ8pz-jM80Y");
     console.log(52);
