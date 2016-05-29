@@ -46,10 +46,10 @@ export default class PostCard extends React.Component {
                         <CssButton className="image-btn_praise_default" style={{float:'right'}} width={20} height={20}/>
                     </span>
                 </div>
-                <div style={styles.d2}>
+                { user && <div style={styles.d2}>
                     <img src={user.headimgurl} width="34" height="34" style={styles.avatar}/>
-                    <span style={styles.name}>{user.nickname}</span>
-                </div>
+                    <span style={styles.name}><strong>{user.nickname}</strong></span>
+                </div> }
                 <audio ref="audio"><source src={fconf.qiniu.site + post.audio_id} /></audio>
             </div>
         );

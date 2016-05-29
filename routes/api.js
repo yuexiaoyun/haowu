@@ -28,6 +28,14 @@ router.get('/fetch_post', function *() {
     this.body = { result: 'ok', post: post, user: user };
 });
 
+router.get('/fetch_me', function *() {
+    this.body = yield {
+        result: 'ok',
+        posts: Post.find({openid: this.session.openid}).sort({_id: -1}).exec(),
+        user: User.findOne({openid: this.session.openid}).exec()
+    };
+});
+
 router.get('/fetch_posts', function *() {
     var ps = yield Post.find().sort({_id: -1}).exec();
     var posts = [];
