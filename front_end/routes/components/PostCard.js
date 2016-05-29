@@ -2,8 +2,11 @@ import React from 'react';
 import { Link, hashHistory } from 'react-router';
 import fconf from '../../fconf';
 import CssButton from './CssButton'
+import Sound from 'react-sound'
+import { connect } from 'react-redux'
+import { playSound, stopPlay } from '../../actions';
 
-export default class PostCard extends React.Component {
+class PostCard extends React.Component {
     constructor() {
         super();
         this.state = {};
@@ -12,11 +15,10 @@ export default class PostCard extends React.Component {
         var data = this.props;
     }
     play_audio = () => {
-        try {
-            this.refs.audio.play();
-        } catch(err) {
-            alert(err);
-        }
+        this.props.dispatch(playSound(this.props.post._id));
+    }
+    stop_play = () => {
+        this.props.dispatch(stopPlay(this.props.post._id));
     }
     preview = () => {
         var { post } = this.props;
@@ -42,7 +44,7 @@ export default class PostCard extends React.Component {
                         onClick={this.preview}/>
                 </div>
                 <div style={styles.d1}>
-                    <span style={styles.audio}>
+                    <span style={styles.audio} onClick={this.play_audio}>
                         <CssButton className="image-btn_home_play3" width={16} height={16}/>
                         <span style={styles.audio_length}>{`${length}"`}</span>
                     </span>
@@ -54,11 +56,17 @@ export default class PostCard extends React.Component {
                     <img src={user.headimgurl} width="34" height="34" style={styles.avatar}/>
                     <span style={styles.name}><strong>{user.nickname}</strong></span>
                 </div> }
-                <audio ref="audio"><source src={fconf.qiniu.site + post.audio_id} /></audio>
+                { this.props.sound_id == post._id && <Sound
+                    url={fconf.qiniu.site + post.audio_id}
+                    playStatus={Sound.status.PLAYING}
+                    onFinishedPlaying={this.stop_play}
+                    /> }
             </div>
         );
     }
 }
+
+module.exports = connect(state=>(state))(PostCard);
 
 var styles = {
     d1: {
