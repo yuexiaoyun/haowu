@@ -36,6 +36,15 @@ router.get('/fetch_me', function *() {
     };
 });
 
+router.get('/fetch_detail', function *() {
+    this.body = yield {
+        result: 'ok',
+        posts: Post.find({openid: this.query.openid}).sort({_id: -1}).exec(),
+        user: User.findOne({openid: this.query.openid}).exec()
+    };
+    console.log(this.body);
+});
+
 router.get('/fetch_posts', function *() {
     var ps = yield Post.find().sort({_id: -1}).exec();
     var posts = [];

@@ -7,14 +7,14 @@ import { parse_online_json } from '../utility/fetch_utils';
 import PopupHelper from '../utility/PopupHelper';
 import showProgress from '../utility/show_progress';
 
-export default class Me extends React.Component {
+export default class Detail extends React.Component {
     constructor() {
         super();
         this.state = {};
     }
     componentDidMount() {
         var id = this.props.params.id;
-        var url = '/api/fetch_me';
+        var url = '/api/fetch_detail?openid=' + id;
         showProgress('加载中', fetch(url, {credentials:'same-origin'})
             .then(parse_online_json)
             .then(data => {
@@ -27,15 +27,7 @@ export default class Me extends React.Component {
         return (
             <div>
                 { user && <UserTopCard user={user} /> }
-                <div style={styles.d3}>
-                    <div style={styles.d30}>
-                        <div>分享动态</div>
-                        <div style={styles.d30u} />
-                    </div>
-                    <div style={styles.d30}>
-                        <div>互动区</div>
-                    </div>
-                </div>
+                <div style={styles.d3} />
                 <FeedList posts={posts} />
             </div>
         );
@@ -44,24 +36,8 @@ export default class Me extends React.Component {
 
 var styles = {
     d3: {
-        display: 'table',
         width: '100%',
-        height: 44,
-        tableLayout: 'fixed',
-        borderTop: '1px solid rgba(0, 0, 0, 0.15)',
+        height: 1,
         borderBottom: '1px solid rgba(0, 0, 0, 0.15)'
-    },
-    d30: {
-        display: 'table-cell',
-        paddingTop: 12,
-        textAlign: 'center',
-        color: '#666666',
-        fontSize: 14
-    },
-    d30u: {
-        margin: '0px auto',
-        backgroundColor: '#666666',
-        width: 60,
-        height: 2
     }
 };

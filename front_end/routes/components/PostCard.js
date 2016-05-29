@@ -25,6 +25,10 @@ export default class PostCard extends React.Component {
             urls: [fconf.qiniu.site + post.pic_id]
         });
     }
+    gotoDetail = () => {
+        var { user } = this.props;
+        hashHistory.push('detail/' + user.openid);
+    }
     render() {
         var { user, post } = this.props;
         var { audio } = this.state;
@@ -46,7 +50,7 @@ export default class PostCard extends React.Component {
                         <CssButton className="image-btn_praise_default" style={{float:'right'}} width={20} height={20}/>
                     </span>
                 </div>
-                { user && <div style={styles.d2}>
+                { user && <div style={styles.d2} onClick={this.gotoDetail}>
                     <img src={user.headimgurl} width="34" height="34" style={styles.avatar}/>
                     <span style={styles.name}><strong>{user.nickname}</strong></span>
                 </div> }
