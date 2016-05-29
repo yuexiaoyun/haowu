@@ -2,6 +2,7 @@ import React from 'react';
 import qs from 'querystring';
 import { parse_online_json } from '../utility/fetch_utils';
 import showProgress from '../utility/show_progress';
+import screenSize from '../utility/screen_size';
 import { hashHistory } from 'react-router';
 import { connect } from 'react-redux';
 import BottomButton from './components/BottomButton';
@@ -87,7 +88,7 @@ class Pub extends React.Component {
         var { audio_id } = this.state;
         if (audio_id) {
             var pic_id = this.props.local_pic_id;
-            showProgress(new Promise((resolve, reject) => {
+            showProgress('发布中', new Promise((resolve, reject) => {
                 wx.uploadVoice({
                     localId: audio_id,
                     isShowProgressTips: 0,
@@ -145,44 +146,51 @@ class Pub extends React.Component {
                     </div >
                 </div>
                 <div style={{backgroundColor:'#ff3333',width:''+ progress + '%',height:3,marginTop:-8}}></div>
-                <div style={styles.d1}>
-                    <div style={styles.d2}>
-                        { d > 0 && d + '"' }
+                <div style={styles.d()}>
+                    <div style={styles.dd}>
+                    <div style={{display:'table-cell', width:0, height:'100%'}} />
+                        <div style={styles.d0}>
+                            <div style={styles.d1}>
+                                <div style={styles.d2}>
+                                    { d > 0 && d + '"' }
+                                </div>
+                                <div style={styles.d2}>
+                                    { !audio_id && !recording && <CssButton
+                                        className='image-btn_tape_start'
+                                        onClick={this.get_audio}
+                                        width={60}
+                                        height={60}/> }
+                                    { recording && <CssButton
+                                        className='image-btn_tape_stop'
+                                        onClick={this.stop_audio}
+                                        width={60}
+                                        height={60}/> }
+                                    { playing && <CssButton
+                                        className='image-btn_play_stop'
+                                        onClick={this.stop_play}
+                                        width={60}
+                                        height={60}/> }
+                                    { audio_id && !playing && <CssButton
+                                        className='image-btn_play_start'
+                                        onClick={this.play_audio}
+                                        width={60}
+                                        height={60}/> }
+                                </div>
+                                <div style={styles.d2}>
+                                    <CssButton
+                                        className='image-btn_play_again'
+                                        disabled={!audio_id || !!playing}
+                                        onClick={this.clear}
+                                        width={44}
+                                        height={44}/>
+                                </div>
+                            </div>
+                            <div style={{textAlign: 'center'}}>
+                                <div className="text-secondary">用声音记录</div>
+                                <div className="text-secondary">它的故事 你的生活</div>
+                            </div>
+                        </div>
                     </div>
-                    <div style={styles.d2}>
-                        { !audio_id && !recording && <CssButton
-                            className='image-btn_tape_start'
-                            onClick={this.get_audio}
-                            width={60}
-                            height={60}/> }
-                        { recording && <CssButton
-                            className='image-btn_tape_stop'
-                            onClick={this.stop_audio}
-                            width={60}
-                            height={60}/> }
-                        { playing && <CssButton
-                            className='image-btn_play_stop'
-                            onClick={this.stop_play}
-                            width={60}
-                            height={60}/> }
-                        { audio_id && !playing && <CssButton
-                            className='image-btn_play_start'
-                            onClick={this.play_audio}
-                            width={60}
-                            height={60}/> }
-                    </div>
-                    <div style={styles.d2}>
-                        <CssButton
-                            className='image-btn_play_again'
-                            disabled={!audio_id || !!playing}
-                            onClick={this.clear}
-                            width={44}
-                            height={44}/>
-                    </div>
-                </div>
-                <div style={{textAlign: 'center'}}>
-                    <div className="text-secondary">用声音记录</div>
-                    <div className="text-secondary">它的故事 你的生活</div>
                 </div>
                 <BottomButton txt='发布' disabled={!audio_id} onClick={this.pub}/>
             </div>
@@ -191,10 +199,26 @@ class Pub extends React.Component {
 }
 
 var styles = {
+    d: () => {
+        return {
+            position: 'absolute',
+            top: screenSize().width,
+            bottom: 52,
+            width: '100%'
+        };
+    },
+    dd: {
+        display: 'table',
+        width: '100%',
+        height: '100%'
+    },
+    d0: {
+        display: 'table-cell',
+        verticalAlign: 'middle'
+    },
     d1: {
         display: 'table',
-        marginTop: 15,
-        marginBottom: 15,
+        marginBottom: 5,
         tableLayout: 'fixed',
         width: '100%',
         height: 64

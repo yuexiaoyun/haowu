@@ -1,10 +1,10 @@
 import PopupHelper from './PopupHelper';
 
-module.exports = function(promise) {
+module.exports = function(tips, promise) {
     var state = 0;
     setTimeout(()=>{
         if (state == 0) {
-            PopupHelper.showProgressDialog();
+            PopupHelper.showProgressDialog(tips);
             state = 1;
         }
     }, 200);

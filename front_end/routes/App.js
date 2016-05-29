@@ -20,7 +20,6 @@ var App = ({children, dispatch}) => {
                     dispatch(takePic(path));
                     hashHistory.push('pub');
                 } catch(err) {
-                    alert('haha' + err);
                 }
             }
         });

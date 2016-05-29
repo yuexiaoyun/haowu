@@ -13,7 +13,7 @@ export default class Me extends React.Component {
     componentDidMount() {
         var id = this.props.params.id;
         var url = '/api/fetch_posts';
-        showProgress(fetch(url, {credentials:'same-origin'})
+        showProgress('加载中', fetch(url, {credentials:'same-origin'})
             .then(parse_online_json)
             .then(data => {
                 this.setState({posts: data.posts});
@@ -22,11 +22,36 @@ export default class Me extends React.Component {
     }
     render() {
         return (
-            <div>{
-                this.state.posts && this.state.posts.map(post => {
-                    return <PostCard user={post.user} post={post} />;
-                })
-            }</div>
+            <div style={styles.d1}>
+                <div style={styles.d2}><div>{
+                    this.state.posts && this.state.posts.map((post, i) => {
+                        if (i % 2 == 0) {
+                            return <PostCard user={post.user} post={post} />;
+                        } else {
+                            return null;
+                        }
+                    })
+                }</div></div>
+                <div style={styles.d2}>{
+                    this.state.posts && this.state.posts.map((post, i) => {
+                        if (i % 2 == 1) {
+                            return <PostCard user={post.user} post={post} />;
+                        } else {
+                            return null;
+                        }
+                    })
+                }</div>
+            </div>
         );
+    }
+}
+var styles = {
+    d1: {
+        display: 'table',
+        tableLayout: 'fixed',
+        width: '100%'
+    },
+    d2: {
+        display: 'table-cell'
     }
 }

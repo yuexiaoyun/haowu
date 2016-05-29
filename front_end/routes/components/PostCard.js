@@ -29,17 +29,8 @@ export default class PostCard extends React.Component {
         var { audio } = this.state;
         return (
             <div className="card facebook-card">
-              <div className="card-header no-border">
-                <div className="facebook-avatar">
-                  <img src={user.headimgurl} width="34" height="34" />
-                </div>
-                <div className="facebook-name">{user.nickname}</div>
-                <div className="facebook-date">{user.province}</div>
-              </div>
               <div className="card-content">
-                <div className="livePlayBox">
                   <img src={fconf.qiniu.site + post.pic_id} className="bgTranslate" onClick={this.preview}/>
-                </div>
               </div>
               <div className="card-footer no-border">
                 <span className="link" onClick={this.play_audio}>播放语音</span>

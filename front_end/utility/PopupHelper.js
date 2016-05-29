@@ -40,7 +40,10 @@ module.exports.toast = function(text, timeout) {
 module.exports.showProgressDialog = function(tips) {
     var progressView = (
         <div style={progressStyle}>
-            <LoadingView />
+            <div style={{marginBottom:10}}>
+                <LoadingView />
+            </div>
+            { tips }
         </div>
     );
     try {
@@ -78,11 +81,12 @@ var spanStyle = {
 
 var progressStyle = {
     display:'inline-block',
-    backgroundColor: "#ffffff",
-    padding:'38px',
+    backgroundColor: "#000000",
+    padding:'20px',
     paddingLeft: "20px",
     paddingRight: "20px",
     borderRadius: "17px",
+    color:'#ddd',
     textAlign:'center',
     fontSize:'15px'
 };

@@ -13,6 +13,7 @@ import Home from './routes/Home'
 import Me from './routes/Me'
 
 import reducers from './reducers'
+import PopupHelper from './utility/PopupHelper'
 
 let store = createStore(reducers);
 
@@ -31,9 +32,8 @@ try {
         document.getElementById('app')
     );
 } catch(err) {
-    alert(err);
 }
 
 wx.error(function (res) {
-    alert(res.errMsg);
+    PopupHelper.toast(err.errMsg);
 });
