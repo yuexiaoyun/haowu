@@ -4,6 +4,7 @@ import PostCard from './components/PostCard';
 import { parse_online_json } from '../utility/fetch_utils';
 import PopupHelper from '../utility/PopupHelper';
 import showProgress from '../utility/show_progress';
+import screenSize from '../utility/screen_size';
 
 export default class Me extends React.Component {
     constructor() {
@@ -23,7 +24,7 @@ export default class Me extends React.Component {
     render() {
         return (
             <div style={styles.d1}>
-                <div style={styles.d2}><div>{
+                <div style={styles.d2()}>{
                     this.state.posts && this.state.posts.map((post, i) => {
                         if (i % 2 == 0) {
                             return <PostCard user={post.user} post={post} />;
@@ -31,8 +32,8 @@ export default class Me extends React.Component {
                             return null;
                         }
                     })
-                }</div></div>
-                <div style={styles.d2}>{
+                }</div>
+                <div style={styles.d2()}>{
                     this.state.posts && this.state.posts.map((post, i) => {
                         if (i % 2 == 1) {
                             return <PostCard user={post.user} post={post} />;
@@ -47,11 +48,14 @@ export default class Me extends React.Component {
 }
 var styles = {
     d1: {
-        display: 'table',
-        tableLayout: 'fixed',
-        width: '100%'
+        width: '100%',
+        paddingLeft: 3,
+        paddingRight: 3
     },
-    d2: {
-        display: 'table-cell'
+    d2: () => {
+        return {
+            width: (screenSize().width - 6) / 2,
+            float: 'left'
+        }
     }
 }
