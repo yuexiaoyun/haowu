@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, hashHistory } from 'react-router';
 import PostCard from './components/PostCard';
+import FeedList from './components/FeedList';
 import { parse_online_json } from '../utility/fetch_utils';
 import PopupHelper from '../utility/PopupHelper';
 import showProgress from '../utility/show_progress';
@@ -22,40 +23,6 @@ export default class Me extends React.Component {
             }).catch(PopupHelper.toast));
     }
     render() {
-        return (
-            <div style={styles.d1}>
-                <div style={styles.d2()}>{
-                    this.state.posts && this.state.posts.map((post, i) => {
-                        if (i % 2 == 0) {
-                            return <PostCard user={post.user} post={post} />;
-                        } else {
-                            return null;
-                        }
-                    })
-                }</div>
-                <div style={styles.d2()}>{
-                    this.state.posts && this.state.posts.map((post, i) => {
-                        if (i % 2 == 1) {
-                            return <PostCard user={post.user} post={post} />;
-                        } else {
-                            return null;
-                        }
-                    })
-                }</div>
-            </div>
-        );
-    }
-}
-var styles = {
-    d1: {
-        width: '100%',
-        paddingLeft: 3,
-        paddingRight: 3
-    },
-    d2: () => {
-        return {
-            width: (screenSize().width - 6) / 2,
-            float: 'left'
-        }
+        return this.state.posts && <FeedList posts={this.state.posts} /> || <div></div>;
     }
 }

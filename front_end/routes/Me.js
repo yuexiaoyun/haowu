@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, hashHistory } from 'react-router';
 import PostCard from './components/PostCard';
+import FeedList from './components/FeedList';
 import { parse_online_json } from '../utility/fetch_utils';
 import PopupHelper from '../utility/PopupHelper';
 import showProgress from '../utility/show_progress';
@@ -23,30 +24,39 @@ export default class Me extends React.Component {
     }
     render() {
         return (
-            <div style={styles.d1}>
-                <div style={styles.d2()}>{
-                    this.state.posts && this.state.posts.map((post, i) => {
-                        if (i % 2 == 0) {
-                            return <PostCard post={post} />;
-                        } else {
-                            return null;
-                        }
-                    })
-                }</div>
-                <div style={styles.d2()}>{
-                    this.state.posts && this.state.posts.map((post, i) => {
-                        if (i % 2 == 1) {
-                            return <PostCard post={post} />;
-                        } else {
-                            return null;
-                        }
-                    })
-                }</div>
+            <div>
+                <div style={styles.dd0}>可以将好物清单分享给微信好友、朋友圈</div>
+                <div style={styles.dd1}>
+                    <div style={styles.dd11}></div>
+                    <div style={styles.dd12}>
+                        <div>长按识别二维码，关注“物我”公众号</div>
+                        <div>朋友互动不遗漏</div>
+                    </div>
+                </div>
+                <FeedList posts={this.state.posts} />
             </div>
         );
     }
 }
 var styles = {
+    dd0: {
+        height: 32,
+        lineHeight: '32px',
+        width: "100%",
+        paddingLeft: 20,
+        fontSize: 12,
+        color: '#ffffff',
+        backgroundColor: '#6699cc'
+    },
+    dd1: {
+        height: 48,
+        width: "100%",
+        paddingLeft: 20,
+        fontSize: 14,
+        color: '#ffffff',
+        backgroundColor: '#81d9d0',
+        display: 'table'
+    },
     d1: {
         width: '100%',
         paddingLeft: 3,
