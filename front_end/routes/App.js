@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, hashHistory } from 'react-router';
-import { takePic } from '../actions';
 import { connect } from 'react-redux';
+import { createAction } from 'redux-actions';
 
 var App = ({children, dispatch}) => {
     function currentHash() {
@@ -17,9 +17,10 @@ var App = ({children, dispatch}) => {
             success: res => {
                 try {
                     var path = res.localIds[0];
-                    dispatch(takePic(path));
+                    dispatch(createAction('take_pic')(path));
                     hashHistory.push('pub');
                 } catch(err) {
+                    alert(err);
                 }
             }
         });

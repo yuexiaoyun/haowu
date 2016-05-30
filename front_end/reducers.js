@@ -1,20 +1,17 @@
-const initialState = {
-}
+import { handleActions } from 'redux-actions';
 
-module.exports = function(state = initialState, action) {
-    if (action.type == 'take_pic') {
-        return {
-            ...state,
-            local_pic_id: action.id
-        };
-    } else if (action.type == 'play_sound') {
-        return {
-            ...state,
-            sound_id: action.id,
-            sound_playing: new Date()
-        }
-    } else if (action.type == 'stop_play') {
-        if (action.id == state.sound_id) {
+module.exports = handleActions({
+    'take_pic': (state, action) => ({
+        ...state,
+        local_pic_id: action.payload
+    }),
+    'play_sound': (state, action) => ({
+        ...state,
+        sound_id: action.payload,
+        sound_playing: new Date()
+    }),
+    'stop_play': (state, action) => {
+        if (action.payload == state.sound_id) {
             return {
                 ...state,
                 sound_id: null
@@ -23,5 +20,4 @@ module.exports = function(state = initialState, action) {
             return state;
         }
     }
-    return state;
-}
+}, {});

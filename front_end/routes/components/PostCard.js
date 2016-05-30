@@ -4,7 +4,7 @@ import fconf from '../../fconf';
 import CssButton from './CssButton'
 import Sound from 'react-sound'
 import { connect } from 'react-redux'
-import { playSound, stopPlay } from '../../actions'
+import { createAction } from 'redux-actions'
 import { soundManager } from 'soundmanager2'
 
 class PostCard extends React.Component {
@@ -20,7 +20,7 @@ class PostCard extends React.Component {
         if (playing) {
             this.stop_play();
         } else {
-            this.props.dispatch(playSound(this.props.post._id));
+            this.props.dispatch(createAction('play_sound')(this.props.post._id));
             this.timer = setInterval(this.refresh, 10);
         }
     }
@@ -33,7 +33,7 @@ class PostCard extends React.Component {
             clearInterval(this.timer);
     }
     stop_play = () => {
-        this.props.dispatch(stopPlay(this.props.post._id));
+        this.props.dispatch(createAction('stop_play')(this.props.post._id));
     }
     preview = () => {
         var { post } = this.props;
