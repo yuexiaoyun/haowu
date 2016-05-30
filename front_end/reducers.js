@@ -19,5 +19,13 @@ module.exports = handleActions({
         } else {
             return state;
         }
-    }
+    },
+    'feed_posts': (state, action) => ({
+        ...state,
+        feed_posts: action.payload
+    }),
+    'home_scroll': (state, action) => ({
+        ...state,
+        home_scroll: action.payload
+    })
 }, {});

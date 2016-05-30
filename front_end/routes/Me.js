@@ -25,7 +25,7 @@ export default class Me extends React.Component {
     render() {
         var { user, posts } = this.state;
         return (
-            <div>
+            <div className='content'>
                 { user && <UserTopCard user={user} /> }
                 <div style={styles.d3}>
                     <div style={styles.d30}>

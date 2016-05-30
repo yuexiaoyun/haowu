@@ -25,7 +25,7 @@ export default class Detail extends React.Component {
     render() {
         var { user, posts } = this.state;
         return (
-            <div>
+            <div className='content'>
                 { user && <UserTopCard user={user} /> }
                 <div style={styles.d3} />
                 <FeedList posts={posts} />
