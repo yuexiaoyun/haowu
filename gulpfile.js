@@ -12,7 +12,11 @@ var cssmin = require('gulp-cssmin');
 var postcss = require('gulp-postcss');
 var rename = require('gulp-rename');
 var imacss = require('gulp-imacss');
+var envifyCustom = require('envify/custom');
+var uglify = require('gulp-uglify')
+var streamify = require('gulp-streamify');
 var _ = require('underscore');
+
 
 function generateCss(image) {
     var slug = image.slug;
@@ -44,6 +48,31 @@ gulp.task('css', ['imacss'], function() {
         .pipe(cssmin())
         .pipe(rename('bundle.min.css'))
         .pipe(gulp.dest('./static/styles'));
+});
+
+
+gulp.task('default', ['css'], function() {
+    var args = {
+        entries: ['./front_end/index.js'],
+        transform: [babelify.configure({
+            stage: 0
+        })],
+        debug: false
+    };
+
+    var onErr = function() {
+        process.exit(1);
+    }
+
+    return browserify(args)
+        .transform(envifyCustom({
+            NODE_ENV: 'production'
+        }), { global: true })
+        .bundle()
+        .on('error', onErr)
+        .pipe(source('bundle.min.js'))
+        .pipe(streamify(uglify()))
+        .pipe(gulp.dest('./static/scripts'));
 });
 
 gulp.task('watchify', ['css'], function() {
