@@ -31,17 +31,15 @@ class App extends React.Component {
         try {
             var { current_tab } = this.props;
             return (
-                <div className="page-group">
-                    <div className="page page-current">
-                        <nav className="bar bar-tab">
-                            <Tab index={0} className={"image-btn_tabbar_home"} />
-                            <span className={"tab-item"} onClick={this.take_photo}>
-                                <span className="setting-icon image-btn_tabbar_photo"></span>
-                            </span>
-                            <Tab index={1} className={"image-btn_tabbar_me"} />
-                        </nav>
-                        {current_tab == 0 ? <Home /> : <Me />}
-                    </div>
+                <div>
+                    <nav className="bar bar-tab">
+                        <Tab index={0} className={"image-btn_tabbar_home"} />
+                        <span className={"tab-item"} onClick={this.take_photo}>
+                            <span className="setting-icon image-btn_tabbar_photo"></span>
+                        </span>
+                        <Tab index={1} className={"image-btn_tabbar_me"} />
+                    </nav>
+                    {current_tab == 0 ? <Home /> : <Me />}
                 </div>
             );
         } catch(err) {
