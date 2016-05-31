@@ -27,5 +27,11 @@ module.exports = handleActions({
     'home_scroll': (state, action) => ({
         ...state,
         home_scroll: action.payload
+    }),
+    'current_tab': (state, action) => ({
+        ...state,
+        current_tab: action.payload
     })
-}, {});
+}, {
+    current_tab: 0
+});

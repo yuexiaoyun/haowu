@@ -13,7 +13,6 @@ export default class Me extends React.Component {
         this.state = {};
     }
     componentDidMount() {
-        var id = this.props.params.id;
         var url = '/api/fetch_me';
         showProgress('加载中', fetch(url, {credentials:'same-origin'})
             .then(parse_online_json)

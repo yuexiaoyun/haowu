@@ -9,8 +9,6 @@ import { createStore } from 'redux'
 
 import App from './routes/App'
 import Pub from './routes/Pub'
-import Home from './routes/Home'
-import Me from './routes/Me'
 import Detail from './routes/Detail'
 
 import reducers from './reducers'
@@ -24,16 +22,14 @@ try {
         <Provider store={store}>
             <Router history={hashHistory}>
                 <Route path="/detail/:id" component={Detail} />
-                <Route path="/" component={App}>
-                    <Route path="home" component={Home} />
-                    <Route path="pub" component={Pub} />
-                    <Route path="me" component={Me} />
-                </Route>
+                <Route path="/pub" component={Pub} />
+                <Route path="/home" component={App} />
             </Router>
         </Provider>,
         document.getElementById('app')
     );
 } catch(err) {
+    alert(err);
 }
 
 wx.error(function (res) {

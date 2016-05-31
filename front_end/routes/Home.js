@@ -10,7 +10,6 @@ import { createAction } from 'redux-actions';
 class Home extends React.Component {
     componentDidMount() {
         if (!this.props.feed_posts) {
-            var id = this.props.params.id;
             var url = '/api/fetch_posts';
             showProgress('加载中', fetch(url, {credentials:'same-origin'})
                 .then(parse_online_json)
