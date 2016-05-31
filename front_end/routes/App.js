@@ -32,6 +32,8 @@ class App extends React.Component {
             var { current_tab } = this.props;
             return (
                 <div>
+                    {current_tab == 0 ? <Home /> : <Me />}
+                    <div style={{width: '100%', height: '2.5rem', clear:'both', overflow:'hidden'}} />
                     <nav className="bar bar-tab">
                         <Tab index={0} className={"image-btn_tabbar_home"} />
                         <span className={"tab-item"} onClick={this.take_photo}>
@@ -39,7 +41,6 @@ class App extends React.Component {
                         </span>
                         <Tab index={1} className={"image-btn_tabbar_me"} />
                     </nav>
-                    {current_tab == 0 ? <Home /> : <Me />}
                 </div>
             );
         } catch(err) {

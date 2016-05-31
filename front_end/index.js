@@ -28,6 +28,7 @@ try {
         </Provider>,
         document.getElementById('app')
     );
+    window.onerror = alert;
 } catch(err) {
     alert(err);
 }

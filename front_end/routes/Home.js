@@ -23,14 +23,14 @@ class Home extends React.Component {
                 }).catch(PopupHelper.toast));
         }
         if (this.props.home_scroll)
-            this.refs.content.scrollTop = this.props.home_scroll;
+            window.scrollTop = this.props.home_scroll;
     }
     componentWillUnmount() {
-        this.props.dispatch(createAction('home_scroll')(this.refs.content.scrollTop));
+        this.props.dispatch(createAction('home_scroll')(window.scrollTop));
     }
     render() {
         return (
-            <div className='content' ref='content'>
+            <div>
                 { this.props.feed_posts && <FeedList posts={this.props.feed_posts} /> }
             </div>
         );

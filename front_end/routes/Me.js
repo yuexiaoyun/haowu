@@ -25,17 +25,17 @@ class Me extends React.Component {
                 }).catch(PopupHelper.toast));
         }
         if (this.props.me_scroll)
-            this.refs.content_me.scrollTop = this.props.me_scroll;
+            window.scrollTop = this.props.me_scroll;
     }
     componentWillUnmount() {
-        this.props.dispatch(createAction('me_scroll')(this.refs.content_me.scrollTop));
+        this.props.dispatch(createAction('me_scroll')(window.scrollTop));
     }
     render() {
         var { myself } = this.props;
         var user = myself && myself.user;
         var posts = myself && myself.posts;
         return (
-            <div className='content' ref='content_me'>
+            <div>
                 { user && <UserTopCard user={user} /> }
                 <div style={styles.d3}>
                     <div style={styles.d30}>
