@@ -5,6 +5,7 @@ import showProgress from '../utility/show_progress';
 import screenSize from '../utility/screen_size';
 import { hashHistory } from 'react-router';
 import { connect } from 'react-redux';
+import { createAction } from 'redux-actions';
 import BottomButton from './components/BottomButton';
 import CssButton from './components/CssButton';
 import PopupHelper from '../utility/PopupHelper';
@@ -111,7 +112,8 @@ class Pub extends React.Component {
                                 fetch(url, {credentials: 'same-origin'})
                                     .then(parse_online_json)
                                     .then(data => {
-                                        hashHistory.replace('/home');
+                                        this.props.dispatch(createAction('refresh')());
+                                        hashHistory.go(-1);
                                         resolve('发布成功');
                                     }).catch(e => {
                                         reject(e);

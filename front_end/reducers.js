@@ -28,9 +28,24 @@ module.exports = handleActions({
         ...state,
         home_scroll: action.payload
     }),
+    'myself': (state, action) => ({
+        ...state,
+        myself: action.payload
+    }),
+    'me_scroll': (state, action) => ({
+        ...state,
+        me_scroll: action.payload
+    }),
     'current_tab': (state, action) => ({
         ...state,
         current_tab: action.payload
+    }),
+    'refresh': (state, action) => ({
+        ...state,
+        feed_posts: null,
+        home_scroll: null,
+        myself: null,
+        me_scroll: null
     })
 }, {
     current_tab: 0

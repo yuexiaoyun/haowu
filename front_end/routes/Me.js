@@ -6,25 +6,36 @@ import CssButton from './components/CssButton';
 import { parse_online_json } from '../utility/fetch_utils';
 import PopupHelper from '../utility/PopupHelper';
 import showProgress from '../utility/show_progress';
+import { connect } from 'react-redux';
+import { createAction } from 'redux-actions';
 
-export default class Me extends React.Component {
+class Me extends React.Component {
     constructor() {
         super();
         this.state = {};
     }
     componentDidMount() {
-        var url = '/api/fetch_me';
-        showProgress('加载中', fetch(url, {credentials:'same-origin'})
-            .then(parse_online_json)
-            .then(data => {
-                this.setState({posts: data.posts, user: data.user});
-                return null;
-            }).catch(PopupHelper.toast));
+        if (!this.props.myself) {
+            var url = '/api/fetch_me';
+            showProgress('加载中', fetch(url, {credentials:'same-origin'})
+                .then(parse_online_json)
+                .then(data => {
+                    this.props.dispatch(createAction('myself')({posts: data.posts, user: data.user}));
+                    return null;
+                }).catch(PopupHelper.toast));
+        }
+        if (this.props.me_scroll)
+            this.refs.content_me.scrollTop = this.props.me_scroll;
+    }
+    componentWillUnmount() {
+        this.props.dispatch(createAction('me_scroll')(this.refs.content_me.scrollTop));
     }
     render() {
-        var { user, posts } = this.state;
+        var { myself } = this.props;
+        var user = myself && myself.user;
+        var posts = myself && myself.posts;
         return (
-            <div className='content'>
+            <div className='content' ref='content_me'>
                 { user && <UserTopCard user={user} /> }
                 <div style={styles.d3}>
                     <div style={styles.d30}>
@@ -40,6 +51,11 @@ export default class Me extends React.Component {
         );
     }
 }
+
+module.exports = connect(state=>({
+    myself: state.myself,
+    me_scroll: state.me_scroll
+}))(Me);
 
 var styles = {
     d3: {
