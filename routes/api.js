@@ -50,7 +50,10 @@ router.get('/fetch_detail', function *() {
 });
 
 router.get('/fetch_posts', function *() {
-    var ps = yield Post.find().sort({_id: -1}).exec();
+    var q = this.query.beforeid ? {
+        _id: { $lt: this.query.beforeid }
+    } : {};
+    var ps = yield Post.find(q).sort({_id: -1}).limit(50).exec();
     var posts = [];
     for (var post of ps) {
         var user = yield User.findOne({
@@ -60,7 +63,7 @@ router.get('/fetch_posts', function *() {
         post.user = user;
         posts.push(post);
     }
-    console.log(posts);
+    console.log(posts.length);
     this.body = { result: 'ok', posts: posts };
 });
 
