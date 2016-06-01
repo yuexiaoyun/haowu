@@ -3,17 +3,16 @@ import { Link, hashHistory } from 'react-router';
 import fconf from '../../fconf';
 import CssButton from './CssButton'
 import Sound from 'react-sound'
+import LazyLoad from 'react-lazyload'
 import { connect } from 'react-redux'
 import { createAction } from 'redux-actions'
 import { soundManager } from 'soundmanager2'
+import screenSize from '../../utility/screen_size'
 
 class PostCard extends React.Component {
     constructor() {
         super();
         this.state = {i: 3};
-    }
-    componentDidMount() {
-        var data = this.props;
     }
     play_audio = () => {
         var playing = this.props.sound_id == this.props.post._id;
@@ -46,17 +45,22 @@ class PostCard extends React.Component {
         var { user } = this.props;
         hashHistory.push('detail/' + user.openid);
     }
+    picHeight = () => {
+        var { post } = this.props;
+        var w = (screenSize().width - 6) / 2 - 10;
+        var h = Math.floor(w * post.h / post.w + 0.5);
+        return h;
+    }
     render() {
         var { user, post } = this.props;
         var { i } = this.state;
         var length = Math.floor(post.length / 1000 + 0.5);
         var playing = this.props.sound_id == post._id;
         return (
-            <div className="card facebook-card">
-                <div className="card-content">
-                    <img src={fconf.qiniu.site + post.pic_id}
-                        style={{overflow:'hidden',borderRadius:5}}
-                        className="bgTranslate"
+            <div className="card facebook-card" ref='card'>
+                <div className="card-content" style={{height: this.picHeight()}}>
+                    <img src={fconf.qiniu.site + post.pic_id + '-c167'}
+                        style={{width:'100%', overflow:'hidden',borderRadius:5}}
                         onClick={this.preview}/>
                 </div>
                 <div style={styles.d1}>

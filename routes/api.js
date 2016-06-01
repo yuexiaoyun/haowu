@@ -10,12 +10,15 @@ router.get('/pub_post', function *() {
     var post = new Post();
     Object.assign(post, this.query);
     post.openid = this.session.openid;
-    yield post.save();
     yield [
         qiniu.sync(post.audio_id),
         qiniu.sync(post.pic_id)
     ];
     yield qiniu.pfop(post.audio_id);
+    var info = JSON.parse(yield qiniu.stat(post.pic_id));
+    post.w = info.width;
+    post.h = info.height;
+    yield post.save();
     this.body = { result: 'ok', post: post };
 });
 

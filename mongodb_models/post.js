@@ -6,7 +6,9 @@ var schema = new mongoose.Schema({
     openid: { type: String },
     pic_id: { type: String },
     audio_id: { type: String },
-    length: { type: Number }
+    length: { type: Number },
+    w: { type: Number },
+    h: { type: Number }
 });
 
 schema.index({ openid: 1 });

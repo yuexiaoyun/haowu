@@ -1,6 +1,7 @@
 var qiniu = require('qiniu');
 var api = require('./wechat').api;
-var conf = require('../conf')
+var conf = require('../conf');
+var request = require('co-request');
 
 qiniu.conf.ACCESS_KEY = conf.qiniu.ak;
 qiniu.conf.SECRET_KEY = conf.qiniu.sk;
@@ -31,6 +32,11 @@ module.exports = {
                     resolve(ret);
             });
         });
-        console.log(ret);
+    },
+    stat: function *(media_id) {
+        var url = conf.qiniu.site + media_id + '?imageInfo';
+        console.log(url);
+        var r = yield request(url);
+        return r.body;
     }
 }
