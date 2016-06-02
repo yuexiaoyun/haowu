@@ -52,7 +52,7 @@ class PostCard extends React.Component {
         return h;
     }
     shouldComponentUpdate(nextProps, nextState) {
-        return false;
+        return this.props.sound_id != nextProps.sound_id || this.state.i != nextState.i;
     }
     render() {
         var { user, post } = this.props;
@@ -61,7 +61,14 @@ class PostCard extends React.Component {
         var playing = this.props.sound_id == post._id;
         return (
             <div className="card facebook-card" ref='card'>
-                <div className="card-content" style={{height: this.picHeight(), backgroundColor: '#f8f8f8'}}>
+                <div className="card-content image-icon_image_loading"
+                    style={{
+                        height: this.picHeight(),
+                        backgroundColor: '#f8f8f8',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundSize: '24px 24px'
+                    }}>
                     <img src={fconf.qiniu.site + post.pic_id + '-c167'}
                         style={{width:'100%', overflow:'hidden',borderRadius:5}}
                         onClick={this.preview}/>
