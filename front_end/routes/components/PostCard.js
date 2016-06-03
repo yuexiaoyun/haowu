@@ -51,14 +51,26 @@ class PostCard extends React.Component {
         var h = Math.floor(w * post.h / post.w + 0.5);
         return h;
     }
+    like = () => {
+        var { post, likes, dispatch } = this.props;
+        if (likes[post._id] == 1)
+            dispatch(createAction('unlike')(post._id));
+        else
+            dispatch(createAction('like')(post._id));
+    }
     shouldComponentUpdate(nextProps, nextState) {
-        return this.props.sound_id != nextProps.sound_id || this.state.i != nextState.i;
+        return this.props.sound_id != nextProps.sound_id
+            || this.state.i != nextState.i
+            || this.props.likes[this.props.post._id] != nextProps.likes[this.props.post._id]
+            || this.props.reads[this.props.post._id] != nextProps.reads[this.props.post._id];
     }
     render() {
-        var { user, post } = this.props;
+        var { user, post, likes, reads } = this.props;
         var { i } = this.state;
         var length = Math.floor(post.length / 1000 + 0.5);
         var playing = this.props.sound_id == post._id;
+        var me_like = this.props.likes[this.props.post._id];
+        var me_read = this.props.reads[this.props.post._id];
         return (
             <div className="card facebook-card" ref='card'>
                 <div className="card-content image-icon_image_loading"
@@ -74,7 +86,7 @@ class PostCard extends React.Component {
                         onClick={this.preview}/>
                 </div>
                 <div style={styles.d1}>
-                    <span style={styles.audio} onClick={this.play_audio}>
+                    <span style={styles.audio(me_read)} onClick={this.play_audio}>
                         <CssButton
                             className={"image-btn_home_play"+i}
                             width={16}
@@ -82,7 +94,12 @@ class PostCard extends React.Component {
                         <span style={styles.audio_length}>{`${length}"`}</span>
                     </span>
                     <span style={styles.praise}>
-                        <CssButton className="image-btn_praise_default" style={{float:'right'}} width={20} height={20}/>
+                        <CssButton
+                            className={me_like == 1 ? "image-btn_praise_selected" : "image-btn_praise_default"}
+                            style={{float:'right'}}
+                            onClick={this.like}
+                            width={20}
+                            height={20}/>
                     </span>
                 </div>
                 { user && <div style={styles.d2} onClick={this.gotoDetail}>
@@ -99,7 +116,12 @@ class PostCard extends React.Component {
     }
 }
 
-module.exports = connect(state=>(state))(PostCard);
+module.exports = connect((state)=>({
+    sound_id: state.sound_id,
+    sound_playing: state.sound_playing,
+    likes: state.likes,
+    reads: state.reads
+}))(PostCard);
 
 var styles = {
     d1: {
@@ -115,7 +137,7 @@ var styles = {
         paddingTop: 8,
         paddingBottom: 12,
     },
-    audio: {
+    audio: (read) => ({
         display: 'table-cell',
         verticalAlign: 'middle',
         borderRadius: 12,
@@ -123,8 +145,8 @@ var styles = {
         paddingLeft: 6,
         paddingTop: 4,
         paddingBottom: 4,
-        backgroundColor: '#ff3333',
-    },
+        backgroundColor: read == 1 ? '#cccccc' : '#ff3333',
+    }),
     audio_length: {
         marginLeft: 15,
         color: '#ffffff',

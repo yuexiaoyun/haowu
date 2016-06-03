@@ -47,5 +47,26 @@ var updatePosts = (state, action) => {
 export var posts = handleActions({
     feed_posts: updatePosts,
     myself: updatePosts,
-    posts: updatePosts
-}, {})
+    posts: updatePosts,
+}, {});
+
+export var likes = handleActions({
+    like: (state, action) => {
+        var d = {};
+        d[action.payload] = 1;
+        return {...state, ...d}
+    },
+    unlike:  (state, action) => {
+        var d = {};
+        d[action.payload] = 0;
+        return {...state, ...d}
+    }
+}, {});
+
+export var reads = handleActions({
+    play_sound: (state, action) => {
+        var d = {};
+        d[action.payload] = 1;
+        return {...state, ...d}
+    }
+}, {});
