@@ -19,10 +19,9 @@ class Me extends React.Component {
             var url = '/api/fetch_me';
             showProgress('加载中', fetch(url, {credentials:'same-origin'})
                 .then(parse_online_json)
-                .then(data => {
-                    this.props.dispatch(createAction('myself')({posts: data.posts, user: data.user}));
-                    return null;
-                }).catch(PopupHelper.toast));
+                .then(createAction('myself'))
+                .then(this.props.dispatch)
+                .catch(PopupHelper.toast));
         }
         if (this.props.me_scroll)
             window.scrollTop = this.props.me_scroll;
@@ -31,12 +30,11 @@ class Me extends React.Component {
         this.props.dispatch(createAction('me_scroll')(window.scrollTop));
     }
     render() {
-        var { myself } = this.props;
-        var user = myself && myself.user;
-        var posts = myself && myself.posts;
+        var { myself, my_post_ids, posts } = this.props;
+        var my_posts = my_post_ids.map((id) => posts[id]);
         return (
             <div>
-                { user && <UserTopCard user={user} /> }
+                { myself && <UserTopCard user={myself} /> }
                 <div style={styles.d3}>
                     <div style={styles.d30}>
                         <div>分享动态</div>
@@ -46,7 +44,7 @@ class Me extends React.Component {
                         <div>互动区</div>
                     </div>
                 </div>
-                <FeedList posts={posts} />
+                <FeedList posts={my_posts} />
             </div>
         );
     }
@@ -54,6 +52,8 @@ class Me extends React.Component {
 
 module.exports = connect(state=>({
     myself: state.myself,
+    my_post_ids: state.my_post_ids,
+    posts: state.posts,
     me_scroll: state.me_scroll
 }))(Me);
 

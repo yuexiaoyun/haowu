@@ -25,40 +25,37 @@ class Home extends React.Component {
     loadMore = (page) => {
         var url;
         var f;
-
-        if (!this.props.feed_posts) {
+        if (this.props.feed_ids.length == 0) {
             url = '/api/fetch_posts';
             f = (p) => {
                 showProgress('加载中', p);
             }
         } else {
             url = '/api/fetch_posts?' + qs.stringify({
-                beforeid: this.props.feed_posts[this.props.feed_posts.length - 1]._id
+                beforeid: this.props.feed_ids[this.props.feed_ids.length - 1]
             });
             f = (p) => (p);
         }
         f(fetch(url, {credentials:'same-origin'})
             .then(parse_online_json)
-            .then(data => {
-                try {
-                    this.props.dispatch(createAction('feed_posts')(data.posts));
-                    return null;
-                } catch(err) {
-                    alert(err);
-                }
-            }));
+            .then(createAction('feed_posts'))
+            .then(this.props.dispatch)
+            .catch(PopupHelper.toast));
     }
     render() {
+        var { posts, feed_ids, feed_end } = this.props;
+        var feed_posts = feed_ids.map((id) => posts[id]);
         return (
-            <InfiniteScroll threshold={1080} hasMore={!this.props.feed_end} loadMore={this.loadMore} Loader={<div></div>}>
-                {this.props.feed_posts && <FeedList posts={this.props.feed_posts} />}
+            <InfiniteScroll threshold={1080} hasMore={!feed_end} loadMore={this.loadMore} Loader={<div></div>}>
+                <FeedList posts={feed_posts} />
             </InfiniteScroll>
         );
     }
 }
 
-module.exports = connect(state=>({
-    feed_posts: state.feed_posts,
-    feed_end: state.feed_end,
-    home_scroll: state.home_scroll
+module.exports = connect(({feed_ids, posts, feed_end, home_scroll})=>({
+    feed_ids,
+    posts,
+    feed_end,
+    home_scroll
 }))(Home);

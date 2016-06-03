@@ -12,7 +12,8 @@ var schema = new mongoose.Schema({
     city: { type: String },
     country: { type: String },
     headimgurl: { type: String },
-    privilege: [{ type: String }]
+    privilege: [{ type: String }],
+    subs: { type: [String] }
 });
 
 schema.index({ openid: 1 }, { unique: 1});

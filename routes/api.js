@@ -67,4 +67,31 @@ router.get('/fetch_posts', function *() {
     this.body = { result: 'ok', posts: posts };
 });
 
+router.get('/like', function *() {
+    var q = { _id: this.query._id };
+    var d = {
+        likes: {
+            $addToSet: this.session.openid
+        }
+    };
+    this.body = yield {
+        result: 'ok',
+        update: Post.update(q, d)
+    };
+});
+
+router.get('/unlike', function *() {
+    var q = { _id: this.query._id };
+    var d = {
+        likes: {
+            $removeFromSet: this.session.openid
+        }
+    };
+    this.body = yield {
+        result: 'ok',
+        update: Post.update(q, d)
+    };
+});
+
+
 module.exports = router.routes();

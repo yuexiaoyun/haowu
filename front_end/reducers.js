@@ -1,68 +1,51 @@
 import { handleActions } from 'redux-actions';
 
-module.exports = handleActions({
-    'take_pic': (state, action) => ({
-        ...state,
-        local_pic_id: action.payload
-    }),
-    'play_sound': (state, action) => ({
-        ...state,
-        sound_id: action.payload,
-        sound_playing: new Date()
-    }),
-    'stop_play': (state, action) => {
-        if (action.payload == state.sound_id) {
-            return {
-                ...state,
-                sound_id: null
-            }
-        } else {
-            return state;
-        }
-    },
-    'feed_posts': (state, action) => {
-        if (!action.payload || action.payload.length == 0) {
-            return {
-                ...state,
-                feed_end: 1
-            }
-        } else if (state.feed_posts) {
-            return {
-                ...state,
-                feed_posts: [...state.feed_posts, ...action.payload],
-                feed_end: 0
-            }
-        } else {
-            return {
-                ...state,
-                feed_posts: action.payload,
-                feed_end: 0
-            }
-        }
-    },
-    'home_scroll': (state, action) => ({
-        ...state,
-        home_scroll: action.payload
-    }),
-    'myself': (state, action) => ({
-        ...state,
-        myself: action.payload
-    }),
-    'me_scroll': (state, action) => ({
-        ...state,
-        me_scroll: action.payload
-    }),
-    'current_tab': (state, action) => ({
-        ...state,
-        current_tab: action.payload
-    }),
-    'refresh': (state, action) => ({
-        ...state,
-        feed_posts: null,
-        home_scroll: null,
-        myself: null,
-        me_scroll: null
-    })
-}, {
-    current_tab: 0
-});
+export var local_pic_id = handleActions({
+    take_pic: (state, action) => (action.payload)
+}, null);
+export var sound_id = handleActions({
+    play_sound: (state, action) => (action.payload),
+    stop_play: (state, action) => (action.payload == state ? null: state)
+}, null);
+export var sound_playing = handleActions({
+    play_sound: (state, action) => (new Date())
+}, null);
+export var home_scroll = handleActions({
+    home_scroll: (state, action) => (action.payload || null),
+    refresh: (state, action) => (null)
+}, null);
+export var me_scroll = handleActions({
+    me_scroll: (state, action) => (action.payload || null),
+    refresh: (state, action) => (null)
+}, null);
+export var current_tab = handleActions({
+    current_tab: (state, action) => (action.payload)
+}, 0);
+export var myself = handleActions({
+    myself: (state, action) => (action.payload.user),
+    refresh: null
+}, null);
+export var my_post_ids = handleActions({
+    myself: (state, action) => (action.payload.posts.map((post) => (post._id))),
+    refresh: null
+}, []);
+export var feed_end = handleActions({
+    feed_posts: (state, action) => ((!action.payload || action.payload.length == 0) ? 1 : 0),
+    refresh: 0
+}, 0);
+export var feed_ids = handleActions({
+    feed_posts: (state, action) => (action.payload.posts.map((post) => (post._id))),
+    refresh: null
+}, []);
+
+var updatePosts = (state, action) => {
+    var d = {};
+    action.payload.posts.map((post) => {d[post._id] = post});
+    return {...state, ...d};
+}
+
+export var posts = handleActions({
+    feed_posts: updatePosts,
+    myself: updatePosts,
+    posts: updatePosts
+}, {})

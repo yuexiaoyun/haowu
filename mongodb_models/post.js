@@ -8,7 +8,9 @@ var schema = new mongoose.Schema({
     audio_id: { type: String },
     length: { type: Number },
     w: { type: Number },
-    h: { type: Number }
+    h: { type: Number },
+    likes: { type: [String] },
+    reads: { type: [mongoose.Schema.ObjectId] }
 });
 
 schema.index({ openid: 1 });
