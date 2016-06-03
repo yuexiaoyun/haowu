@@ -30,22 +30,26 @@ class Me extends React.Component {
     componentWillUnmount() {
         this.props.dispatch(createAction('me_scroll')(window.scrollTop));
     }
+    current_myself_tab = (index) => {
+        this.props.dispatch(createAction('current_myself_tab')(index));
+    }
     render() {
-        var { myself, my_post_ids, posts } = this.props;
+        var { myself, my_post_ids, posts, current_myself_tab, my_badge } = this.props;
         var my_posts = my_post_ids.map((id) => posts[id]);
         return (
             <div>
                 { myself && <UserTopCard user={myself} /> }
                 <div style={styles.d3}>
-                    <div style={styles.d30}>
+                    <div style={styles.d30} onClick={()=>this.current_myself_tab(0)}>
                         <div>分享动态</div>
-                        <div style={styles.d30u} />
+                        { current_myself_tab == 0 && <div style={styles.d30u} /> }
                     </div>
-                    <div style={styles.d30}>
-                        <div>互动区</div>
+                    <div style={styles.d30} onClick={()=>this.current_myself_tab(1)}>
+                        <div>互动区{(my_badge > 0) && <span className="badge">{my_badge}</span>}</div>
+                        { current_myself_tab == 1 && <div style={styles.d30u} /> }
                     </div>
                 </div>
-                <FeedList posts={my_posts} />
+                { current_myself_tab == 0 && <FeedList posts={my_posts} /> }
             </div>
         );
     }
@@ -55,7 +59,9 @@ module.exports = connect(state=>({
     myself: state.myself,
     my_post_ids: state.my_post_ids,
     posts: state.posts,
-    me_scroll: state.me_scroll
+    me_scroll: state.me_scroll,
+    current_myself_tab: state.current_myself_tab,
+    my_badge: state.my_badge
 }))(Me);
 
 var styles = {

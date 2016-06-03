@@ -113,9 +113,13 @@ class Pub extends React.Component {
                                 fetch(url, {credentials: 'same-origin'})
                                     .then(parse_online_json)
                                     .then(data => {
-                                        this.props.dispatch(createAction('refresh')());
-                                        hashHistory.go(-1);
                                         resolve('发布成功');
+                                        try {
+                                            this.props.dispatch(createAction('refresh')());
+                                        } catch(err) {
+                                            alert(err);
+                                        }
+                                        hashHistory.go(-1);
                                     }).catch(e => {
                                         reject(e);
                                     });

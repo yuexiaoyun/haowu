@@ -23,24 +23,28 @@ export var current_tab = handleActions({
 }, 0);
 export var myself = handleActions({
     myself: (state, action) => (action.payload.user),
-    refresh: null
+    refresh: (state, action) => (null)
 }, null);
 export var my_post_ids = handleActions({
     myself: (state, action) => (action.payload.posts.map((post) => (post._id))),
-    refresh: null
+    refresh: (state, action) => ([])
 }, []);
 export var feed_end = handleActions({
     feed_posts: (state, action) => ((action.payload.posts.length == 0) ? 1 : 0),
-    refresh: 0
+    refresh: (state, action) => (0)
 }, 0);
 export var feed_ids = handleActions({
     feed_posts: (state, action) => {
         var ids = action.payload.posts.map((post) => (post._id));
         return [...state, ...ids];
     },
-    refresh: null
+    refresh: (state, action) => ([])
 }, []);
+export var current_myself_tab = handleActions({
+    current_myself_tab: (state, action) => (action.payload)
+}, 0);
 export var my_badge = handleActions({
+    current_myself_tab: (state, action) => (action.payload == 1 ? 0 : state)
 }, 2);
 
 var updatePosts = (state, action) => {
@@ -48,7 +52,7 @@ var updatePosts = (state, action) => {
     action.payload.posts.map((post) => {
         if (action.payload.user)
             post.user = action.payload.user;
-        d[post._id] = post
+        d[post._id] = post;
     });
     return {...state, ...d};
 }
