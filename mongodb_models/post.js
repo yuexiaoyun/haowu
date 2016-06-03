@@ -9,8 +9,8 @@ var schema = new mongoose.Schema({
     length: { type: Number },
     w: { type: Number },
     h: { type: Number },
-    likes: { type: [String] },
-    reads: { type: [mongoose.Schema.ObjectId] }
+    likes: [{ type: String }],
+    reads: [{ type: String }]
 });
 
 schema.index({ openid: 1 });

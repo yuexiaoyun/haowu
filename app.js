@@ -41,7 +41,6 @@ app.use(function *(next) {
         var url = oauth.getAuthorizeURL(origin, 'state', 'snsapi_userinfo');
         this.redirect(url);
     } else {
-        console.log(this.session.openid);
         yield *next;
     }
 });

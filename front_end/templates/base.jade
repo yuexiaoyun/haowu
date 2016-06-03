@@ -12,5 +12,6 @@ html
     #toast_container
   script(src='/static/scripts/jweixin.js')
   script.
+    window.openid='!{openid}';
     wx.config(!{ js_params });
   script(src='/static/scripts/bundle.min.js?1')

@@ -4,6 +4,7 @@ var User = require('../mongodb_models/user').Model;
 var Post = require('../mongodb_models/post').Model;
 
 var qiniu = require('../utility/qiniu');
+var mongoose = require('mongoose');
 
 router.get('/pub_post', function *() {
     console.log('here');
@@ -70,8 +71,8 @@ router.get('/fetch_posts', function *() {
 router.get('/like', function *() {
     var q = { _id: this.query._id };
     var d = {
-        likes: {
-            $addToSet: this.session.openid
+        $addToSet: {
+            likes: this.session.openid
         }
     };
     this.body = yield {
@@ -80,11 +81,11 @@ router.get('/like', function *() {
     };
 });
 
-router.get('/unlike', function *() {
+router.get('/read', function *() {
     var q = { _id: this.query._id };
     var d = {
-        likes: {
-            $removeFromSet: this.session.openid
+        $addToSet: {
+            reads: this.session.openid
         }
     };
     this.body = yield {

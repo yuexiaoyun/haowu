@@ -51,7 +51,8 @@ module.exports = function *() {
         var params = {};
     }
     this.render('base', {
-        js_params: JSON.stringify(params)
+        js_params: JSON.stringify(params),
+        openid: this.session.openid
     });
     console.log(this.body);
 }

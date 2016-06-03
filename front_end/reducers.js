@@ -50,20 +50,41 @@ export var posts = handleActions({
     posts: updatePosts,
 }, {});
 
+var updateLikes = (state, action) => {
+    var d = {};
+    action.payload.posts.map((post) => {
+        if (post.likes && post.likes.indexOf(window.openid) >= 0)
+            d[post._id] = 1;
+        else
+            d[post._id] = 0;
+    });
+    return {...state, ...d};
+}
 export var likes = handleActions({
+    feed_posts: updateLikes,
+    myself: updateLikes,
+    posts: updateLikes,
     like: (state, action) => {
         var d = {};
         d[action.payload] = 1;
         return {...state, ...d}
-    },
-    unlike:  (state, action) => {
-        var d = {};
-        d[action.payload] = 0;
-        return {...state, ...d}
     }
 }, {});
 
+var updateReads = (state, action) => {
+    var d = {};
+    action.payload.posts.map((post) => {
+        if (post.reads && post.reads.indexOf(window.openid) >= 0)
+            d[post._id] = 1;
+        else
+            d[post._id] = 0;
+    });
+    return {...state, ...d};
+}
 export var reads = handleActions({
+    feed_posts: updateReads,
+    myself: updateReads,
+    posts: updateReads,
     play_sound: (state, action) => {
         var d = {};
         d[action.payload] = 1;

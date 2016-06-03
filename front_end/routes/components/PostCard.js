@@ -8,6 +8,7 @@ import { connect } from 'react-redux'
 import { createAction } from 'redux-actions'
 import { soundManager } from 'soundmanager2'
 import screenSize from '../../utility/screen_size'
+import qs from 'querystring'
 
 class PostCard extends React.Component {
     constructor() {
@@ -20,6 +21,10 @@ class PostCard extends React.Component {
             this.stop_play();
         } else {
             this.props.dispatch(createAction('play_sound')(this.props.post._id));
+            var url = '/api/read?' + qs.stringify({
+                _id: this.props.post._id
+            });
+            fetch(url, {credentials: 'same-origin'});
             this.timer = setInterval(this.refresh, 10);
         }
     }
@@ -52,11 +57,12 @@ class PostCard extends React.Component {
         return h;
     }
     like = () => {
-        var { post, likes, dispatch } = this.props;
-        if (likes[post._id] == 1)
-            dispatch(createAction('unlike')(post._id));
-        else
-            dispatch(createAction('like')(post._id));
+        var { post, dispatch } = this.props;
+        dispatch(createAction('like')(post._id));
+        var url = '/api/like?' + qs.stringify({
+            _id: post._id
+        });
+        fetch(url, {credentials: 'same-origin'});
     }
     shouldComponentUpdate(nextProps, nextState) {
         return this.props.sound_id != nextProps.sound_id
