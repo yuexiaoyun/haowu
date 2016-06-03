@@ -30,17 +30,26 @@ export var my_post_ids = handleActions({
     refresh: null
 }, []);
 export var feed_end = handleActions({
-    feed_posts: (state, action) => ((!action.payload || action.payload.length == 0) ? 1 : 0),
+    feed_posts: (state, action) => ((action.payload.posts.length == 0) ? 1 : 0),
     refresh: 0
 }, 0);
 export var feed_ids = handleActions({
-    feed_posts: (state, action) => (action.payload.posts.map((post) => (post._id))),
+    feed_posts: (state, action) => {
+        var ids = action.payload.posts.map((post) => (post._id));
+        return [...state, ...ids];
+    },
     refresh: null
 }, []);
+export var my_badge = handleActions({
+}, 2);
 
 var updatePosts = (state, action) => {
     var d = {};
-    action.payload.posts.map((post) => {d[post._id] = post});
+    action.payload.posts.map((post) => {
+        if (action.payload.user)
+            post.user = action.payload.user;
+        d[post._id] = post
+    });
     return {...state, ...d};
 }
 

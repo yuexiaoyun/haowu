@@ -46,7 +46,7 @@ class Home extends React.Component {
         var { posts, feed_ids, feed_end } = this.props;
         var feed_posts = feed_ids.map((id) => posts[id]);
         return (
-            <InfiniteScroll threshold={1080} hasMore={!feed_end} loadMore={this.loadMore} Loader={<div></div>}>
+            <InfiniteScroll threshold={1080} hasMore={feed_end == 0} loadMore={this.loadMore} Loader={<div></div>}>
                 <FeedList posts={feed_posts} />
             </InfiniteScroll>
         );

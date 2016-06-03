@@ -1,4 +1,5 @@
 import React from 'react';
+import Helmet from 'react-helmet'
 import { Link, hashHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
@@ -8,11 +9,12 @@ import Me from './Me'
 
 var Tab = connect(state=>({
     current_tab: state.current_tab
-}))(({current_tab, index, className, dispatch}) => (
+}))(({current_tab, index, className, badge, dispatch}) => (
     <span className={"tab-item"} onClick={()=>{
         dispatch(createAction('current_tab')(index));
     }}>
         <span className={"setting-icon " + className + (current_tab == index ? '_selected' : '')} />
+        { badge>0 && <span className="badge">{badge}</span> }
     </span>
 ));
 
@@ -29,9 +31,10 @@ class App extends React.Component {
     }
     render() {
         try {
-            var { current_tab } = this.props;
+            var { current_tab, my_badge } = this.props;
             return (
                 <div>
+                    <Helmet title='物我' />
                     {current_tab == 0 ? <Home /> : <Me />}
                     <div style={{width: '100%', height: '2.5rem', clear:'both', overflow:'hidden'}} />
                     <nav className="bar bar-tab">
@@ -39,7 +42,7 @@ class App extends React.Component {
                         <span className={"tab-item"} onClick={this.take_photo}>
                             <span className="setting-icon image-btn_tabbar_photo"></span>
                         </span>
-                        <Tab index={1} className={"image-btn_tabbar_me"} />
+                        <Tab index={1} className={"image-btn_tabbar_me"} badge={my_badge}/>
                     </nav>
                 </div>
             );
@@ -50,5 +53,6 @@ class App extends React.Component {
 }
 
 export default connect(state=>({
-    current_tab: state.current_tab
+    current_tab: state.current_tab,
+    my_badge: state.my_badge
 }))(App);

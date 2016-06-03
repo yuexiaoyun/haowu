@@ -1,4 +1,5 @@
 import React from 'react';
+import Helmet from 'react-helmet'
 import { Link, hashHistory } from 'react-router';
 import FeedList from './components/FeedList';
 import UserTopCard from './components/UserTopCard';

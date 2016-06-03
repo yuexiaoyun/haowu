@@ -1,4 +1,5 @@
 import React from 'react';
+import Helmet from 'react-helmet'
 import { Link, hashHistory } from 'react-router';
 import FeedList from './components/FeedList';
 import UserTopCard from './components/UserTopCard';
@@ -32,6 +33,7 @@ class Detail extends React.Component {
         var user_posts = ids.map((id) => posts[id]);
         return (
             <div className='content'>
+                { user && <Helmet title={user.nickname + '的主页'} />}
                 { user && <UserTopCard user={user} /> }
                 <div style={styles.d3} />
                 <FeedList posts={user_posts} />
