@@ -1,7 +1,7 @@
 import React from 'react';
 import CssButton from './CssButton';
 
-module.exports = ({user}) => {
+module.exports = ({user, sub, subbed}) => {
     return (
         <div>
             { false && <div style={styles.d0}>
@@ -20,6 +20,11 @@ module.exports = ({user}) => {
             <div style={styles.d2}>
                 <img src={user.headimgurl} style={styles.avatar}></img>
                 <div style={styles.n}>{user.nickname}</div>
+                { user.openid != window.openid && <div style={styles.d20}>
+                    <span style={styles.sub} onClick={sub}>{subbed ? '已订阅' : '订阅'}</span>
+                </div> || <div style={styles.d20}>
+                    <span style={styles.sub}>{`${user.subids ? user.subids.length : 0}人订阅`}</span>
+                </div>}
             </div>
         </div>
     );
@@ -53,6 +58,9 @@ var styles = {
         marginBottom: 24,
         width: '100%'
     },
+    d20: {
+        marginTop: 24
+    },
     d11: {
         display: 'table-cell'
     },
@@ -73,5 +81,15 @@ var styles = {
         marginTop: 20,
         fontSize: 17,
         color: '#000000'
+    },
+    sub: {
+        display: 'inline-block',
+        paddingLeft: 20,
+        paddingRight: 20,
+        borderRadius: 12,
+        height: 24,
+        fontSize: 12,
+        lineHeight: '24px',
+        border: '1px solid rgba(0, 0, 0, 0.15)',
     }
 }

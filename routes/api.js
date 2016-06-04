@@ -1,9 +1,11 @@
 var router = require('koa-router')();
+var conf = require('../conf');
 
 var User = require('../mongodb_models/user').Model;
 var Post = require('../mongodb_models/post').Model;
 
 var qiniu = require('../utility/qiniu');
+var wechat = require('../utility/wechat').api;
 var mongoose = require('mongoose');
 
 router.get('/pub_post', function *() {
@@ -75,9 +77,66 @@ router.get('/like', function *() {
             likes: this.session.openid
         }
     };
+    var update = yield Post.update(q, d);
+    console.log(update);
+    if (update.nModified > 0) {
+        var doc = yield Post.findOne({_id: this.query._id}).select('openid').exec();
+        // TODO: 自己给自己点赞不发通知
+        yield wechat.sendTemplate(
+            doc.openid,
+            'FRTOKz43duOUsJI2BQdQGSd4qpl0r7g0RvEJewx5zkA',
+            conf.site + '/app/home',
+            '#FF0000', {
+                first: {
+                    value: this.session.userInfo.nickname,
+                    color: "#173177"
+                }
+            });
+    }
     this.body = yield {
         result: 'ok',
-        update: Post.update(q, d)
+        update
+    };
+});
+
+router.get('/sub', function *() {
+    var q = { openid: this.query.openid };
+    var d = {
+        $addToSet: {
+            subids: this.session.openid
+        }
+    };
+    var update = yield User.update(q, d);
+    console.log(update);
+    if (update.nModified > 0) {
+        yield wechat.sendTemplate(
+            this.query.openid,
+            '3JFrw9e6GFGUKjAHBWZCvSYyKl9u-JGIf7Idn5VSolU',
+            conf.site + '/app/home',
+            '#FF0000', {
+                first: {
+                    value: this.session.userInfo.nickname,
+                    color: "#173177"
+                }
+            });
+    }
+    this.body = yield {
+        result: 'ok',
+        update
+    };
+});
+
+router.get('/unsub', function *() {
+    var q = { openid: this.query.openid };
+    var d = {
+        $pull: {
+            subids: this.session.openid
+        }
+    };
+    var update = yield User.update(q, d);
+    this.body = yield {
+        result: 'ok',
+        update
     };
 });
 

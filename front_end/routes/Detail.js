@@ -21,20 +21,50 @@ class Detail extends React.Component {
         showProgress('加载中', fetch(url, {credentials:'same-origin'})
             .then(parse_online_json)
             .then((data) => {
-                this.setState({ids: data.posts.map((post) => (post._id)), user: data.user});
+                try {
+                    this.setState({
+                        ids: data.posts.map((post) => (post._id)),
+                        user: data.user,
+                        subbed: data.user.subids && data.user.subids.indexOf(window.openid) >= 0
+                    });
+                } catch(err) {
+                    alert(err);
+                }
                 return data;
             }).then(createAction('posts'))
             .then(this.props.dispatch)
             .catch(PopupHelper.toast));
     }
+    sub = () => {
+        var id = this.props.params.id;
+        var url = '/api/sub?openid=' + id;
+        showProgress('订阅中', fetch(url, {credentials:'same-origin'})
+            .then(parse_online_json)
+            .then(() => {
+                this.setState({subbed: true});
+                return null;
+            })
+            .catch(PopupHelper.toast));
+    }
+    unsub = () => {
+        var id = this.props.params.id;
+        var url = '/api/unsub?openid=' + id;
+        showProgress('取消订阅中', fetch(url, {credentials:'same-origin'})
+            .then(parse_online_json)
+            .then(() => {
+                this.setState({subbed: false});
+                return null;
+            })
+            .catch(PopupHelper.toast));
+    }
     render() {
-        var { user, ids } = this.state;
+        var { user, ids, subbed } = this.state;
         var { posts } = this.props;
         var user_posts = ids.map((id) => posts[id]);
         return (
             <div className='content'>
                 { user && <Helmet title={user.nickname + '的主页'} />}
-                { user && <UserTopCard user={user} /> }
+                { user && <UserTopCard user={user} subbed={subbed} sub={subbed?this.unsub:this.sub}/> }
                 <div style={styles.d3} />
                 <FeedList posts={user_posts} />
             </div>
