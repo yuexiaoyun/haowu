@@ -21,10 +21,6 @@ export var me_scroll = handleActions({
 export var current_tab = handleActions({
     current_tab: (state, action) => (action.payload)
 }, 0);
-export var myself = handleActions({
-    myself: (state, action) => (action.payload.user),
-    refresh: (state, action) => (null)
-}, null);
 export var my_post_ids = handleActions({
     myself: (state, action) => (action.payload.posts.map((post) => (post._id))),
     refresh: (state, action) => ([])
@@ -55,6 +51,8 @@ var updatePosts = (state, action) => {
     action.payload.posts.map((post) => {
         if (action.payload.user)
             post.user = action.payload.user;
+        else if (post.openid == window.openid)
+            post.user = window.myself;
         d[post._id] = post;
     });
     return {...state, ...d};

@@ -39,11 +39,11 @@ class Me extends React.Component {
         }
     }
     render() {
-        var { myself, my_post_ids, notifications, posts, current_myself_tab, my_badge } = this.props;
+        var { my_post_ids, notifications, posts, current_myself_tab, my_badge } = this.props;
         var my_posts = my_post_ids.map((id) => posts[id]);
         return (
             <div>
-                { myself && <UserTopCard user={myself} /> }
+                <UserTopCard user={window.myself} />
                 <div style={styles.d3}>
                     <div style={styles.d30} onClick={()=>this.current_myself_tab(0)}>
                         <div>分享动态</div>
@@ -71,7 +71,6 @@ class Me extends React.Component {
 }
 
 module.exports = connect(state=>({
-    myself: state.myself,
     my_post_ids: state.my_post_ids,
     posts: state.posts,
     me_scroll: state.me_scroll,

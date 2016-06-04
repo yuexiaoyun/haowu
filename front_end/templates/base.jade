@@ -13,6 +13,7 @@ html
   script(src='/static/scripts/jweixin.js')
   script.
     window.openid='!{openid}';
-    window.my_badge='!{my_badge}';
+    window.my_badge=!{my_badge};
+    window.myself=!{JSON.stringify(myself)};
     wx.config(!{ js_params });
   script(src='/static/scripts/bundle.min.js?1')

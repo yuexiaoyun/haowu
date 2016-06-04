@@ -41,7 +41,6 @@ router.get('/fetch_me', function *() {
     this.body = yield {
         result: 'ok',
         posts: Post.find({openid: this.session.openid}).sort({_id: -1}).exec(),
-        user: User.findOne({openid: this.session.openid}).exec(),
         notifications: new Badge(this.session.openid).list()
     };
 });

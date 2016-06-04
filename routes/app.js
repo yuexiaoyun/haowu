@@ -1,6 +1,7 @@
 var api = require('../utility/wechat').api;
 var conf = require('../conf');
 var Badge = require('../models/Badge');
+var User = require('../mongodb_models/user').Model;
 
 module.exports = function *() {
     var param = {
@@ -54,6 +55,7 @@ module.exports = function *() {
     this.render('base', {
         js_params: JSON.stringify(params),
         openid: this.session.openid,
+        myself: yield User.findOne({openid: this.session.openid}).exec(),
         my_badge: yield new Badge(this.session.openid).count()
     });
     console.log(this.body);
