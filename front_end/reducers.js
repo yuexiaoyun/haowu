@@ -32,10 +32,14 @@ export var feed_end = handleActions({
 export var feed_ids = handleActions({
     feed_posts: (state, action) => {
         var ids = action.payload.posts.map((post) => (post._id));
-        return [...state, ...ids];
+        return action.meta == 'reload' ? ids : [...state, ...ids];
     },
     refresh: (state, action) => ([])
 }, []);
+export var feed_reloading = handleActions({
+    feed_reloading: (state, action) => (action.payload),
+    feed_posts: (state, action) => (action.meta == 'reload' ? 0: state)
+}, 0);
 export var current_myself_tab = handleActions({
     current_myself_tab: (state, action) => (action.payload)
 }, 0);

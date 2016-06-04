@@ -35,14 +35,26 @@ class App extends React.Component {
             return (
                 <div>
                     <Helmet title='物我' />
-                    {current_tab == 0 ? <Home /> : <Me />}
+                    {current_tab == 0 ? <Home ref={(c) => {this._home = c}}/> : <Me />}
                     <div style={{width: '100%', height: '2.5rem', clear:'both', overflow:'hidden'}} />
                     <nav className="bar bar-tab">
-                        <Tab index={0} className={"image-btn_tabbar_home"} />
+                        <span className={"tab-item"} onClick={()=>{
+                            if (current_tab == 0) {
+                                this._home.getWrappedInstance().reload();
+                            }
+                            this.props.dispatch(createAction('current_tab')(0));
+                        }}>
+                            <span className={"setting-icon image-btn_tabbar_home" + (current_tab == 0 ? '_selected' : '')} />
+                        </span>
                         <span className={"tab-item"} onClick={this.take_photo}>
                             <span className="setting-icon image-btn_tabbar_photo"></span>
                         </span>
-                        <Tab index={1} className={"image-btn_tabbar_me"} badge={my_badge}/>
+                        <span className={"tab-item"} onClick={()=>{
+                            this.props.dispatch(createAction('current_tab')(1));
+                        }}>
+                            <span className={"setting-icon image-btn_tabbar_me" + (current_tab == 1 ? '_selected' : '')} />
+                            { my_badge>0 && <span className="badge">{my_badge}</span> }
+                        </span>
                     </nav>
                 </div>
             );
