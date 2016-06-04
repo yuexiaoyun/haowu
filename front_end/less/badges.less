@@ -3,17 +3,18 @@
 // --------------------------------------------------
 
 .badge {
-  display: inline-block;
-  padding: 0.1rem 0.45rem 0.15rem;
-  font-size: 0.6rem;
-  line-height: 1;
-  color: @color-text;
-  background-color: rgba(0, 0, 0,.15);
-  border-radius: 5rem;
-
-  // Inverted badges have no background.
-  &.badge-inverted {
-    padding: 0 0.25rem 0 0;
-    background-color: transparent;
-  }
+  position: absolute;
+  top: 13px;
+  left: 50%;
+  z-index: 100;
+  height: 16px;
+  min-width: 16px;
+  padding: 0 4px;
+  font-size: 12px;
+  line-height: .8rem;
+  color: white;
+  vertical-align: top;
+  background: red;
+  border-radius: 10px;
+  margin-left: 20px;
 }

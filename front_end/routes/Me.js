@@ -90,6 +90,7 @@ var styles = {
         borderBottom: '1px solid rgba(0, 0, 0, 0.15)'
     },
     d30: {
+        position: 'relative',
         display: 'table-cell',
         paddingTop: 12,
         textAlign: 'center',
