@@ -151,7 +151,7 @@ var styles = {
         paddingLeft: 6,
         paddingTop: 4,
         paddingBottom: 4,
-        backgroundColor: '#ff3333'
+        backgroundColor: '#ff6b6b'
     }),
     audio_length: {
         marginLeft: 15,

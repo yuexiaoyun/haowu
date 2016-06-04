@@ -148,7 +148,7 @@ class Pub extends React.Component {
                         <img src={pic_id} className="bgTranslate"/>
                     </div >
                 </div>
-                <div style={{backgroundColor:'#ff3333',width:''+ progress + '%',height:3,marginTop:-8}}></div>
+                <div style={{backgroundColor:'#ff6b6b',width:''+ progress + '%',height:3,marginTop:-8}}></div>
                 <div style={styles.d()}>
                     <div style={styles.dd}>
                     <div style={{display:'table-cell', width:0, height:'100%'}} />

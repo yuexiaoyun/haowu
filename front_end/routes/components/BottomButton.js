@@ -9,7 +9,7 @@ export default class BottomButton extends React.Component {
                 height: "49px",
                 lineHeight: "49px",
                 margin: "10px auto 0",
-                background: this.props.disabled ? "#ccc" : "#ff3333",
+                background: this.props.disabled ? "#ccc" : "#ff6b6b",
                 color: "#fff",
                 fontSize: "1.1em",
                 textAlign: "center",

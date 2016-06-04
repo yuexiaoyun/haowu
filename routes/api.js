@@ -97,7 +97,7 @@ router.get('/like', function *() {
         yield wechat.sendTemplate(
             doc.openid,
             'FRTOKz43duOUsJI2BQdQGSd4qpl0r7g0RvEJewx5zkA',
-            conf.site + '/app/home',
+            conf.site + '/app/notification',
             '#FF0000', {
                 first: {
                     value: this.session.userInfo.nickname,
@@ -134,7 +134,7 @@ router.get('/sub', function *() {
         yield wechat.sendTemplate(
             this.query.openid,
             '3JFrw9e6GFGUKjAHBWZCvSYyKl9u-JGIf7Idn5VSolU',
-            conf.site + '/app/home',
+            conf.site + '/app/notification',
             '#FF0000', {
                 first: {
                     value: this.session.userInfo.nickname,
