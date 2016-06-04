@@ -55,6 +55,16 @@ router.get('/fetch_detail', function *() {
     console.log(this.body);
 });
 
+router.get('/fetch_subs', function *() {
+    var user = yield User.findOne({openid: this.session.openid}).select('subids').exec();
+    var subids = user.subids || [];
+    this.body = yield {
+        result: 'ok',
+        users: yield User.find({openid: {$in: subids}}).select('openid headimgurl nickname').exec()
+    };
+    console.log(this.body);
+});
+
 router.get('/fetch_posts', function *() {
     var q = this.query.beforeid ? {
         _id: { $lt: this.query.beforeid }

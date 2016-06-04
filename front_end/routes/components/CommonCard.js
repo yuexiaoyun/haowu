@@ -4,8 +4,11 @@ import { Link, hashHistory } from 'react-router';
 
 export default ({openid, avatar, txt, pic_id, onClick}) => {
     return (
-        <div style={styles.d}>
-            <div style={styles.d1} onClick={()=>hashHistory.push('detail/' + openid)}>
+        <div style={styles.d} onClick={onClick || ()=>{}}>
+            <div style={styles.d1} onClick={(e)=>{
+                e.stopPropagation();
+                hashHistory.push('detail/' + openid);
+            }}>
                 <img src={avatar} style={styles.avatar} />
             </div>
             <div style={styles.d2}>

@@ -11,6 +11,7 @@ import { createStore, combineReducers } from 'redux'
 import App from './routes/App'
 import Pub from './routes/Pub'
 import Detail from './routes/Detail'
+import SubList from './routes/SubList'
 
 import * as reducers from './reducers'
 import PopupHelper from './utility/PopupHelper'
@@ -24,6 +25,7 @@ render(
             <Route path="/detail/:id" component={Detail} />
             <Route path="/pub" component={Pub} />
             <Route path="/home" component={App} />
+            <Route path="/sub_list" component={SubList} />
         </Router>
     </Provider>,
     document.getElementById('app')

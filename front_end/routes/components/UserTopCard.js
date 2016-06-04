@@ -1,5 +1,6 @@
 import React from 'react';
 import CssButton from './CssButton';
+import { Link, hashHistory } from 'react-router';
 
 module.exports = ({user, sub, subbed}) => {
     return (
@@ -23,7 +24,9 @@ module.exports = ({user, sub, subbed}) => {
                 { user.openid != window.openid && <div style={styles.d20}>
                     <span style={styles.sub} onClick={sub}>{subbed ? '已订阅' : '订阅'}</span>
                 </div> || <div style={styles.d20}>
-                    <span style={styles.sub}>{`${user.subids ? user.subids.length : 0}人订阅`}</span>
+                    <span style={styles.sub} onClick={()=>(user.subids&& user.subids.length>0 && hashHistory.push('sub_list'))}>
+                        {`${user.subids ? user.subids.length : 0}人订阅`}
+                    </span>
                 </div>}
             </div>
         </div>
