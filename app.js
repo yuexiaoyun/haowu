@@ -19,7 +19,9 @@ var jade = new Jade({
 })
 
 require('koa-qs')(app);
-require('babel-core/register')();
+require('babel/register')({
+    stage: 0
+});
 
 app.keys = [conf.secret];
 app.use(session({

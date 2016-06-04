@@ -45,7 +45,10 @@ export var current_myself_tab = handleActions({
 }, 0);
 export var my_badge = handleActions({
     current_myself_tab: (state, action) => (action.payload == 1 ? 0 : state)
-}, 2);
+}, window.my_badge);
+export var notifications = handleActions({
+    myself: (state, action) => (action.payload.notifications)
+}, []);
 
 var updatePosts = (state, action) => {
     var d = {};

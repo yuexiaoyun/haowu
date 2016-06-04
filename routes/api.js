@@ -3,6 +3,8 @@ var conf = require('../conf');
 
 var User = require('../mongodb_models/user').Model;
 var Post = require('../mongodb_models/post').Model;
+var Notification = require('../mongodb_models/notification').Model;
+var Badge = require('../models/Badge');
 
 var qiniu = require('../utility/qiniu');
 var wechat = require('../utility/wechat').api;
@@ -39,7 +41,8 @@ router.get('/fetch_me', function *() {
     this.body = yield {
         result: 'ok',
         posts: Post.find({openid: this.session.openid}).sort({_id: -1}).exec(),
-        user: User.findOne({openid: this.session.openid}).exec()
+        user: User.findOne({openid: this.session.openid}).exec(),
+        notifications: new Badge(this.session.openid).list()
     };
 });
 
@@ -92,6 +95,16 @@ router.get('/like', function *() {
                     color: "#173177"
                 }
             });
+        var query = {
+            openid: doc.openid,
+            openid2: this.session.openid,
+            type: 'like',
+            target: this.query._id
+        }
+        console.log(yield Notification.update(query, {
+            ...query,
+            uptime: new Date()
+        }, { upsert: true }));
     }
     this.body = yield {
         result: 'ok',
@@ -119,6 +132,15 @@ router.get('/sub', function *() {
                     color: "#173177"
                 }
             });
+        var query = {
+            openid: this.query.openid,
+            openid2: this.session.openid,
+            type: 'sub'
+        }
+        console.log(yield Notification.update(query, {
+            ...query,
+            uptime: new Date()
+        }, { upsert: true }));
     }
     this.body = yield {
         result: 'ok',
@@ -152,6 +174,5 @@ router.get('/read', function *() {
         update: Post.update(q, d)
     };
 });
-
 
 module.exports = router.routes();

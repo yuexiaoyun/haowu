@@ -13,7 +13,8 @@ var schema = new mongoose.Schema({
     country: { type: String },
     headimgurl: { type: String },
     privilege: [{ type: String }],
-    subids: { type: [String] }
+    subids: { type: [String] },
+    clear_badge: { type: Date }
 });
 
 schema.index({ openid: 1 }, { unique: 1});
