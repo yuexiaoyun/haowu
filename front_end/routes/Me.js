@@ -10,6 +10,31 @@ import { parse_online_json } from '../utility/fetch_utils';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
 
+class Notifications extends React.Component {
+    componentDidMount() {
+        var { new_count } = this.props;
+        if (new_count > 0)
+            fetch('/api/clear_badge', {credentials:'same-origin'});
+    }
+    componentWillUnmount() {
+        this.props.dispatch(createAction('clear_badge2')());
+    }
+    render() {
+        var { notifications, new_count } = this.props;
+        return <div>{ notifications && notifications.map(
+            (n, i) => {
+                return <CommonCard
+                    openid={n.openid2}
+                    avatar={n.user.headimgurl}
+                    txt={`${n.user.nickname} ${n.type=='like' ? '赞' : '订阅'}了你`}
+                    pic_id={n.type == 'like' ? n.post.pic_id : null}
+                    new_item={i < new_count}
+                />;
+            }
+        )}</div>;
+    }
+}
+
 class Me extends React.Component {
     constructor() {
         super();
@@ -31,13 +56,9 @@ class Me extends React.Component {
     }
     current_myself_tab = (index) => {
         this.props.dispatch(createAction('current_myself_tab')(index));
-        if (index == 1) {
-            var url = '/api/clear_badge';
-            fetch(url, {credentials:'same-origin'});
-        }
     }
     render() {
-        var { my_post_ids, notifications, posts, current_myself_tab, my_badge } = this.props;
+        var { my_post_ids, notifications, posts, current_myself_tab, my_badge, my_badge2 } = this.props;
         var { err } = this.state;
         var my_posts = my_post_ids ? my_post_ids.map((id) => posts[id]) : [];
         return (
@@ -55,16 +76,11 @@ class Me extends React.Component {
                 </div>
                 { !my_post_ids && !err && <Loader /> }
                 { current_myself_tab == 0 && <FeedList posts={my_posts} /> }
-                { current_myself_tab == 1 && notifications && notifications.map(
-                    (n) => {
-                        return <CommonCard
-                            openid={n.openid2}
-                            avatar={n.user.headimgurl}
-                            txt={`${n.user.nickname} ${n.type=='like' ? '赞' : '订阅'}了你`}
-                            pic_id={n.type == 'like' ? n.post.pic_id : null}
-                        />;
-                    }
-                )}
+                { current_myself_tab == 1 &&
+                    <Notifications
+                        notifications={notifications}
+                        new_count={my_badge2}
+                        dispatch={this.props.dispatch}/> }
             </div>
         );
     }
@@ -76,6 +92,7 @@ module.exports = connect(state=>({
     me_scroll: state.me_scroll,
     current_myself_tab: state.current_myself_tab,
     my_badge: state.my_badge,
+    my_badge2: state.my_badge2,
     notifications: state.notifications
 }))(Me);
 
@@ -85,8 +102,8 @@ var styles = {
         width: '100%',
         height: 44,
         tableLayout: 'fixed',
-        borderTop: '1px solid rgba(0, 0, 0, 0.15)',
-        borderBottom: '1px solid rgba(0, 0, 0, 0.15)'
+        borderTop: '1px solid #dfdfdd',
+        borderBottom: '1px solid #dfdfdd'
     },
     d30: {
         position: 'relative',

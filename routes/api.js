@@ -78,8 +78,14 @@ router.get('/fetch_posts', function *() {
         post.user = user;
         posts.push(post);
     }
-    console.log(posts.length);
+    console.log(posts);
     this.body = { result: 'ok', posts: posts };
+});
+
+router.get('/clear_badge', function *() {
+    var clear = yield new Badge(this.session.openid).clear();
+    console.log(clear);
+    this.body = { result: 'ok', clear: clear };
 });
 
 router.get('/like', function *() {

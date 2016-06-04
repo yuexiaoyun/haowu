@@ -79,6 +79,6 @@ var styles = {
     d3: {
         width: '100%',
         height: 1,
-        borderBottom: '1px solid rgba(0, 0, 0, 0.15)'
+        borderBottom: '1px solid #dfdfdd'
     }
 };

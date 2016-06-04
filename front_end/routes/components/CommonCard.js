@@ -2,9 +2,9 @@ import React from 'react';
 import fconf from '../../fconf';
 import { Link, hashHistory } from 'react-router';
 
-export default ({openid, avatar, txt, pic_id, onClick}) => {
+export default ({openid, avatar, txt, pic_id, new_item, onClick}) => {
     return (
-        <div style={styles.d} onClick={onClick || ()=>{}}>
+        <div style={styles.d(new_item)} onClick={onClick || ()=>{}}>
             <div style={styles.d1} onClick={(e)=>{
                 e.stopPropagation();
                 hashHistory.push('detail/' + openid);
@@ -22,11 +22,12 @@ export default ({openid, avatar, txt, pic_id, onClick}) => {
 }
 
 var styles = {
-    d: {
+    d: (new_item) => ({
         height: 60,
         width: '100%',
-        borderBottom: '1px solid rgba(0, 0, 0, 0.15)'
-    },
+        borderBottom: '1px solid #dfdfdd',
+        backgroundColor: new_item ? '#f1e8e8' : undefined
+    }),
     d1: {
         float: 'left'
     },
