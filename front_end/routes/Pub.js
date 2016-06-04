@@ -69,6 +69,7 @@ class Pub extends React.Component {
                 alert(JSON.stringify(res));
             }
         });
+        this.setState({recording: null});
     }
     play_audio = () => {
         var { audio_id } = this.state;
@@ -114,23 +115,19 @@ class Pub extends React.Component {
                                     .then(parse_online_json)
                                     .then(data => {
                                         resolve('发布成功');
-                                        try {
-                                            this.props.dispatch(createAction('refresh')());
-                                        } catch(err) {
-                                            alert(err);
-                                        }
+                                        this.props.dispatch(createAction('refresh')());
                                         hashHistory.go(-1);
                                     }).catch(e => {
-                                        reject(e);
+                                        resolve('发布失败');
                                     });
                             },
                             fail: res => {
-                                reject(JSON.stringify(res));
+                                resolve('发布失败');
                             }
                         });
                     },
                     fail: res => {
-                        reject(JSON.stringify(res));
+                        resolve('发布失败');
                     }
                 });
             }));

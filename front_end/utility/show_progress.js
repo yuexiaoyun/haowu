@@ -1,13 +1,8 @@
 import PopupHelper from './PopupHelper';
 
 module.exports = function(tips, promise) {
-    var state = 0;
-    setTimeout(()=>{
-        if (state == 0) {
-            PopupHelper.showProgressDialog(tips);
-            state = 1;
-        }
-    }, 200);
+    var state = 1;
+    PopupHelper.showProgressDialog(tips);
     promise.then((r)=>{
         if (state == 1) {
             PopupHelper.hideProgressDialog();
