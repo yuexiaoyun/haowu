@@ -31,7 +31,7 @@ class PostCard extends React.Component {
     refresh = () => {
         var playing = this.props.sound_id == this.props.post._id;
         var d = playing ? (new Date() - this.props.sound_playing) : 250;
-        var i = Math.floor(d / 100) % 3 + 1;
+        var i = Math.floor(d / 300) % 3 + 1;
         this.setState({i : i});
         if (!playing)
             clearInterval(this.timer);
@@ -94,7 +94,7 @@ class PostCard extends React.Component {
                 <div style={styles.d1}>
                     <span style={styles.audio(me_read)} onClick={this.play_audio}>
                         <CssButton
-                            className={"image-btn_home_play"+i}
+                            className={"image-btn_home_play"+ (playing ? i : 3)}
                             width={16}
                             height={16}/>
                         <span style={styles.audio_length}>{`${length}"`}</span>
@@ -138,7 +138,7 @@ var styles = {
         width: '100%'
     },
     d2: {
-        display: 'table',
+        width: '100%',
         paddingLeft: 12,
         paddingTop: 8,
         paddingBottom: 12,
@@ -151,7 +151,7 @@ var styles = {
         paddingLeft: 6,
         paddingTop: 4,
         paddingBottom: 4,
-        backgroundColor: read == 1 ? '#cccccc' : '#ff3333',
+        backgroundColor: '#ff3333'
     }),
     audio_length: {
         marginLeft: 15,
@@ -167,14 +167,15 @@ var styles = {
         paddingRight: 10
     },
     avatar: {
-        display: 'table-cell',
+        float: 'left',
         width: 34,
         height: 34,
         overflow: 'hidden',
         borderRadius: '50%'
     },
     name: {
-        display: 'table-cell',
+        align: 'left',
+        textAlign: 'left',
         lineHeight: '34px',
         paddingLeft: 5,
         verticalAlign: 'middle',
