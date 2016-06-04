@@ -24,7 +24,7 @@ export var current_tab = handleActions({
 export var my_post_ids = handleActions({
     myself: (state, action) => (action.payload.posts.map((post) => (post._id))),
     refresh: (state, action) => ([])
-}, []);
+}, null);
 export var feed_end = handleActions({
     feed_posts: (state, action) => ((action.payload.posts.length == 0) ? 1 : 0),
     refresh: (state, action) => (0)

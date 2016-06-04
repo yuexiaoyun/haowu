@@ -5,9 +5,8 @@ import FeedList from './components/FeedList';
 import UserTopCard from './components/UserTopCard';
 import CommonCard from './components/CommonCard';
 import CssButton from './components/CssButton';
+import Loader from './components/Loader';
 import { parse_online_json } from '../utility/fetch_utils';
-import PopupHelper from '../utility/PopupHelper';
-import showProgress from '../utility/show_progress';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
 
@@ -17,13 +16,12 @@ class Me extends React.Component {
         this.state = {};
     }
     componentDidMount() {
-        if (!this.props.myself) {
-            var url = '/api/fetch_me';
-            showProgress('加载中', fetch(url, {credentials:'same-origin'})
+        if (!this.props.my_post_ids) {
+            fetch('/api/fetch_me', {credentials:'same-origin'})
                 .then(parse_online_json)
                 .then(createAction('myself'))
                 .then(this.props.dispatch)
-                .catch(PopupHelper.toast));
+                .catch((err) => this.setState({err}));
         }
         if (this.props.me_scroll)
             window.scrollTop = this.props.me_scroll;
@@ -40,7 +38,8 @@ class Me extends React.Component {
     }
     render() {
         var { my_post_ids, notifications, posts, current_myself_tab, my_badge } = this.props;
-        var my_posts = my_post_ids.map((id) => posts[id]);
+        var { err } = this.state;
+        var my_posts = my_post_ids ? my_post_ids.map((id) => posts[id]) : [];
         return (
             <div>
                 <UserTopCard user={window.myself} />
@@ -54,6 +53,7 @@ class Me extends React.Component {
                         { current_myself_tab == 1 && <div style={styles.d30u} /> }
                     </div>
                 </div>
+                { !my_post_ids && !err && <Loader /> }
                 { current_myself_tab == 0 && <FeedList posts={my_posts} /> }
                 { current_myself_tab == 1 && notifications && notifications.map(
                     (n) => {

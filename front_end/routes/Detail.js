@@ -7,6 +7,7 @@ import CssButton from './components/CssButton';
 import { parse_online_json } from '../utility/fetch_utils';
 import PopupHelper from '../utility/PopupHelper';
 import showProgress from '../utility/show_progress';
+import Loader from './components/Loader';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
 
@@ -17,8 +18,7 @@ class Detail extends React.Component {
     }
     componentDidMount() {
         var id = this.props.params.id;
-        var url = '/api/fetch_detail?openid=' + id;
-        showProgress('加载中', fetch(url, {credentials:'same-origin'})
+        fetch('/api/fetch_detail?openid=' + id, {credentials:'same-origin'})
             .then(parse_online_json)
             .then((data) => {
                 try {
@@ -33,7 +33,7 @@ class Detail extends React.Component {
                 return data;
             }).then(createAction('posts'))
             .then(this.props.dispatch)
-            .catch(PopupHelper.toast));
+            .catch((err) => this.setState({err}));
     }
     sub = () => {
         var id = this.props.params.id;
@@ -58,14 +58,15 @@ class Detail extends React.Component {
             .catch(PopupHelper.toast));
     }
     render() {
-        var { user, ids, subbed } = this.state;
+        var { user, ids, subbed, err } = this.state;
         var { posts } = this.props;
         var user_posts = ids.map((id) => posts[id]);
         return (
-            <div className='content'>
+            <div>
+                { !user && !err && <Loader /> }
                 { user && <Helmet title={user.nickname + '的主页'} />}
                 { user && <UserTopCard user={user} subbed={subbed} sub={subbed?this.unsub:this.sub}/> }
-                <div style={styles.d3} />
+                { user && <div style={styles.d3} /> }
                 <FeedList posts={user_posts} />
             </div>
         );

@@ -107,3 +107,24 @@
   background: white;
   border-radius: 4px;
 }
+@keyframes loader-animation {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+.loader {
+    padding: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #33ABF9;
+}
+.loader-circle {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+	background-size:16px 16px;
+	background-repeat: no-repeat;
+    margin-right: 6px;
+    vertical-align: sub;
+    animation: loader-animation 1s linear infinite;
+}
