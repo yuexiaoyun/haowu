@@ -21,13 +21,14 @@ class Notifications extends React.Component {
         this.props.dispatch(createAction('clear_badge2')());
     }
     render() {
-        var { notifications, new_count } = this.props;
+        var { notifications, new_count, users } = this.props;
         return <div>{ notifications && notifications.map(
             (n, i) => {
+                var user = users[n.openid2];
                 return <CommonCard
                     openid={n.openid2}
-                    avatar={n.user.headimgurl}
-                    txt={`${n.user.nickname} ${n.type=='like' ? '赞' : '订阅'}了你`}
+                    avatar={user.headimgurl}
+                    txt={`${user.nickname} ${n.type=='like' ? '赞' : '订阅'}了你`}
                     pic_id={n.type == 'like' ? n.post.pic_id : null}
                     new_item={i < new_count}
                 />;
@@ -80,6 +81,7 @@ class Me extends React.Component {
                 { current_myself_tab == 1 &&
                     <Notifications
                         notifications={notifications}
+                        users={users}
                         new_count={my_badge2}
                         dispatch={this.props.dispatch}/> }
             </div>

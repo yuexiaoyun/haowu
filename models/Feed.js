@@ -43,7 +43,7 @@ export default class Feed {
         var openids = _.uniq([
             openid,
             ...(results[1].subids || []),
-            ...(results[2].map(result=>result.openid))
+            ...(results[2].map(result=>result.openid2))
         ]);
         var users = await User.find({
             openid: { $in: openids }
