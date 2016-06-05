@@ -5,8 +5,7 @@ import FeedList from './components/FeedList';
 import UserTopCard from './components/UserTopCard';
 import CssButton from './components/CssButton';
 import { parse_online_json } from '../utility/fetch_utils';
-import PopupHelper from '../utility/PopupHelper';
-import showProgress from '../utility/show_progress';
+import update from '../utility/update';
 import Loader from './components/Loader';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
@@ -18,62 +17,31 @@ class Detail extends React.Component {
     }
     componentDidMount() {
         var id = this.props.params.id;
-        fetch('/api/fetch_detail?openid=' + id, {credentials:'same-origin'})
-            .then(parse_online_json)
-            .then((data) => {
-                try {
-                    this.setState({
-                        ids: data.posts.map((post) => (post._id)),
-                        user: data.user,
-                        subbed: data.user.subids && data.user.subids.indexOf(window.openid) >= 0
-                    });
-                } catch(err) {
-                    alert(err);
-                }
-                return data;
-            }).then(createAction('posts'))
-            .then(this.props.dispatch)
-            .catch((err) => this.setState({err}));
-    }
-    sub = () => {
-        var id = this.props.params.id;
-        var url = '/api/sub?openid=' + id;
-        showProgress('订阅中', fetch(url, {credentials:'same-origin'})
-            .then(parse_online_json)
-            .then(() => {
-                this.setState({subbed: true});
-                return null;
-            })
-            .catch(PopupHelper.toast));
-    }
-    unsub = () => {
-        var id = this.props.params.id;
-        var url = '/api/unsub?openid=' + id;
-        showProgress('取消订阅中', fetch(url, {credentials:'same-origin'})
-            .then(parse_online_json)
-            .then(() => {
-                this.setState({subbed: false});
-                return null;
-            })
-            .catch(PopupHelper.toast));
+        var { user_post_ids } = this.props;
+        if (!user_post_ids[id]) {
+            update('/api/update_user_detail?openid=' + id)
+                .catch((err) => this.setState({err}));
+        }
     }
     render() {
-        var { user, ids, subbed, err } = this.state;
-        var { posts } = this.props;
-        var user_posts = ids.map((id) => posts[id]);
+        var id = this.props.params.id;
+        var { posts, users, user_post_ids } = this.props;
+        var { err } = this.state;
+        var user = users[id];
+        var ids = user_post_ids[id];
         return (
             <div>
-                { !user && !err && <Loader /> }
-                { user && <Helmet title={user.nickname + '的主页'} />}
-                { user && <UserTopCard user={user} subbed={subbed} sub={subbed?this.unsub:this.sub}/> }
-                { user && <div style={styles.d3} /> }
-                <FeedList posts={user_posts} />
+                <Helmet title={user.nickname + '的主页'} />
+                <UserTopCard user={user} />
+                <div style={styles.d3} />
+                { !ids && !err && <Loader /> }
+                { ids && <FeedList ids={ids} /> }
             </div>
         );
     }
 }
 
-module.exports = connect(({posts}) => ({posts}))(Detail);
+module.exports = connect(({posts, users, user_post_ids}) => ({posts, users, user_post_ids}))(Detail);
 
 var styles = {
     d3: {

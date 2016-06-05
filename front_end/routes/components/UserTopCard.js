@@ -1,8 +1,16 @@
 import React from 'react';
 import CssButton from './CssButton';
+import update from '../../utility/update';
 import { Link, hashHistory } from 'react-router';
+import PopupHelper from '../../utility/PopupHelper';
+import showProgress from '../../utility/show_progress';
+import { connect } from 'react-redux'
 
-module.exports = ({user, sub, subbed}) => {
+var UserTopCard = ({user, subids}) => {
+    var sub = () => {
+        var id = user.openid;
+        showProgress('操作中', update(`/api/${user.subbed ? 'unsub' : 'sub'}?openid=${id}`));
+    }
     return (
         <div>
             { false && <div style={styles.d0}>
@@ -22,16 +30,18 @@ module.exports = ({user, sub, subbed}) => {
                 <img src={user.headimgurl} style={styles.avatar}></img>
                 <div style={styles.n}>{user.nickname}</div>
                 { user.openid != window.openid && <div style={styles.d20}>
-                    <span style={styles.sub} onClick={sub}>{subbed ? '已订阅' : '订阅'}</span>
+                    <span style={styles.sub} onClick={sub}>{user.subbed ? '已订阅' : '订阅'}</span>
                 </div> || <div style={styles.d20}>
-                    <span style={styles.sub} onClick={()=>(user.subids&& user.subids.length>0 && hashHistory.push('sub_list'))}>
-                        {`${user.subids ? user.subids.length : 0}人订阅`}
+                    <span style={styles.sub} onClick={()=>(subids && subids.length>0 && hashHistory.push('sub_list'))}>
+                        {`${subids ? subids.length : 0}人订阅`}
                     </span>
                 </div>}
             </div>
         </div>
     );
 };
+
+export default connect(({subids}) => ({subids}))(UserTopCard)
 
 var styles = {
     d0: {

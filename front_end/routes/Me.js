@@ -7,6 +7,7 @@ import CommonCard from './components/CommonCard';
 import CssButton from './components/CssButton';
 import Loader from './components/Loader';
 import { parse_online_json } from '../utility/fetch_utils';
+import update from '../utility/update';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
 
@@ -41,12 +42,11 @@ class Me extends React.Component {
         this.state = {};
     }
     componentDidMount() {
-        if (!this.props.my_post_ids) {
-            fetch('/api/fetch_me', {credentials:'same-origin'})
-                .then(parse_online_json)
-                .then(createAction('myself'))
-                .then(this.props.dispatch)
-                .catch((err) => this.setState({err}));
+        var { user_post_ids, users } = this.props;
+        var ids = user_post_ids[window.openid];
+        var user = users[window.openid];
+        if (!ids || !user) {
+            update('/api/update_me');
         }
         if (this.props.me_scroll)
             window.scrollTop = this.props.me_scroll;
@@ -58,12 +58,13 @@ class Me extends React.Component {
         this.props.dispatch(createAction('current_myself_tab')(index));
     }
     render() {
-        var { my_post_ids, notifications, posts, current_myself_tab, my_badge, my_badge2 } = this.props;
+        var { user_post_ids, users, notifications, current_myself_tab, my_badge, my_badge2 } = this.props;
+        var ids = user_post_ids[window.openid];
+        var user = users[window.openid];
         var { err } = this.state;
-        var my_posts = my_post_ids ? my_post_ids.map((id) => posts[id]) : [];
         return (
             <div>
-                <UserTopCard user={window.myself} />
+                { user && <UserTopCard user={user} />}
                 <div style={styles.d3}>
                     <div style={styles.d30} onClick={()=>this.current_myself_tab(0)}>
                         <div>分享动态</div>
@@ -74,8 +75,8 @@ class Me extends React.Component {
                         { current_myself_tab == 1 && <div style={styles.d30u} /> }
                     </div>
                 </div>
-                { !my_post_ids && !err && <Loader /> }
-                { current_myself_tab == 0 && <FeedList posts={my_posts} /> }
+                { !ids && !err && <Loader /> }
+                { current_myself_tab == 0 && ids && <FeedList ids={ids} /> }
                 { current_myself_tab == 1 &&
                     <Notifications
                         notifications={notifications}
@@ -87,12 +88,13 @@ class Me extends React.Component {
 }
 
 module.exports = connect(state=>({
-    my_post_ids: state.my_post_ids,
-    posts: state.posts,
+    user_post_ids: state.user_post_ids,
+    users: state.users,
     me_scroll: state.me_scroll,
     current_myself_tab: state.current_myself_tab,
     my_badge: state.my_badge,
     my_badge2: state.my_badge2,
+    subids: state.subids,
     notifications: state.notifications
 }))(Me);
 

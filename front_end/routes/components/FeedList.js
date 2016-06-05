@@ -1,23 +1,24 @@
 import React from 'react';
 import PostCard from './PostCard';
 import screenSize from '../../utility/screen_size';
+import { connect } from 'react-redux';
 
-module.exports = ({posts, showUser}) => {
+var FeedList = ({ids, posts, users, showUser}) => {
     return (
         <div style={styles.d1}>
             <div style={styles.d2()} key={'d1'}>{
-                posts && posts.map((post, i) => {
+                ids && ids.map((id, i) => {
                     if (i % 2 == 0) {
-                        return <PostCard key={post._id} post={post} user={showUser && post.user || null}/>;
+                        return <PostCard key={id} post={posts[id]} user={showUser && users[posts[id].openid] || null}/>;
                     } else {
                         return null;
                     }
                 })
             }</div>
             <div style={styles.d2()} key={'d2'}>{
-                posts && posts.map((post, i) => {
+                ids && ids.map((id, i) => {
                     if (i % 2 == 1) {
-                        return <PostCard key={post._id} post={post} user={showUser && post.user || null}/>;
+                        return <PostCard key={id} post={posts[id]} user={showUser && users[posts[id].openid] || null}/>;
                     } else {
                         return null;
                     }
@@ -27,6 +28,10 @@ module.exports = ({posts, showUser}) => {
         </div>
     );
 };
+export default connect(({posts, users})=>({
+    posts,
+    users
+}))(FeedList);
 
 var styles = {
     d1: {

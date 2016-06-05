@@ -1,4 +1,5 @@
 import { handleActions } from 'redux-actions';
+import _ from 'underscore';
 
 export var local_pic_id = handleActions({
     take_pic: (state, action) => (action.payload)
@@ -21,24 +22,9 @@ export var me_scroll = handleActions({
 export var current_tab = handleActions({
     current_tab: (state, action) => (action.payload)
 }, 0);
-export var my_post_ids = handleActions({
-    myself: (state, action) => (action.payload.posts.map((post) => (post._id))),
-    refresh: (state, action) => ([])
-}, null);
 export var feed_end = handleActions({
     feed_posts: (state, action) => ((action.payload.posts.length == 0) ? 1 : 0),
     refresh: (state, action) => (0)
-}, 0);
-export var feed_ids = handleActions({
-    feed_posts: (state, action) => {
-        var ids = action.payload.posts.map((post) => (post._id));
-        return action.meta == 'reload' ? ids : [...state, ...ids];
-    },
-    refresh: (state, action) => ([])
-}, []);
-export var feed_reloading = handleActions({
-    feed_reloading: (state, action) => (action.payload),
-    feed_posts: (state, action) => (action.meta == 'reload' ? 0: state)
 }, 0);
 export var current_myself_tab = handleActions({
     current_myself_tab: (state, action) => (action.payload)
@@ -49,66 +35,58 @@ export var my_badge = handleActions({
 export var my_badge2 = handleActions({
     clear_badge2: (state, action) => 0
 }, window.my_badge);
-export var notifications = handleActions({
-    myself: (state, action) => (action.payload.notifications)
+
+
+// 首页feed的id列表
+export var feed_ids = handleActions({
+    feed_ids: (state, action) => action.payload,
+    feed_ids_more: (state, action) => [...state, ...action.payload]
 }, []);
-
-var updatePosts = (state, action) => {
-    var d = {};
-    action.payload.posts.map((post) => {
-        if (action.payload.user)
-            post.user = action.payload.user;
-        else if (post.openid == window.openid)
-            post.user = window.myself;
-        d[post._id] = post;
-    });
-    return {...state, ...d};
-}
-
+// 首页feed是否已完全加载
+export var feed_end = handleActions({
+    feed_end: (state, action) => action.payload
+}, 0);
+// 某个用户的发布列表
+export var user_post_ids = handleActions({
+    user_post_ids: (state, action) => ({...state, ...action.payload})
+}, {});
+// 自己的通知列表
+export var notifications = handleActions({
+    notifications: (state, action) => action.payload
+}, []);
+// 自己的被订阅列表
+export var subids = handleActions({
+    subids: (state, action) => action.payload
+}, []);
+// 帖子的ID与内容对应
 export var posts = handleActions({
-    feed_posts: updatePosts,
-    myself: updatePosts,
-    posts: updatePosts,
-}, {});
-
-var updateLikes = (state, action) => {
-    var d = {};
-    action.payload.posts.map((post) => {
-        if (post.likes && post.likes.indexOf(window.openid) >= 0)
-            d[post._id] = 1;
-        else
-            d[post._id] = 0;
-    });
-    return {...state, ...d};
-}
-export var likes = handleActions({
-    feed_posts: updateLikes,
-    myself: updateLikes,
-    posts: updateLikes,
+    posts: (state, action) => ({
+        ...state, ...action.payload
+    }),
     like: (state, action) => {
-        var d = {};
-        d[action.payload] = 1;
-        return {...state, ...d}
+        var id = action.payload;
+        var post = state[id];
+        if (post) {
+            post = {...post, me_like: true}
+            return {...state, ...(_.object([id], [post]))}
+        } else {
+            return state;
+        }
+    },
+    read: (state, action) => {
+        var id = action.payload;
+        var post = state[id];
+        if (post) {
+            post = {...post, me_read: true}
+            return {...state, ...(_.object([id], [post]))}
+        } else {
+            return state;
+        }
     }
 }, {});
-
-var updateReads = (state, action) => {
-    var d = {};
-    action.payload.posts.map((post) => {
-        if (post.reads && post.reads.indexOf(window.openid) >= 0)
-            d[post._id] = 1;
-        else
-            d[post._id] = 0;
-    });
-    return {...state, ...d};
-}
-export var reads = handleActions({
-    feed_posts: updateReads,
-    myself: updateReads,
-    posts: updateReads,
-    play_sound: (state, action) => {
-        var d = {};
-        d[action.payload] = 1;
-        return {...state, ...d}
-    }
+// 用户的ID与内容对应
+export var users = handleActions({
+    users: (state, action) => ({
+        ...state, ...action.payload
+    })
 }, {});

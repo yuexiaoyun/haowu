@@ -16,8 +16,10 @@ import Post from './routes/Post'
 import SubList from './routes/SubList'
 import PopupHelper from './utility/PopupHelper'
 import * as reducers from './reducers'
+import { setStore } from './utility/update'
 
 let store = createStore(combineReducers(reducers));
+setStore(store);
 var entry = window.location.pathname.substring(4);
 if (entry == '/notification') {
     hashHistory.replace('/home');

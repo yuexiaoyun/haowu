@@ -23,7 +23,6 @@ export default class Badge {
         var results = [];
         for (var d of docs) {
             d = d.toObject();
-            d.user = await User.findOne({openid: d.openid2}).select('nickname headimgurl').exec();
             if (d.type == 'like') {
                 d.post = await Post.findOne({_id: d.target}).select('pic_id').exec();
             }

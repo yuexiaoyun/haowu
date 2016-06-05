@@ -57,19 +57,11 @@ class PostCard extends React.Component {
         });
         fetch(url, {credentials: 'same-origin'});
     }
-    shouldComponentUpdate(nextProps, nextState) {
-        return this.props.sound_id != nextProps.sound_id
-            || this.state.i != nextState.i
-            || this.props.likes[this.props.post._id] != nextProps.likes[this.props.post._id]
-            || this.props.reads[this.props.post._id] != nextProps.reads[this.props.post._id];
-    }
     render() {
-        var { user, post, likes, reads } = this.props;
+        var { user, post } = this.props;
         var { i } = this.state;
         var length = Math.floor(post.length / 1000 + 0.5);
         var playing = this.props.sound_id == post._id;
-        var me_like = this.props.likes[this.props.post._id];
-        var me_read = this.props.reads[this.props.post._id];
         return (
             <div className="card facebook-card" ref='card'>
                 <div className="card-content image-icon_image_loading"
@@ -85,7 +77,7 @@ class PostCard extends React.Component {
                         onClick={()=>hashHistory.push('post/' + post._id)}/>
                 </div>
                 <div style={styles.d1}>
-                    <span style={styles.audio(me_read)} onClick={this.play_audio}>
+                    <span style={styles.audio(post.me_read)} onClick={this.play_audio}>
                         <CssButton
                             className={"image-btn_home_play"+ (playing ? i : 3)}
                             width={16}
@@ -94,7 +86,7 @@ class PostCard extends React.Component {
                     </span>
                     <span style={styles.praise}>
                         <CssButton
-                            className={me_like == 1 ? "image-btn_praise_selected" : "image-btn_praise_default"}
+                            className={post.me_like ? "image-btn_praise_selected" : "image-btn_praise_default"}
                             style={{float:'right'}}
                             onClick={this.like}
                             width={20}
@@ -117,9 +109,7 @@ class PostCard extends React.Component {
 
 module.exports = connect((state)=>({
     sound_id: state.sound_id,
-    sound_playing: state.sound_playing,
-    likes: state.likes,
-    reads: state.reads
+    sound_playing: state.sound_playing
 }))(PostCard);
 
 var styles = {
@@ -136,7 +126,7 @@ var styles = {
         paddingTop: 8,
         paddingBottom: 12,
     },
-    audio: (read) => ({
+    audio: (me_read) => ({
         display: 'table-cell',
         verticalAlign: 'middle',
         borderRadius: 12,
