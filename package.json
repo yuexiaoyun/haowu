@@ -38,6 +38,7 @@
     "koa-static": "2.0.0",
     "moment": "2.13.0",
     "mongoose": "4.4.17",
+    "ms": "0.7.1",
     "qiniu": "6.1.11",
     "react": "15.1.0",
     "react-addons-update": "15.1.0",

@@ -12,6 +12,7 @@ import { createAction } from 'redux-actions';
 import App from './routes/App'
 import Pub from './routes/Pub'
 import Detail from './routes/Detail'
+import Post from './routes/Post'
 import SubList from './routes/SubList'
 import PopupHelper from './utility/PopupHelper'
 import * as reducers from './reducers'
@@ -31,6 +32,7 @@ render(
         <Router history={hashHistory}>
             <Route path="/detail/:id" component={Detail} />
             <Route path="/pub" component={Pub} />
+            <Route path="/post/:id" component={Post} />
             <Route path="/home" component={App} />
             <Route path="/sub_list" component={SubList} />
         </Router>

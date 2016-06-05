@@ -27,14 +27,15 @@ router.get('/pub_post', function *() {
     this.body = { result: 'ok', post: post };
 });
 
-router.get('/fetch_post', function *() {
+router.get('/fetch_post_detail', function *() {
     var post = yield Post.findOne({
         _id: this.query._id
     }).exec();
-    var user = yield User.findOne({
-        openid: post.openid
+    var like_users = yield User.find({
+        openid: { $in: post.likes }
     }).exec();
-    this.body = { result: 'ok', post: post, user: user };
+    this.body = { result: 'ok', post, like_users };
+    console.log(this.body);
 });
 
 router.get('/fetch_me', function *() {
@@ -78,7 +79,7 @@ router.get('/fetch_posts', function *() {
         post.user = user;
         posts.push(post);
     }
-    console.log(posts);
+    console.log(JSON.stringify(posts));
     this.body = { result: 'ok', posts: posts };
 });
 

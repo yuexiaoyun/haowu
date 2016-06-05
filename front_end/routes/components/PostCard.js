@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, hashHistory } from 'react-router';
+import { hashHistory } from 'react-router';
 import fconf from '../../fconf';
 import CssButton from './CssButton'
 import Sound from 'react-sound'
@@ -38,13 +38,6 @@ class PostCard extends React.Component {
     }
     stop_play = () => {
         this.props.dispatch(createAction('stop_play')(this.props.post._id));
-    }
-    preview = () => {
-        var { post } = this.props;
-        wx.previewImage({
-            current: fconf.qiniu.site + post.pic_id,
-            urls: [fconf.qiniu.site + post.pic_id]
-        });
     }
     gotoDetail = () => {
         var { user } = this.props;
@@ -89,7 +82,7 @@ class PostCard extends React.Component {
                     }}>
                     <img src={fconf.qiniu.site + post.pic_id + '-c167'}
                         style={{width:'100%', overflow:'hidden',borderRadius:5}}
-                        onClick={this.preview}/>
+                        onClick={()=>hashHistory.push('post/' + post._id)}/>
                 </div>
                 <div style={styles.d1}>
                     <span style={styles.audio(me_read)} onClick={this.play_audio}>
