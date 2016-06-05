@@ -24,9 +24,9 @@ class Post extends React.Component {
         });
     }
     gotoDetail = () => {
-        var { posts, params } = this.props;
+        var { posts, users, params } = this.props;
         var post = posts[params.id];
-        var user = post.user;
+        var user = users[post.openid];
         hashHistory.push('detail/' + user.openid);
     }
     componentDidMount() {
@@ -37,10 +37,10 @@ class Post extends React.Component {
             .catch((err) => this.setState({err}));
     }
     render() {
-        var { posts, params } = this.props;
+        var { posts, users, params } = this.props;
         var { like_users, err } = this.state;
         var post = posts[params.id];
-        var user = post.user;
+        var user = users[post.openid];
         var d = Math.floor((post.length + 500) / 1000);
         return (
             <div>
@@ -94,7 +94,7 @@ class Post extends React.Component {
     }
 }
 
-export default connect(({posts}) => ({posts}))(Post);
+export default connect(({posts, users}) => ({posts, users}))(Post);
 
 var styles = {
     d: {
