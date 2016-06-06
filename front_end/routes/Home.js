@@ -16,14 +16,6 @@ class Home extends React.Component {
             reloading: false
         };
     }
-    componentDidMount() {
-        if (this.props.home_scroll) {
-            window.scrollTop = this.props.home_scroll;
-        }
-    }
-    componentWillUnmount() {
-        this.props.dispatch(createAction('home_scroll')(window.scrollTop));
-    }
     loadMore = (page) => {
         var { feed_ids } = this.props;
         if (feed_ids.length == 0) {
@@ -53,5 +45,4 @@ class Home extends React.Component {
 module.exports = connect(({feed_ids,feed_end,home_scroll})=>({
     feed_ids,
     feed_end,
-    home_scroll
 }), null, null, {withRef: true})(Home);

@@ -10,6 +10,10 @@ import { createStore, combineReducers } from 'redux'
 import { createAction } from 'redux-actions';
 
 import App from './routes/App'
+import Home from './routes/Home'
+import Me from './routes/Me'
+import MyPosts from './routes/MyPosts'
+import Notifications from './routes/Notifications'
 import Pub from './routes/Pub'
 import Detail from './routes/Detail'
 import Post from './routes/Post'
@@ -35,8 +39,14 @@ render(
             <Route path="/detail/:id" component={Detail} />
             <Route path="/pub" component={Pub} />
             <Route path="/post/:id" component={Post} />
-            <Route path="/home" component={App} />
             <Route path="/sub_list" component={SubList} />
+            <Route path="/" component={App} >
+                <Route path="home" ref='home' component={Home} />
+                <Route path="me" component={Me} >
+                    <Route path="posts" component={MyPosts} />
+                    <Route path="notifications" component={Notifications} />
+                </Route>
+            </Route>
         </Router>
     </Provider>,
     document.getElementById('app')

@@ -11,17 +11,6 @@ export var sound_id = handleActions({
 export var sound_playing = handleActions({
     play_sound: (state, action) => (new Date())
 }, null);
-export var home_scroll = handleActions({
-    home_scroll: (state, action) => (action.payload || null),
-    refresh: (state, action) => (null)
-}, null);
-export var me_scroll = handleActions({
-    me_scroll: (state, action) => (action.payload || null),
-    refresh: (state, action) => (null)
-}, null);
-export var current_tab = handleActions({
-    current_tab: (state, action) => (action.payload)
-}, 0);
 export var feed_end = handleActions({
     feed_posts: (state, action) => ((action.payload.posts.length == 0) ? 1 : 0),
     refresh: (state, action) => (0)
