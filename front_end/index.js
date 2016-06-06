@@ -4,7 +4,8 @@ window.onerror = alert;
 
 import React from 'react';
 import { render, findDOMNode } from 'react-dom';
-import { Router, Route, Link, hashHistory } from 'react-router'
+import { applyRouterMiddleware, Router, Route, Link, hashHistory } from 'react-router'
+import useScroll from 'react-router-scroll';
 import { Provider } from 'react-redux'
 import { createStore, combineReducers } from 'redux'
 import { createAction } from 'redux-actions';
@@ -35,7 +36,7 @@ if (entry.substring(0, 5) == '/post') {
 
 render(
     <Provider store={store}>
-        <Router history={hashHistory}>
+        <Router history={hashHistory} render={applyRouterMiddleware(useScroll)}>
             <Route path="/detail/:id" component={Detail} />
             <Route path="/pub" component={Pub} />
             <Route path="/post/:id" component={Post} />
