@@ -2,6 +2,7 @@ import React from 'react';
 import CommonCard from './components/CommonCard';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
+import { hashHistory } from 'react-router';
 
 class Notifications extends React.Component {
     componentDidMount() {
@@ -23,6 +24,7 @@ class Notifications extends React.Component {
                     txt={`${user.nickname} ${n.type=='like' ? '赞' : '订阅'}了你`}
                     pic_id={n.type == 'like' ? n.post.pic_id : null}
                     new_item={i < my_badge2}
+                    onClick={n.type=='like' ? ()=>{hashHistory.push('/post/' + n.post._id)} : null}
                 />;
             }
         )}</div>;

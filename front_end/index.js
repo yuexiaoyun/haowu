@@ -25,12 +25,12 @@ import { setStore } from './utility/update'
 let store = createStore(combineReducers(reducers));
 setStore(store);
 var entry = window.location.pathname.substring(4);
-if (entry == '/notification') {
+if (entry.substring(0, 5) == '/post') {
     hashHistory.replace('/home');
-    store.dispatch(createAction('current_tab')(1));
-    store.dispatch(createAction('current_myself_tab')(1));
+    setTimeout(()=>hashHistory.push(entry), 0);
 } else {
     hashHistory.replace(entry);
+    entry = null;
 }
 
 render(

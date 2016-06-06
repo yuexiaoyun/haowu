@@ -16,17 +16,14 @@ class Post extends React.Component {
         this.state = {};
     }
     preview = () => {
-        var { posts, params } = this.props;
-        var post = posts[params.id];
+        var { post } = this.props;
         wx.previewImage({
             current: fconf.qiniu.site + post.pic_id,
             urls: [fconf.qiniu.site + post.pic_id]
         });
     }
     gotoDetail = () => {
-        var { posts, users, params } = this.props;
-        var post = posts[params.id];
-        var user = users[post.openid];
+        var { user } = this.props;
         hashHistory.push('detail/' + user.openid);
     }
     componentDidMount() {
@@ -37,22 +34,20 @@ class Post extends React.Component {
             .catch((err) => this.setState({err}));
     }
     render() {
-        var { posts, users, params } = this.props;
+        var { post, user } = this.props;
         var { like_users, err } = this.state;
-        var post = posts[params.id];
-        var user = users[post.openid];
-        var d = Math.floor((post.length + 500) / 1000);
+        var d = post && Math.floor((post.length + 500) / 1000) || 0;
         return (
             <div>
                 <Helmet title={'发布详情'} />
-                <div style={styles.d} onClick={this.gotoDetail}>
+                { user && <div style={styles.d} onClick={this.gotoDetail}>
                     <img src={user.headimgurl} width="34" height="34" style={styles.avatar}/>
                     <div>
                         <div style={styles.name}><strong>{user.nickname}</strong></div>
                         <div style={styles.time}>{ fromObjectId(post._id) }</div>
                     </div>
-                </div>
-                <div className="card-content image-icon_image_loading"
+                </div> }
+                { post && <div className="card-content image-icon_image_loading"
                     style={{
                         height: screenSize().width,
                         backgroundColor: '#f8f8f8',
@@ -64,8 +59,8 @@ class Post extends React.Component {
                     <img src={fconf.qiniu.site + post.pic_id }
                         className="bgTranslate2"
                         onClick={this.preview}/>
-                </div>
-                <div style={styles.d1}>
+                </div> }
+                { post && <div style={styles.d1}>
                     <div style={styles.d2}>
                         { d + '"' }
                     </div>
@@ -78,7 +73,7 @@ class Post extends React.Component {
                     <div style={styles.d2}>
                         <span style={styles.reads}>{`${(post.reads ? post.reads.length : 0)}人听过`}</span>
                     </div>
-                </div>
+                </div> }
                 { !like_users && !err && <Loader /> }
                 { like_users && <div style={styles.dd}><div style={styles.praise}>
                         <CssButton
@@ -94,7 +89,13 @@ class Post extends React.Component {
     }
 }
 
-export default connect(({posts, users}) => ({posts, users}))(Post);
+export default connect((state, props) => {
+    var post = state.posts[props.params.id];
+    var user = post && state.users[post.openid];
+    return {
+        post, user
+    }
+})(Post);
 
 var styles = {
     d: {
