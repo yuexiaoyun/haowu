@@ -28,6 +28,13 @@ router.get('/update_user_detail', function *() {
     };
     console.log(JSON.stringify(this.body.actions[1]));
 });
+router.get('/update_post_detail', function *() {
+    this.body = {
+        result: 'ok',
+        actions: yield Feed.loadPostDetail(this.session.openid, this.query._id)
+    };
+    console.log(JSON.stringify(this.body.actions));
+});
 router.get('/like', function *() {
     var q = { _id: this.query._id };
     var d = {

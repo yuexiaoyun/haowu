@@ -2,13 +2,17 @@ import React from 'react'
 import Helmet from 'react-helmet'
 import PostCard from './components/PostCard'
 import screenSize from '../utility/screen_size';
+import update from '../utility/update';
 import CssButton from './components/CssButton';
 import Loader from './components/Loader';
 import fconf from '../fconf';
 import { hashHistory } from 'react-router';
 import { connect } from 'react-redux';
+import { createAction } from 'redux-actions'
 import { fromObjectId } from '../utility/format_time';
 import { parse_online_json } from '../utility/fetch_utils';
+import _ from 'underscore';
+import qs from 'querystring';
 
 class Post extends React.Component {
     constructor() {
@@ -22,20 +26,25 @@ class Post extends React.Component {
             urls: [fconf.qiniu.site + post.pic_id]
         });
     }
+    like = () => {
+        var { post, dispatch } = this.props;
+        dispatch(createAction('like')(post._id));
+        var url = '/api/like?' + qs.stringify({
+            _id: post._id
+        });
+        fetch(url, {credentials: 'same-origin'});
+    }
     gotoDetail = () => {
         var { user } = this.props;
         hashHistory.push('detail/' + user.openid);
     }
     componentDidMount() {
         var { params } = this.props;
-        fetch('/api/fetch_post_detail?_id=' + params.id, { credentials: 'same-origin'})
-            .then(parse_online_json)
-            .then((data) => this.setState(data))
-            .catch((err) => this.setState({err}));
+        update('/api/update_post_detail?_id=' + params.id);
     }
     render() {
-        var { post, user } = this.props;
-        var { like_users, err } = this.state;
+        var { post, user, like_users } = this.props;
+        var { err } = this.state;
         var d = post && Math.floor((post.length + 500) / 1000) || 0;
         return (
             <div>
@@ -71,18 +80,29 @@ class Post extends React.Component {
                         height={60}/>
                     </div>
                     <div style={styles.d2}>
-                        <span style={styles.reads}>{`${(post.reads ? post.reads.length : 0)}人听过`}</span>
+                        <span style={styles.reads}>{`${post.read_count}人听过`}</span>
                     </div>
                 </div> }
                 { !like_users && !err && <Loader /> }
-                { like_users && <div style={styles.dd}><div style={styles.praise}>
+                { like_users && <div style={styles.dd}>
+                    <div style={styles.praise}>
                         <CssButton
-                            className={"image-btn_praise_selected"}
+                            className={"image-btn_detail_praise" +(post.me_like ? "_selected" : "")}
                             onClick={this.like}
-                            width={20}
-                            height={20}/>
+                            width={40}
+                            height={32}/>
                     </div>
-                    { like_users.map(user => (<img src={user.headimgurl} style={styles.like_user} />)) }
+                    { like_users.map(user => (<img
+                        src={user.headimgurl}
+                        onClick={()=>hashHistory.push('detail/' + user.openid)}
+                        style={styles.like_user} />)) }
+                    <div style={styles.delete}>
+                        <CssButton
+                            className={"image-btn_detail_delete"}
+                            onClick={this.delete}
+                            width={40}
+                            height={32}/>
+                    </div>
                 </div> }
             </div>
         )
@@ -92,8 +112,18 @@ class Post extends React.Component {
 export default connect((state, props) => {
     var post = state.posts[props.params.id];
     var user = post && state.users[post.openid];
+    var post_detail = state.post_details[props.params.id];
+    var like_users = (()=> {
+        if (post_detail && post_detail.likes) {
+            var likes = _.filter(post_detail.likes, id=>(id!=window.openid));
+            if (post.me_like)
+                likes = [window.openid, ...likes];
+            return likes.map(id=>state.users[id]);
+        }
+        return null;
+    })();
     return {
-        post, user
+        post, user, like_users
     }
 })(Post);
 
@@ -106,17 +136,31 @@ var styles = {
     },
     dd: {
         marginTop: 20,
-        height: 30
+        height: 32
     },
     praise: {
         float: 'left',
-        marginLeft: 15,
+        height: 32,
+        width: 48,
         paddingTop: 4,
-        paddingLeft: 10,
-        paddingRight: 10,
-        backgroundColor: '#cccccc',
-        marginRight: 8,
-        marginTop: 0,
+        marginBottom: 0,
+        marginLeft: 15,
+        paddingRight: 8
+    },
+    like_user: {
+        width: 32,
+        height: 32,
+        overflow: 'hidden',
+        borderRadius: '50%',
+        marginLeft: 10
+    },
+    delete: {
+        float: 'right',
+        height: 32,
+        width: 40,
+        paddingTop: 4,
+        marginRight: 15,
+        marginBottom: 0
     },
     avatar: {
         float: 'left',
@@ -125,13 +169,6 @@ var styles = {
         overflow: 'hidden',
         borderRadius: '50%',
         marginRight: 5
-    },
-    like_user: {
-        width: 30,
-        height: 30,
-        overflow: 'hidden',
-        borderRadius: '50%',
-        marginLeft: 10
     },
     name: {
         align: 'left',
@@ -146,7 +183,6 @@ var styles = {
     },
     d1: {
         display: 'table',
-        marginBottom: 5,
         tableLayout: 'fixed',
         width: '100%',
         height: 64,

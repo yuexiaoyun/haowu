@@ -22,6 +22,7 @@ Model.toBrowser = (doc, openid) => {
     doc = doc.toObject();
     doc.me_like = doc.likes && doc.likes.indexOf(openid) >= 0;
     doc.me_read = doc.reads && doc.reads.indexOf(openid) >= 0;
+    doc.read_count = doc.reads.length;
     delete doc.likes;
     delete doc.reads;
     return doc;

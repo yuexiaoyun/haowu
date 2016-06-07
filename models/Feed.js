@@ -26,6 +26,19 @@ export default class Feed {
             createAction(beforeid ? 'feed_ids_more' : 'feed_ids')(postids)
         ]
     }
+    static async loadPostDetail(openid, _id) {
+        var post = await Post.findOne({_id: _id}).exec();
+        var likes = post.likes || [];
+        var users = await User.find({openid: {
+            $in: [...likes, post.openid]
+        }}).exec();
+        var openids = users.map(user => user.openid);
+        return  [
+            createAction('users')(_.object(openids, users.map(user=>User.toBrowser(user, openid)))),
+            createAction('posts')(_.object([_id], [Post.toBrowser(post, openid)])),
+            createAction('post_details')(_.object([_id], [{likes: post.likes}]))
+        ]
+    }
     static async loadByUser(openid, openid2) {
         var posts = await Post.find({openid: openid2}).sort({_id:-1}).exec()
         var postids = posts.map(post => post._id)

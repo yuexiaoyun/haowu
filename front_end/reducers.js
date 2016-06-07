@@ -15,9 +15,6 @@ export var feed_end = handleActions({
     feed_posts: (state, action) => ((action.payload.posts.length == 0) ? 1 : 0),
     refresh: (state, action) => (0)
 }, 0);
-export var current_myself_tab = handleActions({
-    current_myself_tab: (state, action) => (action.payload)
-}, 0);
 export var my_badge = handleActions({
     current_myself_tab: (state, action) => (action.payload == 1 ? 0 : state)
 }, window.my_badge);
@@ -76,6 +73,12 @@ export var posts = handleActions({
 // 用户的ID与内容对应
 export var users = handleActions({
     users: (state, action) => ({
+        ...state, ...action.payload
+    })
+}, {});
+// 帖子详情页的ID与内容对应
+export var post_details = handleActions({
+    post_details: (state, action) => ({
         ...state, ...action.payload
     })
 }, {});
