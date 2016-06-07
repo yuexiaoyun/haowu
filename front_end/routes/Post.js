@@ -130,11 +130,13 @@ export default connect((state, props) => {
 var styles = {
     d: {
         width: '100%',
-        paddingLeft: 12,
-        paddingTop: 8,
-        paddingBottom: 12,
+        paddingLeft: 20,
+        paddingTop: 15,
+        paddingBottom: 15,
     },
     dd: {
+        borderTop: '1px solid #dfdfdd',
+        paddingTop: 4,
         marginTop: 20,
         height: 32
     },
@@ -142,14 +144,14 @@ var styles = {
         float: 'left',
         height: 32,
         width: 48,
-        paddingTop: 4,
+        paddingTop: 3,
         marginBottom: 0,
         marginLeft: 15,
         paddingRight: 8
     },
     like_user: {
-        width: 32,
-        height: 32,
+        width: 30,
+        height: 30,
         overflow: 'hidden',
         borderRadius: '50%',
         marginLeft: 10
@@ -158,28 +160,30 @@ var styles = {
         float: 'right',
         height: 32,
         width: 40,
-        paddingTop: 4,
+        paddingTop: 3,
         marginRight: 15,
         marginBottom: 0
     },
     avatar: {
         float: 'left',
-        width: 34,
-        height: 34,
+        width: 30,
+        height: 30,
         overflow: 'hidden',
         borderRadius: '50%',
-        marginRight: 5
+        marginRight: 10
     },
     name: {
         align: 'left',
         textAlign: 'left',
-        lineHeight: '20px',
-        fontSize: 12
+        fontSize: 15,
+        lineHeight: '15px',
+        marginBottom: 2
     },
     time: {
         textAlign: 'left',
-        lineHeight: '14px',
-        fontSize: 10
+        fontSize: 12,
+        lineHeight: '12px',
+        color: '#999999'
     },
     d1: {
         display: 'table',

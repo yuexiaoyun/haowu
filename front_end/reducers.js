@@ -11,10 +11,6 @@ export var sound_id = handleActions({
 export var sound_playing = handleActions({
     play_sound: (state, action) => (new Date())
 }, null);
-export var feed_end = handleActions({
-    feed_posts: (state, action) => ((action.payload.posts.length == 0) ? 1 : 0),
-    refresh: (state, action) => (0)
-}, 0);
 export var my_badge = handleActions({
     current_myself_tab: (state, action) => (action.payload == 1 ? 0 : state)
 }, window.my_badge);
