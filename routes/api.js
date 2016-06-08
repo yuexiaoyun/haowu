@@ -21,6 +21,13 @@ router.get('/update_feeds', function *() {
     };
     console.log(JSON.stringify(this.body.actions));
 });
+router.get('/delete_post', function *() {
+    this.body = {
+        result: 'ok',
+        actions: yield Feed.deletePost(this.session.openid, this.query._id)
+    };
+    console.log(JSON.stringify(this.body.actions));
+});
 router.get('/update_user_detail', function *() {
     this.body = {
         result: 'ok',
@@ -36,7 +43,7 @@ router.get('/update_post_detail', function *() {
     console.log(JSON.stringify(this.body.actions));
 });
 router.get('/like', function *() {
-    var q = { _id: this.query._id };
+    var q = { _id: this.query._id, status: 1 };
     var d = {
         $addToSet: {
             likes: this.session.openid
@@ -99,8 +106,15 @@ router.get('/pub_post', function *() {
     var info = JSON.parse(yield qiniu.stat(post.pic_id));
     post.w = info.width;
     post.h = info.height;
+    post.status = 1;
     yield post.save();
-    this.body = { result: 'ok', post: post };
+    this.body = {
+        result: 'ok',
+        actions: [
+            createAction('feed_ids')([]),
+            createAction('user_post_ids')(_.object([this.session.openid],[[]]))
+        ]
+    };
 });
 
 router.get('/fetch_post_detail', function *() {

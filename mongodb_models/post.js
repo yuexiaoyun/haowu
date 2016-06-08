@@ -10,7 +10,8 @@ var schema = new mongoose.Schema({
     w: { type: Number },
     h: { type: Number },
     likes: [{ type: String }],
-    reads: [{ type: String }]
+    reads: [{ type: String }],
+    status: { type: Number }
 });
 
 schema.index({ openid: 1 });

@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { createAction } from 'redux-actions'
 import { fromObjectId } from '../utility/format_time';
 import { parse_online_json } from '../utility/fetch_utils';
+import PopupHelper from '../utility/PopupHelper';
 import _ from 'underscore';
 import qs from 'querystring';
 
@@ -33,6 +34,23 @@ class Post extends React.Component {
             _id: post._id
         });
         fetch(url, {credentials: 'same-origin'});
+    }
+    deletePost = () => {
+        if (confirm('您确认要删除么？')) {
+            var { post } = this.props;
+            var url = '/api/delete_post?' + qs.stringify({
+                _id: post._id
+            });
+            update(url)
+                .then(()=>{
+                    PopupHelper.toast('删除成功');
+                    hashHistory.go(-1);
+                })
+                .catch((err)=>{
+                    alert(err);
+                    PopupHelper.toast('删除失败');
+                });
+        }
     }
     gotoDetail = () => {
         var { user } = this.props;
@@ -84,7 +102,7 @@ class Post extends React.Component {
                     </div>
                 </div> }
                 { !like_users && !err && <Loader /> }
-                { like_users && <div style={styles.dd}>
+                { post && like_users && <div style={styles.dd}>
                     <div style={styles.praise}>
                         <CssButton
                             className={"image-btn_detail_praise" +(post.me_like ? "_selected" : "")}
@@ -96,13 +114,13 @@ class Post extends React.Component {
                         src={user.headimgurl}
                         onClick={()=>hashHistory.push('detail/' + user.openid)}
                         style={styles.like_user} />)) }
-                    <div style={styles.delete}>
+                    { post.openid == window.openid && <div style={styles.delete} onClick={this.deletePost}>
                         <CssButton
                             className={"image-btn_detail_delete"}
                             onClick={this.delete}
                             width={40}
                             height={32}/>
-                    </div>
+                    </div> }
                 </div> }
             </div>
         )
@@ -114,7 +132,7 @@ export default connect((state, props) => {
     var user = post && state.users[post.openid];
     var post_detail = state.post_details[props.params.id];
     var like_users = (()=> {
-        if (post_detail && post_detail.likes) {
+        if (post && post_detail && post_detail.likes) {
             var likes = _.filter(post_detail.likes, id=>(id!=window.openid));
             if (post.me_like)
                 likes = [window.openid, ...likes];

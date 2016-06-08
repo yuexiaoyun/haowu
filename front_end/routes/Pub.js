@@ -2,6 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import qs from 'querystring';
 import { parse_online_json } from '../utility/fetch_utils';
+import update from '../utility/update';
 import showProgress from '../utility/show_progress';
 import screenSize from '../utility/screen_size';
 import { hashHistory } from 'react-router';
@@ -111,11 +112,8 @@ class Pub extends React.Component {
                                     audio_id: audio_server_id,
                                     length: this.state.d
                                 });
-                                fetch(url, {credentials: 'same-origin'})
-                                    .then(parse_online_json)
-                                    .then(data => {
+                                update(url).then(data => {
                                         resolve('发布成功');
-                                        this.props.dispatch(createAction('refresh')());
                                         hashHistory.go(-1);
                                     }).catch(e => {
                                         resolve('发布失败');
