@@ -11,13 +11,6 @@ export var sound_id = handleActions({
 export var sound_playing = handleActions({
     play_sound: (state, action) => (new Date())
 }, null);
-export var my_badge = handleActions({
-    current_myself_tab: (state, action) => (action.payload == 1 ? 0 : state)
-}, window.my_badge);
-export var my_badge2 = handleActions({
-    clear_badge2: (state, action) => 0
-}, window.my_badge);
-
 
 // 首页feed的id列表
 export var feed_ids = handleActions({
@@ -93,3 +86,7 @@ export var post_details = handleActions({
         ...state, ...action.payload
     })
 }, {});
+// 上一次清badge的时间
+export var clear_badge_time = handleActions({
+    clear_badge_time: (state, action) => action.payload
+}, null);

@@ -46,6 +46,7 @@ export default class Feed {
         ]
     }
     static async loadByUser(openid, openid2) {
+        // TODO: 一个人的发布列表要支持分页？
         var posts = await Post.find({openid:openid2, status:1}).sort({_id:-1}).exec()
         var postids = posts.map(post => post._id)
         return [
@@ -54,9 +55,10 @@ export default class Feed {
         ]
     }
     static async loadMe(openid) {
+        // TODO: subids和notifications要支持分页？
         var results = await Promise.all([
             Feed.loadByUser(openid, openid),
-            User.findOne({openid: openid}).select('subids').exec(),
+            User.findOne({openid: openid}).select('subids clear_badge').exec(),
             new Badge(openid).list()
         ])
         var openids = _.uniq([
@@ -70,6 +72,7 @@ export default class Feed {
         openids = users.map(user => user.openid)
         return [
             createAction('users')(_.object(openids, users.map(user=>User.toBrowser(user, openid)))),
+            createAction('clear_badge_time')(results[1].clear_badge),
             createAction('notifications')(results[2]),
             createAction('subids')(results[1].subids),
             ...results[0]

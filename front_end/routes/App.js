@@ -1,8 +1,11 @@
 import React from 'react';
 import Helmet from 'react-helmet'
+import update from '../utility/update'
 import { Link, hashHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
+import { createStructuredSelector } from 'reselect'
+import { get_badge_count } from '../reselectors'
 
 import Home from './Home'
 import Me from './Me'
@@ -18,9 +21,12 @@ class App extends React.Component {
             }
         });
     }
+    componentDidMount() {
+        update('/api/update_me');
+    }
     render() {
         try {
-            var { my_badge, children, location } = this.props;
+            var { badge_count, children, location } = this.props;
             var current_tab = 0;
             return (
                 <div>
@@ -45,7 +51,7 @@ class App extends React.Component {
                         }}>
                             <span className={"setting-icon image-btn_tabbar_me"
                             + ((location.pathname=='/me/posts' || location.pathname=='/me/notifications') ? '_selected' : '')} />
-                            { my_badge>0 && <span className="badge">{my_badge}</span> }
+                            { badge_count>0 && <span className="badge">{badge_count}</span> }
                         </span>
                     </nav>
                 </div>
@@ -56,6 +62,6 @@ class App extends React.Component {
     }
 }
 
-export default connect(state=>({
-    my_badge: state.my_badge
+export default connect(createStructuredSelector({
+    badge_count: get_badge_count
 }))(App);

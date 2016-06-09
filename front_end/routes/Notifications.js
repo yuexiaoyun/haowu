@@ -3,27 +3,32 @@ import CommonCard from './components/CommonCard';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
 import { hashHistory } from 'react-router';
+import { get_badge_count } from '../reselectors';
 
 class Notifications extends React.Component {
-    componentDidMount() {
-        var { new_count } = this.props;
-        if (new_count > 0)
-            fetch('/api/clear_badge', {credentials:'same-origin'});
+    constructor(props) {
+        super(props);
+        // componentDidMount后会clear_badge，但本次渲染仍然需要上一次的clear_badge_time
+        this.state = {
+            clear_badge_time: props.clear_badge_time
+        }
     }
-    componentWillUnmount() {
-        this.props.dispatch(createAction('clear_badge2')());
+    componentDidMount() {
+        fetch('/api/clear_badge', {credentials:'same-origin'});
+        this.props.dispatch(createAction('clear_badge_time')(new Date()));
     }
     render() {
-        var { notifications, my_badge2, users } = this.props;
+        var { notifications, users } = this.props;
+        var { clear_badge_time } = this.state;
         return <div>{ notifications && notifications.map(
-            (n, i) => {
+            (n) => {
                 var user = users[n.openid2];
                 return <CommonCard
                     openid={n.openid2}
                     avatar={user.headimgurl}
                     txt={`${user.nickname} ${n.type=='like' ? '赞' : '订阅'}了你`}
                     pic_id={n.type == 'like' ? n.post.pic_id : null}
-                    new_item={i < my_badge2}
+                    new_item={!clear_badge_time || n.uptime > clear_badge_time}
                     onClick={n.type=='like' ? ()=>{hashHistory.push('/post/' + n.post._id)} : null}
                 />;
             }
@@ -33,6 +38,6 @@ class Notifications extends React.Component {
 
 export default connect(state=>({
     users: state.users,
-    my_badge2: state.my_badge2,
+    clear_badge_time: state.clear_badge_time,
     notifications: state.notifications
 }))(Notifications);

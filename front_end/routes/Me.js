@@ -8,17 +8,15 @@ import { parse_online_json } from '../utility/fetch_utils';
 import update from '../utility/update';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
+import { get_badge_count } from '../reselectors';
 
 class Me extends React.Component {
     constructor() {
         super();
         this.state = {};
     }
-    componentDidMount() {
-        update('/api/update_me');
-    }
     render() {
-        var { user, ids, location, children, my_badge } = this.props;
+        var { user, ids, location, children, badge_count } = this.props;
         var { err } = this.state;
         return (
             <div>
@@ -29,7 +27,7 @@ class Me extends React.Component {
                         { location.pathname=='/me/posts' && <div style={styles.d30u} /> }
                     </div>
                     <div style={styles.d30} onClick={()=>hashHistory.replace('/me/notifications')}>
-                        <div>互动区{(my_badge > 0) && <span className="badge">{my_badge}</span>}</div>
+                        <div>互动区{(badge_count > 0) && <span className="badge">{badge_count}</span>}</div>
                         { location.pathname=='/me/notifications' && <div style={styles.d30u} /> }
                     </div>
                 </div>
@@ -43,7 +41,7 @@ class Me extends React.Component {
 module.exports = connect(state=>({
     user: state.users[window.openid],
     ids: state.user_post_ids[window.openid],
-    my_badge: state.my_badge
+    badge_count: get_badge_count(state)
 }))(Me);
 
 var styles = {

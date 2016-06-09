@@ -54,9 +54,7 @@ module.exports = function *() {
     }
     this.render('base', {
         js_params: JSON.stringify(params),
-        openid: this.session.openid,
-        myself: yield User.findOne({openid: this.session.openid}).exec(),
-        my_badge: yield new Badge(this.session.openid).count()
+        openid: this.session.openid
     });
     console.log(this.body);
 }
