@@ -15,10 +15,7 @@ class Me extends React.Component {
         this.state = {};
     }
     componentDidMount() {
-        var { ids, user } = this.props;
-        if (!ids || !user) {
-            update('/api/update_me');
-        }
+        update('/api/update_me');
     }
     render() {
         var { user, ids, location, children, my_badge } = this.props;
