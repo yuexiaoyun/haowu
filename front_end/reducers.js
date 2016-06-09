@@ -85,7 +85,20 @@ export var users = handleActions({
 export var post_details = handleActions({
     post_details: (state, action) => ({
         ...state, ...action.payload
-    })
+    }),
+    new_comment: (state, action) => {
+        var post_detail = state[action.payload.post_id];
+        if (!post_detail)
+            return state;
+        post_detail = {
+            ...post_detail,
+            comments: [...post_detail.comments, action.payload]
+        }
+        return {
+            ...state,
+            ..._.object([action.payload.post_id], [post_detail])
+        }
+    }
 }, {});
 // 上一次清badge的时间
 export var clear_badge_time = handleActions({

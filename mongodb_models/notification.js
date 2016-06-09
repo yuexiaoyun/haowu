@@ -21,8 +21,7 @@ var schema = new mongoose.Schema({
     uptime: { type: Date }
 });
 
-schema.index({ openid: 1, openid2: 1, type: 1, target: 1 }, { unique: 1 });
-schema.index({ openid2: 1 });
+schema.index({ openid: 1, uptime: -1});
 
 var Model = mongo.conn.model('notification', schema);
 module.exports.Model = Model;

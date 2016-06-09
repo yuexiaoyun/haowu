@@ -16,6 +16,17 @@ import PopupHelper from '../utility/PopupHelper';
 import _ from 'underscore';
 import qs from 'querystring';
 
+// 相对时间要用timer重刷
+var UserCard = ({user, _id}) => (
+    <div style={styles.d} onClick={()=>(hashHistory.push('detail/' + user.openid))}>
+        <img src={user.headimgurl} width="34" height="34" style={styles.avatar}/>
+        <div>
+            <div style={styles.name}><strong>{user.nickname}</strong></div>
+            <div style={styles.time}>{ fromObjectId(_id) }</div>
+        </div>
+    </div>
+);
+
 class Post extends React.Component {
     constructor() {
         super();
@@ -53,12 +64,7 @@ class Post extends React.Component {
                 });
         }
     }
-    gotoDetail = () => {
-        var { user } = this.props;
-        hashHistory.push('detail/' + user.openid);
-    }
     send = () => {
-        alert('here');
         try {
             var text = this.refs.input.value;
             if (text.length > 0 && text.length <= 40) {
@@ -84,19 +90,14 @@ class Post extends React.Component {
         update('/api/update_post_detail?_id=' + params.id);
     }
     render() {
-        var { post, user, like_users } = this.props;
+        var { post, user, users, like_users, comments } = this.props;
         var { err } = this.state;
         var d = post && Math.floor((post.length + 500) / 1000) || 0;
+        // TODO: 图片的显示有问题
         return (
             <div style={styles.post}>
                 <Helmet title={'发布详情'} />
-                { user && <div style={styles.d} onClick={this.gotoDetail}>
-                    <img src={user.headimgurl} width="34" height="34" style={styles.avatar}/>
-                    <div>
-                        <div style={styles.name}><strong>{user.nickname}</strong></div>
-                        <div style={styles.time}>{ fromObjectId(post._id) }</div>
-                    </div>
-                </div> }
+                { user && <UserCard user={user} _id={post._id} /> }
                 { post && <div className="card-content image-icon_image_loading"
                     style={{
                         height: screenSize().width,
@@ -106,7 +107,7 @@ class Post extends React.Component {
                         backgroundSize: '24px 24px',
                         position: 'relative'
                     }}>
-                    <img src={fconf.qiniu.site + post.pic_id }
+                    <img src={fconf.qiniu.site + post.pic_id}
                         className="bgTranslate2"
                         onClick={this.preview}/>
                 </div> }
@@ -145,6 +146,12 @@ class Post extends React.Component {
                             height={32}/>
                     </div> }
                 </div> }
+                { comments && comments.map(comment=>(
+                    <div style={styles.comment}>
+                        <UserCard _id={comment._id} user={users[comment.openid]} />
+                        <div style={styles.comment_text}>{comment.text}</div>
+                    </div>
+                )) }
                 <div style={{width: '100%', height: 60, clear:'both', overflow:'hidden'}} />
                 <div style={styles.input_d}>
                     <input style={styles.input} ref="input" placeholder={'请输入评论'} />
@@ -156,26 +163,37 @@ class Post extends React.Component {
 }
 
 export default connect((state, props) => {
+    var users = state.users;
     var post = state.posts[props.params.id];
-    var user = post && state.users[post.openid];
+    var user = post && users[post.openid];
     var post_detail = state.post_details[props.params.id];
     var like_users = (()=> {
         if (post && post_detail && post_detail.likes) {
             var likes = _.filter(post_detail.likes, id=>(id!=window.openid));
             if (post.me_like)
                 likes = [window.openid, ...likes];
-            return likes.map(id=>state.users[id]);
+            return likes.map(id=>users[id]);
         }
         return null;
     })();
+    var comments = post_detail && post_detail.comments;
     return {
-        post, user, like_users
-    }
+        post, user, users, like_users, comments
+    };
 })(Post);
 
 var styles = {
     post: {
         backgroundColor: '#ffffff'
+    },
+    comment: {
+        marginTop: 20,
+        marginBottom: 20
+    },
+    comment_text: {
+        marginLeft: 57,
+        fontSize: 14,
+        color: '#000000'
     },
     d: {
         width: '100%',
@@ -184,7 +202,6 @@ var styles = {
         paddingBottom: 15,
     },
     dd: {
-        borderTop: '1px solid #dfdfdd',
         paddingTop: 4,
         marginTop: 20,
         height: 52

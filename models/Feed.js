@@ -46,14 +46,22 @@ export default class Feed {
     // TODO: 点赞列表和评论、评论回复的分页
     static async loadPostDetail(openid, _id) {
         var post = await Post.findOne({_id:_id, status: {$ne: 0}}).exec();
-        var comments = await Comment.find({postid: _id, status: 1}).exec();
         if (!post)
             throw(createError(404));
+        var comments = await Comment.find({post_id: _id, status: 1}).exec();
+        var comment_openids = comments.map((comment)=>comment.openid);
+        var replies = _.flatten(comments.map((comment)=>comment.replies));
+        var reply_uids = replies.map((reply)=>reply.openid);
         var likes = post.likes || [];
         var users = await User.find({openid: {
-            $in: [...likes, post.openid]
+            $in: _.uniq([
+                post.openid,
+                ...likes,
+                ...comment_openids,
+                ...reply_uids
+            ])
         }}).exec();
-        var openids = users.map(user => user.openid);
+        var openids = users.map(user=>user.openid);
         return  [
             createAction('users')(_.object(openids, users.map(user=>User.toBrowser(user, openid)))),
             createAction('posts')(_.object([_id], [Post.toBrowser(post, openid)])),
@@ -102,7 +110,6 @@ export default class Feed {
             status: 0
         };
         var update = await Post.update(q, d);
-        console.log(update);
         if (update.nModified > 0) {
             var q = { openid: openid, target: _id };
             await Notification.remove(q);
