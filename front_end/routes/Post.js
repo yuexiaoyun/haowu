@@ -46,12 +46,6 @@ class Post extends React.Component {
         super();
         this.state = {};
     }
-    clear_reply = () => {
-        this.setState({
-            reply_comment: null,
-            reply_user: null
-        });
-    }
     preview = (e) => {
         e.stopPropagation();
         var { post } = this.props;
@@ -82,7 +76,6 @@ class Post extends React.Component {
                     hashHistory.go(-1);
                 })
                 .catch((err)=>{
-                    alert(err);
                     PopupHelper.toast('删除失败');
                 });
         }
@@ -109,7 +102,6 @@ class Post extends React.Component {
                         this.refs.input.value = '';
                     })
                     .catch((err)=>{
-                        alert(err);
                         PopupHelper.toast('发布失败');
                     }));
             }
@@ -120,6 +112,16 @@ class Post extends React.Component {
     componentDidMount() {
         var { params } = this.props;
         update('/api/update_post_detail?_id=' + params.id);
+        try {
+            this.refs.input.addEventListener('blur', ()=>{
+                this.setState({
+                    reply_comment: null,
+                    reply_user: null
+                });
+            });
+        } catch(err) {
+            alert(err);
+        }
     }
     render() {
         var { post, user, users, like_users, comments } = this.props;
@@ -128,7 +130,7 @@ class Post extends React.Component {
         // TODO: 图片的显示有问题
         // TODO: 记录进入详情页的次数？
         return (
-            <div style={styles.post} onClick={this.clear_reply}>
+            <div style={styles.post}>
                 <Helmet title={'发布详情'} />
                 { user && <UserCard user={user} _id={post._id} /> }
                 { post && <div className="card-content image-icon_image_loading"
@@ -183,20 +185,21 @@ class Post extends React.Component {
                     </div> }
                 </div> }
                 { comments && comments.map(comment=>{
-                    var onClick = (e)=>{
+                    var onClick = (openid)=>(e)=>{
                         e.stopPropagation();
+                        this.refs.input.focus();
                         this.setState({
                             reply_comment: comment._id,
-                            reply_user: comment.openid
+                            reply_user: openid
                         });
                     };
                     return (
                         <div style={styles.comment}>
-                            <UserCard _id={comment._id} user={users[comment.openid]} onClick={onClick}/>
-                            <div style={styles.comment_text} onClick={onClick}>{comment.text}</div>
+                            <UserCard _id={comment._id} user={users[comment.openid]} onClick={onClick(comment.openid)}/>
+                            <div style={styles.comment_text} onClick={onClick(comment.openid)}>{comment.text}</div>
                             { comment.replies.length > 0 && <div style={styles.replies}>
                             { comment.replies.length > 0 && comment.replies.map((reply)=>(
-                                <div style={styles.reply_text}>
+                                <div style={styles.reply_text} onClick={onClick(reply.openid)}>
                                     <NameSpan user={users[reply.openid]} />{' 回复 '}<NameSpan user={users[reply.openid2]} />：
                                     {reply.text}
                                 </div>
