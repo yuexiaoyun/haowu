@@ -2,6 +2,7 @@ import React from 'react'
 import Helmet from 'react-helmet'
 import PostCard from './components/PostCard'
 import screenSize from '../utility/screen_size';
+import showProgress from '../utility/show_progress';
 import update from '../utility/update';
 import CssButton from './components/CssButton';
 import Loader from './components/Loader';
@@ -56,6 +57,28 @@ class Post extends React.Component {
         var { user } = this.props;
         hashHistory.push('detail/' + user.openid);
     }
+    send = () => {
+        alert('here');
+        try {
+            var text = this.refs.input.value;
+            if (text.length > 0 && text.length <= 40) {
+                var url = '/api/pub_comment?' + qs.stringify({
+                    text: text,
+                    post_id: this.props.post._id
+                });
+                showProgress('发布中', update(url)
+                    .then(()=>{
+                        this.refs.input.value = '';
+                    })
+                    .catch((err)=>{
+                        alert(err);
+                        PopupHelper.toast('发布失败');
+                    }));
+            }
+        } catch(err) {
+            alert(err);
+        }
+    }
     componentDidMount() {
         var { params } = this.props;
         update('/api/update_post_detail?_id=' + params.id);
@@ -65,7 +88,7 @@ class Post extends React.Component {
         var { err } = this.state;
         var d = post && Math.floor((post.length + 500) / 1000) || 0;
         return (
-            <div>
+            <div style={styles.post}>
                 <Helmet title={'发布详情'} />
                 { user && <div style={styles.d} onClick={this.gotoDetail}>
                     <img src={user.headimgurl} width="34" height="34" style={styles.avatar}/>
@@ -122,6 +145,11 @@ class Post extends React.Component {
                             height={32}/>
                     </div> }
                 </div> }
+                <div style={{width: '100%', height: 60, clear:'both', overflow:'hidden'}} />
+                <div style={styles.input_d}>
+                    <input style={styles.input} ref="input" placeholder={'请输入评论'} />
+                    <span style={styles.send} onClick={this.send}>发送</span>
+                </div>
             </div>
         )
     }
@@ -146,6 +174,9 @@ export default connect((state, props) => {
 })(Post);
 
 var styles = {
+    post: {
+        backgroundColor: '#ffffff'
+    },
     d: {
         width: '100%',
         paddingLeft: 20,
@@ -156,7 +187,7 @@ var styles = {
         borderTop: '1px solid #dfdfdd',
         paddingTop: 4,
         marginTop: 20,
-        height: 32
+        height: 52
     },
     praise: {
         float: 'left',
@@ -226,5 +257,31 @@ var styles = {
         fontSize: 12,
         lineHeight: '24px',
         border: '1px solid rgba(0, 0, 0, 0.15)',
+    },
+    input_d: {
+        height: 60,
+        position: 'fixed',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 10,
+        paddingTop: 13,
+        paddingLeft: 8,
+        backgroundColor: '#f1f1f1',
+        borderTop: '1px solid #dfdfdd',
+        WebkitBackfaceVisibility: 'hidden', // Make sure the bar is visible when a modal animates in.
+        BackfaceVisibility: 'hidden'
+    },
+    input: {
+        width: screenSize().width - 70,
+        height: 34,
+        paddingLeft: 15,
+        backgroundColor: '#ffffff',
+        borderRadius: 5,
+        border: '1px solid #dfdfdd',
+    },
+    send: {
+        lineHeight: '34px',
+        paddingLeft: 15
     }
 }

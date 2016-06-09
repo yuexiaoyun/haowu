@@ -1,6 +1,7 @@
 import { handleActions } from 'redux-actions';
 import _ from 'underscore';
 
+// TODO: 各种分页加载
 export var local_pic_id = handleActions({
     take_pic: (state, action) => (action.payload)
 }, null);

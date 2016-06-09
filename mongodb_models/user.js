@@ -14,7 +14,8 @@ var schema = new mongoose.Schema({
     headimgurl: { type: String },
     privilege: [{ type: String }],
     subids: { type: [String] },
-    clear_badge: { type: Date }
+    clear_badge: { type: Date },
+    status: { type: Number }
 });
 
 schema.index({ openid: 1 }, { unique: 1});

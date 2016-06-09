@@ -3,6 +3,7 @@ var conf = require('../conf');
 
 var User = require('../mongodb_models/user').Model;
 var Post = require('../mongodb_models/post').Model;
+var Comment = require('../mongodb_models/comment').Model;
 var Notification = require('../mongodb_models/notification').Model;
 var Badge = require('../models/Badge');
 var Feed = require('../models/Feed');
@@ -13,6 +14,8 @@ var mongoose = require('mongoose');
 
 import _ from 'underscore'
 import {createAction} from 'redux-actions'
+
+// TODO: 前后端一致的：发主贴、发评论、发回复的合法性检查
 
 router.get('/update_feeds', function *() {
     this.body = {
@@ -115,6 +118,68 @@ router.get('/pub_post', function *() {
             createAction('user_post_ids')(_.object([this.session.openid],[[]]))
         ]
     };
+});
+
+router.get('/pub_comment', function *() {
+    // 获取原贴信息（主要看原贴是否已删除，以及是否是贴主自己在评论）
+    var post = yield Post.findOne({
+        _id: this.query.post_id,
+        status: {$ne: 0}
+    }).select('openid').exec();
+
+    if (!post)
+        this.throw(404);
+
+    // 开始生成这一条评论。注意只有楼主才能用语音评论
+    var comment = new Comment();
+    Object.assign(comment, this.query);
+    comment.openid = this.session.openid;
+    if (post.openid != this.session.openid)
+        comment.audio_id = null;
+    if (comment.audio_id) {
+        yield qiniu.sync(comment.audio_id),
+        yield qiniu.pfop(comment.audio_id);
+    }
+    comment.status = 1;
+    comment.uptime = new Date();
+    yield comment.save();
+
+    // 发送站内通知
+    var notification = new Notification();
+    notification.openid = post.openid;
+    notification.openid2 = this.session.openid;
+    notification.type = 'comment';
+    notification.target = this.query.post_id;
+    notification.comment_id = comment._id;
+    notification.audio_id = comment.audio_id;
+    notification.text = comment.text;
+    notification.uptime = new Date();
+    yield notification.save();
+
+    // 发送公众号通知
+    // TODO: 把几处发公众号通知的地方，放到一个文件中
+    yield wechat.sendTemplate(
+        post.openid,
+        'jGs_WM8l95bgGzyeBnQfphxM0rxEiEkUau3VV3r51wM',
+        conf.site + '/app/post/' + this.query.post_id + '/comments/' + comment._id,
+        '#FF0000', {
+            first: {
+                value: this.session.userInfo.nickname,
+                color: "#173177"
+            },
+            second: {
+                value: comment.audio_id ? '[语音]' : comment.text,
+                color: "#000000"
+            }
+        });
+
+    this.body = {
+        result: 'ok',
+        actions: [
+            createAction('new_comment')(comment)
+        ]
+    };
+    console.log(this.body);
 });
 
 router.get('/fetch_post_detail', function *() {

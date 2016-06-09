@@ -2,6 +2,7 @@ import {createAction} from 'redux-actions'
 import {Model as Post} from '../mongodb_models/post'
 import {Model as User} from '../mongodb_models/user'
 import {Model as Notification} from '../mongodb_models/notification'
+import {Model as Comment} from '../mongodb_models/comment'
 import createError from 'http-errors'
 import Badge from './Badge'
 import _ from 'underscore'
@@ -42,8 +43,10 @@ export default class Feed {
             createAction(beforeid ? 'feed_ids_more' : 'feed_ids')(postids)
         ]
     }
+    // TODO: 点赞列表和评论、评论回复的分页
     static async loadPostDetail(openid, _id) {
         var post = await Post.findOne({_id:_id, status: {$ne: 0}}).exec();
+        var comments = await Comment.find({postid: _id, status: 1}).exec();
         if (!post)
             throw(createError(404));
         var likes = post.likes || [];
@@ -54,7 +57,10 @@ export default class Feed {
         return  [
             createAction('users')(_.object(openids, users.map(user=>User.toBrowser(user, openid)))),
             createAction('posts')(_.object([_id], [Post.toBrowser(post, openid)])),
-            createAction('post_details')(_.object([_id], [{likes: post.likes}]))
+            createAction('post_details')(_.object([_id], [{
+                likes: post.likes,
+                comments: comments
+            }]))
         ]
     }
     static async loadByUser(openid, openid2) {

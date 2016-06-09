@@ -30,6 +30,8 @@ app.use(session({
     })
 }));
 app.use(logger());
+// TODO: 对公众号事件通知的处理
+// TODO: 在线的日志系统
 app.use(mount('/agent', function *() {
     this.body = this.query.echostr;
 }));
