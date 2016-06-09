@@ -7,6 +7,7 @@ var schema = new mongoose.Schema({
     post_id: { type: String },
     text: { type: String },
     audio_id: { type: String },
+    d: { type: Number },
     replies: [{
         openid: { type: String },
         openid2: { type: String },

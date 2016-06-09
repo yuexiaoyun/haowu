@@ -86,13 +86,25 @@ export var post_details = handleActions({
     post_details: (state, action) => ({
         ...state, ...action.payload
     }),
-    new_comment: (state, action) => {
+    update_comment: (state, action) => {
         var post_detail = state[action.payload.post_id];
         if (!post_detail)
             return state;
+        var comments = [];
+        var exists = false;
+        post_detail.comments.map((comment)=>{
+            if (comment._id == action.payload._id) {
+                exists = true;
+                comments.push(action.payload);
+            }
+            else
+                comments.push(comment);
+        });
+        if (!exists)
+            comments.push(action.payload);
         post_detail = {
             ...post_detail,
-            comments: [...post_detail.comments, action.payload]
+            comments: comments
         }
         return {
             ...state,

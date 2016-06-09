@@ -18,6 +18,7 @@ var schema = new mongoose.Schema({
     reply_id: { type: String },
     text: { type: String },
     audio_id: { type: String },
+    d: { type: Number },
     uptime: { type: Date }
 });
 

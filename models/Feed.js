@@ -48,7 +48,7 @@ export default class Feed {
         var post = await Post.findOne({_id:_id, status: {$ne: 0}}).exec();
         if (!post)
             throw(createError(404));
-        var comments = await Comment.find({post_id: _id, status: 1}).exec();
+        var comments = await Comment.find({post_id: _id, status: 1}).sort({_id:1}).exec();
         var comment_openids = comments.map((comment)=>comment.openid);
         var replies = _.flatten(comments.map((comment)=>comment.replies));
         var reply_uids = replies.map((reply)=>reply.openid);

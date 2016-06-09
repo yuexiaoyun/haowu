@@ -16,30 +16,52 @@ import PopupHelper from '../utility/PopupHelper';
 import _ from 'underscore';
 import qs from 'querystring';
 
-// 相对时间要用timer重刷
-var UserCard = ({user, _id}) => (
-    <div style={styles.d} onClick={()=>(hashHistory.push('detail/' + user.openid))}>
-        <img src={user.headimgurl} width="34" height="34" style={styles.avatar}/>
-        <div>
-            <div style={styles.name}><strong>{user.nickname}</strong></div>
-            <div style={styles.time}>{ fromObjectId(_id) }</div>
+// TODO: 相对时间的重刷
+var UserCard = ({user, onClick, _id}) => {
+    var avatarClick = (e)=>{
+        e.stopPropagation();
+        hashHistory.push('detail/' + user.openid);
+    }
+    return (
+        <div style={styles.d} onClick={onClick || avatarClick}>
+            <img src={user.headimgurl} width="34" height="34" style={styles.avatar} onClick={avatarClick}/>
+            <div>
+                <div style={styles.name}><strong>{user.nickname}</strong></div>
+                <div style={styles.time}>{ fromObjectId(_id) }</div>
+            </div>
         </div>
-    </div>
-);
+    );
+};
+
+var NameSpan = ({user}) => {
+    var avatarClick = (e)=>{
+        e.stopPropagation();
+        hashHistory.push('detail/' + user.openid);
+    }
+    return <span style={styles.name} onClick={avatarClick}><strong>{user.nickname}</strong></span>;
+};
 
 class Post extends React.Component {
     constructor() {
         super();
         this.state = {};
     }
-    preview = () => {
+    clear_reply = () => {
+        this.setState({
+            reply_comment: null,
+            reply_user: null
+        });
+    }
+    preview = (e) => {
+        e.stopPropagation();
         var { post } = this.props;
         wx.previewImage({
             current: fconf.qiniu.site + post.pic_id,
             urls: [fconf.qiniu.site + post.pic_id]
         });
     }
-    like = () => {
+    like = (e) => {
+        e.stopPropagation();
         var { post, dispatch } = this.props;
         dispatch(createAction('like')(post._id));
         var url = '/api/like?' + qs.stringify({
@@ -47,7 +69,8 @@ class Post extends React.Component {
         });
         fetch(url, {credentials: 'same-origin'});
     }
-    deletePost = () => {
+    deletePost = (e) => {
+        e.stopPropagation();
         if (confirm('您确认要删除么？')) {
             var { post } = this.props;
             var url = '/api/delete_post?' + qs.stringify({
@@ -64,14 +87,23 @@ class Post extends React.Component {
                 });
         }
     }
-    send = () => {
+    send = (e) => {
+        e.stopPropagation();
         try {
             var text = this.refs.input.value;
             if (text.length > 0 && text.length <= 40) {
-                var url = '/api/pub_comment?' + qs.stringify({
-                    text: text,
-                    post_id: this.props.post._id
-                });
+                if (this.state.reply_user && this.state.reply_comment) {
+                    var url = '/api/pub_reply?' + qs.stringify({
+                        text: text,
+                        openid: this.state.reply_user,
+                        comment_id: this.state.reply_comment
+                    });
+                } else {
+                    var url = '/api/pub_comment?' + qs.stringify({
+                        text: text,
+                        post_id: this.props.post._id
+                    });
+                }
                 showProgress('发布中', update(url)
                     .then(()=>{
                         this.refs.input.value = '';
@@ -94,8 +126,9 @@ class Post extends React.Component {
         var { err } = this.state;
         var d = post && Math.floor((post.length + 500) / 1000) || 0;
         // TODO: 图片的显示有问题
+        // TODO: 记录进入详情页的次数？
         return (
-            <div style={styles.post}>
+            <div style={styles.post} onClick={this.clear_reply}>
                 <Helmet title={'发布详情'} />
                 { user && <UserCard user={user} _id={post._id} /> }
                 { post && <div className="card-content image-icon_image_loading"
@@ -136,7 +169,10 @@ class Post extends React.Component {
                     </div>
                     { like_users.map(user => (<img
                         src={user.headimgurl}
-                        onClick={()=>hashHistory.push('detail/' + user.openid)}
+                        onClick={(e)=>{
+                            e.stopPropagation();
+                            hashHistory.push('detail/' + user.openid)
+                        }}
                         style={styles.like_user} />)) }
                     { post.openid == window.openid && <div style={styles.delete} onClick={this.deletePost}>
                         <CssButton
@@ -146,15 +182,35 @@ class Post extends React.Component {
                             height={32}/>
                     </div> }
                 </div> }
-                { comments && comments.map(comment=>(
-                    <div style={styles.comment}>
-                        <UserCard _id={comment._id} user={users[comment.openid]} />
-                        <div style={styles.comment_text}>{comment.text}</div>
-                    </div>
-                )) }
+                { comments && comments.map(comment=>{
+                    var onClick = (e)=>{
+                        e.stopPropagation();
+                        this.setState({
+                            reply_comment: comment._id,
+                            reply_user: comment.openid
+                        });
+                    };
+                    return (
+                        <div style={styles.comment}>
+                            <UserCard _id={comment._id} user={users[comment.openid]} onClick={onClick}/>
+                            <div style={styles.comment_text} onClick={onClick}>{comment.text}</div>
+                            { comment.replies.length > 0 && <div style={styles.replies}>
+                            { comment.replies.length > 0 && comment.replies.map((reply)=>(
+                                <div style={styles.reply_text}>
+                                    <NameSpan user={users[reply.openid]} />{' 回复 '}<NameSpan user={users[reply.openid2]} />：
+                                    {reply.text}
+                                </div>
+                            )) }
+                            </div>}
+                        </div>
+                    );
+                }) }
                 <div style={{width: '100%', height: 60, clear:'both', overflow:'hidden'}} />
-                <div style={styles.input_d}>
-                    <input style={styles.input} ref="input" placeholder={'请输入评论'} />
+                <div style={styles.input_d} onClick={(e)=>e.stopPropagation()}>
+                    <input
+                        style={styles.input}
+                        ref="input"
+                        placeholder={this.state.reply_user ? ('回复' + users[this.state.reply_user].nickname) : '请输入评论'} />
                     <span style={styles.send} onClick={this.send}>发送</span>
                 </div>
             </div>
@@ -185,6 +241,23 @@ export default connect((state, props) => {
 var styles = {
     post: {
         backgroundColor: '#ffffff'
+    },
+    replies: {
+        marginLeft: 51,
+        marginRight: 10,
+        marginTop: 15,
+        paddingTop: 3,
+        paddingBottom: 3,
+        paddingLeft: 6,
+        paddingRight: 6,
+        backgroundColor: '#f1f1f1'
+    },
+    reply_text: {
+        marginTop: 7,
+        marginBottom: 7,
+        fontSize: 14,
+        lineHeight: '22px',
+        color: '#000000'
     },
     comment: {
         marginTop: 20,
@@ -242,10 +315,10 @@ var styles = {
         align: 'left',
         textAlign: 'left',
         fontSize: 15,
-        lineHeight: '15px',
-        marginBottom: 2
+        lineHeight: '15px'
     },
     time: {
+        marginTop: 2,
         textAlign: 'left',
         fontSize: 12,
         lineHeight: '12px',

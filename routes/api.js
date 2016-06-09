@@ -16,6 +16,7 @@ import _ from 'underscore'
 import {createAction} from 'redux-actions'
 
 // TODO: 前后端一致的：发主贴、发评论、发回复的合法性检查
+// TODO: 各种发布的hash去重
 
 router.get('/update_feeds', function *() {
     this.body = {
@@ -120,6 +121,83 @@ router.get('/pub_post', function *() {
     };
 });
 
+router.get('/pub_reply', function *() {
+    // 获取原评论信息
+    var comment = yield Comment.findOne({
+        _id: this.query.comment_id,
+        status: 1
+    }).exec();
+    if (!comment)
+        this.throw(404);
+
+    // 获取原贴信息（主要看原贴是否已删除，以及是否是贴主自己在评论）
+    var post = yield Post.findOne({
+        _id: comment.post_id,
+        status: {$ne: 0}
+    }).select('openid').exec();
+    if (!post)
+        this.throw(404);
+
+    // 检查回复的人确实在评论或者回复里
+    var openids = [comment.openid, ...comment.replies.map((reply)=>reply.openid)];
+    if (openids.indexOf(this.session.openid) < 0)
+        this.throw(404);
+
+    // 保存回复
+    // TODO: 竞态条件下comment.save()会失败
+    var reply = {
+        openid: this.session.openid,
+        openid2: this.query.openid,
+        text: this.query.text,
+        audio_id: this.query.audio_id,
+        d: this.query.d
+    }
+    if (this.session.openid != post.openid) {
+        delete reply.audio_id;
+        delete reply.d;
+    }
+    comment.replies.push(reply);
+    yield comment.save();
+    var reply_id = comment.replies[comment.replies.length - 1]._id.toString();
+
+    // 发送站内通知
+    var notification = new Notification();
+    notification.openid = reply.openid2;
+    notification.openid2 = reply.openid;
+    notification.type = 'reply';
+    notification.target = comment.post_id;
+    notification.comment_id = comment._id;
+    notification.reply_id = reply_id;
+    notification.audio_id = reply.audio_id;
+    notification.d = reply.d;
+    notification.text = reply.text;
+    notification.uptime = new Date();
+    yield notification.save();
+
+    yield wechat.sendTemplate(
+        this.query.openid,
+        'EmQHRZ1nyZ1bNAE3R7bflOgmE3kYXT0pn_RXLaaFHQk',
+        `${conf.site}/app/post/${comment.post_id}/comments/${comment._id}/replies/${reply_id}`,
+        '#FF0000', {
+            first: {
+                value: this.session.userInfo.nickname,
+                color: "#173177"
+            },
+            second: {
+                value: reply.audio_id ? '[语音]' : reply.text,
+                color: "#000000"
+            }
+        });
+
+    this.body = {
+        result: 'ok',
+        actions: [
+            createAction('update_comment')(comment)
+        ]
+    };
+    console.log(this.body);
+})
+
 router.get('/pub_comment', function *() {
     // 获取原贴信息（主要看原贴是否已删除，以及是否是贴主自己在评论）
     var post = yield Post.findOne({
@@ -134,8 +212,10 @@ router.get('/pub_comment', function *() {
     var comment = new Comment();
     Object.assign(comment, this.query);
     comment.openid = this.session.openid;
-    if (post.openid != this.session.openid)
+    if (post.openid != this.session.openid) {
         comment.audio_id = null;
+        comment.d = null;
+    }
     if (comment.audio_id) {
         yield qiniu.sync(comment.audio_id),
         yield qiniu.pfop(comment.audio_id);
@@ -152,6 +232,7 @@ router.get('/pub_comment', function *() {
     notification.target = this.query.post_id;
     notification.comment_id = comment._id;
     notification.audio_id = comment.audio_id;
+    notification.d = comment.d;
     notification.text = comment.text;
     notification.uptime = new Date();
     yield notification.save();
@@ -176,7 +257,7 @@ router.get('/pub_comment', function *() {
     this.body = {
         result: 'ok',
         actions: [
-            createAction('new_comment')(comment)
+            createAction('update_comment')(comment)
         ]
     };
     console.log(this.body);
@@ -245,6 +326,7 @@ router.get('/sub', function *() {
     };
 });
 
+//TODO: 取消订阅时取消对应的通知
 router.get('/unsub', function *() {
     var q = { openid: this.query.openid };
     var d = {
