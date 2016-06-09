@@ -8,7 +8,12 @@ import _ from 'underscore'
 
 export default class Feed {
     static async load(openid, beforeid) {
-        var q = { status: 1 }
+        var q = {
+            $or: [
+                { status: 1 },
+                { status: 2, openid: openid}
+            ]
+        }
         if (beforeid)
             q = { ...q, _id: {$lt: beforeid} }
         var posts = await Post.find(q).sort({_id:-1}).limit(21).exec();
@@ -21,17 +26,24 @@ export default class Feed {
         var openids = _.uniq(posts.map(post => post.openid))
         var users = await User.find({
             openid: { $in: openids }
-        }).select('openid headimgurl nickname subids').exec()
+        }).select('openid headimgurl nickname subids status').exec()
         openids = users.map(user => user.openid)
+
+        var user_map = _.object(openids, users.map(user=>User.toBrowser(user, openid)));
+        console.log(openid);
+        var postids = _.chain(posts)
+            .filter((post) => (user_map[post.openid].status == 1 || post.openid == openid))
+            .map((post) => post._id)
+            .value();
         return [
-            createAction('users')(_.object(openids, users.map(user=>User.toBrowser(user, openid)))),
+            createAction('users')(user_map),
             createAction('posts')(_.object(postids, posts.map(post=>Post.toBrowser(post, openid)))),
             createAction('feed_end')(feed_end),
             createAction(beforeid ? 'feed_ids_more' : 'feed_ids')(postids)
         ]
     }
     static async loadPostDetail(openid, _id) {
-        var post = await Post.findOne({_id:_id, status:1}).exec();
+        var post = await Post.findOne({_id:_id, status: {$ne: 0}}).exec();
         if (!post)
             throw(createError(404));
         var likes = post.likes || [];
@@ -47,7 +59,7 @@ export default class Feed {
     }
     static async loadByUser(openid, openid2) {
         // TODO: 一个人的发布列表要支持分页？
-        var posts = await Post.find({openid:openid2, status:1}).sort({_id:-1}).exec()
+        var posts = await Post.find({openid:openid2, status: {$ne: 0}}).sort({_id:-1}).exec()
         var postids = posts.map(post => post._id)
         return [
             createAction('posts')(_.object(postids, posts.map(post=>Post.toBrowser(post, openid)))),
@@ -68,7 +80,7 @@ export default class Feed {
         ]);
         var users = await User.find({
             openid: { $in: openids }
-        }).select('openid headimgurl nickname subids').exec()
+        }).select('openid headimgurl nickname subids status').exec()
         openids = users.map(user => user.openid)
         return [
             createAction('users')(_.object(openids, users.map(user=>User.toBrowser(user, openid)))),
@@ -79,7 +91,7 @@ export default class Feed {
         ]
     }
     static async deletePost(openid, _id) {
-        var q = { _id:_id, openid:openid, status:1 };
+        var q = { _id:_id, openid:openid, status: {$ne: 0} };
         var d = {
             status: 0
         };

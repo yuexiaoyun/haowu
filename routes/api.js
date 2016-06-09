@@ -43,7 +43,7 @@ router.get('/update_post_detail', function *() {
     console.log(JSON.stringify(this.body.actions));
 });
 router.get('/like', function *() {
-    var q = { _id: this.query._id, status: 1 };
+    var q = { _id: this.query._id, status: {$ne: 0} };
     var d = {
         $addToSet: {
             likes: this.session.openid
