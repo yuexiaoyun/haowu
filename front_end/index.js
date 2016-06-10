@@ -35,6 +35,7 @@ if (entry.substring(0, 5) == '/post') {
 }
 
 // TODO useScroll貌似没解决滚动条的问题
+// TODO 精简CSS
 render(
     <Provider store={store}>
         <Router history={hashHistory} render={applyRouterMiddleware(useScroll)}>
