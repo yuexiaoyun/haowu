@@ -251,7 +251,7 @@ router.get('/delete_comment', function *() {
     yield Notification.remove({
         type: 'comment',
         comment_id: this.query._id
-    });
+    }).exec();
     this.body = {
         result: 'ok',
         new_id: comment._id,
@@ -284,7 +284,7 @@ router.get('/delete_reply', function *() {
     yield Notification.remove({
         type: 'reply',
         reply_id: this.query._id
-    });
+    }).exec();
 
     this.body = {
         result: 'ok',

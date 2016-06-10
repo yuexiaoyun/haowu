@@ -280,6 +280,7 @@ class Post extends React.Component {
                         position: 'relative'
                     }}>
                     <img src={fconf.qiniu.site + post.pic_id}
+                        style={post.w > post.h ? {height: '100%'} : {width: '100%'}}
                         className="bgTranslate2"
                         onClick={this.preview}/>
                 </div> }
