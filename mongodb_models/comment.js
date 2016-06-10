@@ -12,7 +12,8 @@ var schema = new mongoose.Schema({
         openid: { type: String },
         openid2: { type: String },
         text: { type: String },
-        audio_id: { type: String }
+        audio_id: { type: String },
+        d: { type: Number }
     }],
     uptime: { type: Date },
     status: { type: Number }

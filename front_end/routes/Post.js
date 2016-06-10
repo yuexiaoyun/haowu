@@ -6,6 +6,7 @@ import showProgress from '../utility/show_progress';
 import update from '../utility/update';
 import CssButton from './components/CssButton';
 import Recorder from './components/Recorder';
+import AudioPlayer from './components/AudioPlayer';
 import Loader from './components/Loader';
 import fconf from '../fconf';
 import { hashHistory } from 'react-router';
@@ -246,14 +247,16 @@ class Post extends React.Component {
                         });
                     };
                     return (
-                        <div style={styles.comment}>
+                        <div style={styles.comment} key={comment._id}>
                             <UserCard _id={comment._id} user={users[comment.openid]} onClick={onClick(comment.openid)}/>
-                            <div style={styles.comment_text} onClick={onClick(comment.openid)}>{comment.text}</div>
+                            <div style={styles.comment_text} onClick={onClick(comment.openid)}>
+                                {comment.audio_id ? <AudioPlayer key={comment.audio_id} audio_id={comment.audio_id} length={comment.d}/>: comment.text}
+                            </div>
                             { comment.replies.length > 0 && <div style={styles.replies}>
                             { comment.replies.length > 0 && comment.replies.map((reply)=>(
-                                <div style={styles.reply_text} onClick={onClick(reply.openid)}>
+                                <div style={styles.reply_text} key={reply._id} onClick={onClick(reply.openid)}>
                                     <NameSpan user={users[reply.openid]} />{' 回复 '}<NameSpan user={users[reply.openid2]} />：
-                                    {reply.text}
+                                    {reply.audio_id ? <AudioPlayer key={reply.audio_id} audio_id={reply.audio_id} length={reply.d}/>: reply.text}
                                 </div>
                             )) }
                             </div>}

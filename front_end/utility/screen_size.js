@@ -1,3 +1,4 @@
+// TODO: 调用screen_size的地方都必须实时调用
 module.exports = function () {
     if (typeof window == 'undefined') return {width: 1440, height: 900};
 

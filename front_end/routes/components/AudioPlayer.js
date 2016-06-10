@@ -11,7 +11,8 @@ class AudioPlayer extends React.Component {
         super();
         this.state = {i: 3};
     }
-    play_audio = () => {
+    play_audio = (e) => {
+        e.stopPropagation();
         var { audio_id, playing } = this.props;
         if (playing) {
             this.stop_play();
@@ -66,17 +67,15 @@ export default connect((state, props)=>({
 
 var styles = {
     audio: (read) => ({
-        display: 'table-cell',
-        verticalAlign: 'middle',
+        display: 'inline-block',
         borderRadius: 12,
         height: 24,
         paddingLeft: 6,
-        paddingTop: 4,
-        paddingBottom: 4,
         backgroundColor: '#ff6b6b'
     }),
     audio_length: {
         marginLeft: 15,
+        lineHeight: '24px',
         color: '#ffffff',
         marginRight: 10
     }

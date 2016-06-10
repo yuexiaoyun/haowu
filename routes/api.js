@@ -148,6 +148,10 @@ router.get('/pub_reply', function *() {
         delete reply.audio_id;
         delete reply.d;
     }
+    if (reply.audio_id) {
+        yield qiniu.sync(reply.audio_id),
+        yield qiniu.pfop(reply.audio_id);
+    }
     comment.replies.push(reply);
     yield comment.save();
     reply = comment.replies[comment.replies.length - 1];
