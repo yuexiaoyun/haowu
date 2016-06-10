@@ -24,17 +24,49 @@ var UserCard = ({user, onClick, _id}) => {
     var avatarClick = (e)=>{
         hashHistory.push('detail/' + user.openid);
     }
+    var styles = {
+        d: {
+            width: '100%',
+            paddingLeft: 20,
+            paddingTop: 15,
+            paddingBottom: 15,
+        },
+        avatar: {
+            float: 'left',
+            width: 30,
+            height: 30,
+            overflow: 'hidden',
+            borderRadius: '50%',
+            marginRight: 12
+        },
+        name: {
+            height: 20,
+            align: 'left',
+            textAlign: 'left',
+            fontSize: 15,
+            lineHeight: '20px'
+        },
+        time: {
+            textAlign: 'left',
+            fontSize: 12,
+            lineHeight: '12px',
+            color: '#999999'
+        }
+    }
     return (
         <div style={styles.d} onClick={onClick || avatarClick}>
             <img src={user.headimgurl} width="34" height="34" style={styles.avatar} onClick={avatarClick}/>
             <div>
-                <div style={styles.name}><strong>{user.nickname}</strong></div>
+                <div style={styles.name}>
+                    <strong>{user.nickname}</strong>
+                </div>
                 <div style={styles.time}>{ fromObjectId(_id) }</div>
             </div>
         </div>
     );
 };
 
+// TODO: 微信昵称重名问题
 var NameSpan = ({user}) => {
     var avatarClick = (e)=>{
         e.stopPropagation();
@@ -97,6 +129,27 @@ class Comment extends React.Component {
     render() {
         try {
             var { comment, onClick, new_id, users } = this.props;
+            var styles = {
+                comment: {
+                    marginTop: 5,
+                    marginBottom: 5
+                },
+                comment_text: {
+                    marginLeft: 57,
+                    fontSize: 14,
+                    color: '#000000'
+                },
+                replies: {
+                    marginLeft: 51,
+                    marginRight: 10,
+                    marginTop: 15,
+                    paddingTop: 3,
+                    paddingBottom: 3,
+                    paddingLeft: 6,
+                    paddingRight: 6,
+                    backgroundColor: '#f1f1f1'
+                }
+            }
             return (
                 <div style={styles.comment}>
                     <UserCard _id={comment._id} user={users[comment.openid]} onClick={this.onClick}/>
@@ -260,8 +313,24 @@ class Post extends React.Component {
             </div>
         )
     }
+    onClick = (comment_id)=>(openid)=>(e)=>{
+        e.stopPropagation();
+        this.refs.input.focus();
+        this.setState({
+            reply_comment: comment_id,
+            reply_user: openid
+        });
+    }
+    renderComment = (comment) => {
+        return <Comment
+            key={comment._id}
+            new_id={this.new_id}
+            users={this.props.users}
+            comment={comment}
+            onClick={this.onClick(comment._id)} />;
+    }
     render() {
-        var { post, user, users, like_users, comments } = this.props;
+        var { post, user, users, like_users, comments, comments_top } = this.props;
         var { record, err } = this.state;
         var d = post && Math.floor((post.length + 500) / 1000) || 0;
         // TODO: 图片的显示有问题
@@ -321,19 +390,16 @@ class Post extends React.Component {
                             height={32}/>
                     </div> }
                 </div> }
-                { comments && comments.map(comment=>{
-                    if (comment.status == 0 && comment.replies.length == 0)
-                        return null;
-                    var onClick = (openid)=>(e)=>{
-                        e.stopPropagation();
-                        this.refs.input.focus();
-                        this.setState({
-                            reply_comment: comment._id,
-                            reply_user: openid
-                        });
-                    };
-                    return <Comment key={comment._id} new_id={this.new_id} users={users} comment={comment} onClick={onClick} />;
-                }) }
+                { comments_top.length > 0 && <div>
+                    <div style={styles.comments_top}>
+                        <span style={styles.comments_top_l} />
+                        <span style={styles.comments_top_text}>楼主参与的互动</span>
+                    </div>
+                    { comments_top.map(this.renderComment) }
+                </div>}
+                { comments.length > 0 && <div style={styles.comments}>
+                    { comments.map(this.renderComment) }
+                </div>}
                 <div style={{width: '100%', height: 48 + (record ? 132 : 0), clear:'both', overflow:'hidden'}} />
                 { this.renderInput() }
             </div>
@@ -341,6 +407,7 @@ class Post extends React.Component {
     }
 }
 
+// TODO: 这里要用reselect机制做一些缓存
 export default connect((state, props) => {
     var users = state.users;
     var post = state.posts[props.params.id];
@@ -355,25 +422,25 @@ export default connect((state, props) => {
         }
         return null;
     })();
-    var comments = post_detail && post_detail.comments;
+    var comments_top = [];
+    var comments = [];
+    post && post_detail && post_detail.comments && post_detail.comments.map(comment => {
+        if (comment.status == 1 || comment.replies.length > 0) {
+            var openids = [comment.openid, ...comment.replies.map(reply=>reply.openid)];
+            if (openids.indexOf(post.openid) >= 0)
+                comments_top.push(comment);
+            else
+                comments.push(comment);
+        }
+    });
     return {
-        post, user, users, like_users, comments
+        post, user, users, like_users, comments_top, comments
     };
 })(Post);
 
 var styles = {
     post: {
         backgroundColor: '#ffffff'
-    },
-    replies: {
-        marginLeft: 51,
-        marginRight: 10,
-        marginTop: 15,
-        paddingTop: 3,
-        paddingBottom: 3,
-        paddingLeft: 6,
-        paddingRight: 6,
-        backgroundColor: '#f1f1f1'
     },
     reply_text: {
         marginTop: 7,
@@ -382,20 +449,29 @@ var styles = {
         lineHeight: '22px',
         color: '#000000'
     },
-    comment: {
-        marginTop: 20,
-        marginBottom: 20
+    comments_top: {
+        marginTop: 5,
+        clear: 'both',
+        width: '100%',
+        height: 20,
     },
-    comment_text: {
-        marginLeft: 57,
+    comments_top_l: {
+        float: 'left',
+        marginLeft: 15,
+        marginRight: 10,
+        width: 6,
+        height: 20,
+        backgroundColor: '#ff6b6b'
+    },
+    comments_top_text: {
+        display: 'inline-block',
+        marginTop: 0,
+        lineHeight: '20px',
         fontSize: 14,
         color: '#000000'
     },
-    d: {
-        width: '100%',
-        paddingLeft: 20,
-        paddingTop: 15,
-        paddingBottom: 15,
+    comments: {
+        borderTop: '1px solid #dfdfdd'
     },
     dd: {
         paddingTop: 4,
@@ -425,27 +501,6 @@ var styles = {
         paddingTop: 3,
         marginRight: 15,
         marginBottom: 0
-    },
-    avatar: {
-        float: 'left',
-        width: 30,
-        height: 30,
-        overflow: 'hidden',
-        borderRadius: '50%',
-        marginRight: 10
-    },
-    name: {
-        align: 'left',
-        textAlign: 'left',
-        fontSize: 15,
-        lineHeight: '15px'
-    },
-    time: {
-        marginTop: 2,
-        textAlign: 'left',
-        fontSize: 12,
-        lineHeight: '12px',
-        color: '#999999'
     },
     d1: {
         display: 'table',
