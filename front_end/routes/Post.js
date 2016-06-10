@@ -50,11 +50,22 @@ class Reply extends React.Component {
             dom.scrollIntoViewIfNeeded(true);
         }
     }
+    onClick = () => {
+        var { reply, onClick } = this.props;
+        if (reply.openid == window.openid) {
+            if (confirm('你确认删除您发布的这条回复么？')) {
+                showProgress('删除中', update('/api/delete_reply?_id=' + reply._id)
+                    .catch(()=>PopupHelper.toast('删除失败')));
+            }
+        } else {
+            onClick(this.props.reply.openid);
+        }
+    }
     render() {
         try {
-            var { reply, onClick, users } = this.props;
+            var { reply, users } = this.props;
             return (
-                <div style={styles.reply_text} onClick={onClick(reply.openid)}>
+                <div style={styles.reply_text} onClick={this.onClick}>
                     <NameSpan user={users[reply.openid]} />{' 回复 '}<NameSpan user={users[reply.openid2]} />：
                     {reply.audio_id ? <AudioPlayer key={reply.audio_id} audio_id={reply.audio_id} length={reply.d}/>: reply.text}
                 </div>
@@ -96,6 +107,8 @@ class Comment extends React.Component {
     }
 };
 
+// TODO: 详情页的404状态
+// TODO: 评论被删除后的占位
 class Post extends React.Component {
     constructor(props) {
         super(props);

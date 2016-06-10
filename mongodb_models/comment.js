@@ -20,6 +20,7 @@ var schema = new mongoose.Schema({
 });
 
 schema.index({ post_id: 1 });
+schema.index({ 'replies._id': 1 });
 schema.index({ uptime: 1 });
 
 var Model = mongo.conn.model('comment', schema);

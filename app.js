@@ -32,6 +32,8 @@ app.use(session({
 app.use(logger());
 // TODO: 对公众号事件通知的处理
 // TODO: 在线的日志系统
+// TODO: 服务器部署的时候前面要挡一层nginx（或者另一层node）做各种处理，例如防恶意攻击等
+// TODO: 某现成的统计平台
 app.use(mount('/agent', function *() {
     this.body = this.query.echostr;
 }));

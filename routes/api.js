@@ -18,6 +18,8 @@ import {createAction} from 'redux-actions'
 
 // TODO: 前后端一致的：发主贴、发评论、发回复的合法性检查
 // TODO: 各种发布的hash去重
+// TODO: 防CSRF攻击处理
+// TODO: confirm弹太多会被关闭网页
 
 router.get('/update_feeds', function *() {
     this.body = {
@@ -230,6 +232,39 @@ router.get('/pub_comment', function *() {
         ]
     };
     console.log(this.body);
+});
+
+router.get('/delete_reply', function *() {
+    // 获取原评论信息
+    var q = {
+        'replies._id': this.query._id,
+        status: 1
+    };
+    var d = {
+        $pull: {
+            replies: {
+                _id: this.query._id,
+                openid: this.session.openid
+            }
+        }
+    };
+    var comment = yield Comment.findOneAndUpdate(q, d, { new: true });
+    if (!comment)
+        this.throw(404);
+
+    yield Notification.remove({
+        type: 'reply',
+        reply_id: this.query._id
+    });
+
+    this.body = {
+        result: 'ok',
+        new_id: comment._id,
+        actions: [
+            createAction('update_comment')(comment)
+        ]
+    };
+    console.log(JSON.stringify(this.body));
 });
 
 router.get('/fetch_post_detail', function *() {
