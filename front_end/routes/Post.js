@@ -20,7 +20,7 @@ import _ from 'underscore';
 import qs from 'querystring';
 
 // TODO: 相对时间的重刷
-var UserCard = ({user, onClick, _id}) => {
+var UserCard = ({user, onClick, louzhu, _id}) => {
     var avatarClick = (e)=>{
         hashHistory.push('detail/' + user.openid);
     }
@@ -39,26 +39,44 @@ var UserCard = ({user, onClick, _id}) => {
             borderRadius: '50%',
             marginRight: 12
         },
-        name: {
+        name_line: {
+            marginTop: -6,
             height: 20,
+            marginBottom: 4,
             align: 'left',
-            textAlign: 'left',
-            fontSize: 15,
-            lineHeight: '20px'
+            textAlign: 'left'
+        },
+        name: {
+            display: 'inline-block',
+            verticalAlign: 'middle',
+            fontSize: 15
         },
         time: {
             textAlign: 'left',
             fontSize: 12,
             lineHeight: '12px',
             color: '#999999'
+        },
+        openid: {
+            display: 'inline-block',
+            verticalAlign: 'middle',
+            width: 40,
+            height: 20,
+            paddingTop: 2,
+            fontSize: 10,
+            marginLeft: 5,
+            paddingLeft: 10,
+            border: '1px solid #ff6b6b',
+            color: '#ff6b6b'
         }
     }
     return (
         <div style={styles.d} onClick={onClick || avatarClick}>
             <img src={user.headimgurl} width="34" height="34" style={styles.avatar} onClick={avatarClick}/>
             <div>
-                <div style={styles.name}>
-                    <strong>{user.nickname}</strong>
+                <div style={styles.name_line}>
+                    <span style={styles.name}><strong>{user.nickname}</strong></span>
+                    { louzhu && <span style={styles.openid}>楼主</span> }
                 </div>
                 <div style={styles.time}>{ fromObjectId(_id) }</div>
             </div>
@@ -82,7 +100,7 @@ class Reply extends React.Component {
             dom.scrollIntoViewIfNeeded(true);
         }
     }
-    onClick = () => {
+    onClick = (e) => {
         var { reply, onClick } = this.props;
         if (reply.openid == window.openid) {
             if (confirm('你确认删除您发布的这条回复么？')) {
@@ -90,7 +108,7 @@ class Reply extends React.Component {
                     .catch(()=>PopupHelper.toast('删除失败')));
             }
         } else {
-            onClick(reply.openid);
+            onClick(reply.openid)(e);
         }
     }
     render() {
@@ -115,7 +133,7 @@ class Comment extends React.Component {
             dom.scrollIntoViewIfNeeded(true);
         }
     }
-    onClick = () => {
+    onClick = (e) => {
         var { comment, onClick } = this.props;
         if (comment.openid == window.openid) {
             if (confirm('你确认删除您发布的这条评论么？')) {
@@ -123,12 +141,12 @@ class Comment extends React.Component {
                     .catch(()=>PopupHelper.toast('删除失败')));
             }
         } else {
-            onClick(comment.openid);
+            onClick(comment.openid)(e);
         }
     }
     render() {
         try {
-            var { comment, onClick, new_id, users } = this.props;
+            var { comment, louzhu, onClick, new_id, users } = this.props;
             var styles = {
                 comment: {
                     marginTop: 5,
@@ -152,7 +170,7 @@ class Comment extends React.Component {
             }
             return (
                 <div style={styles.comment}>
-                    <UserCard _id={comment._id} user={users[comment.openid]} onClick={this.onClick}/>
+                    <UserCard _id={comment._id} louzhu={louzhu} user={users[comment.openid]} onClick={this.onClick}/>
                     { comment.status == 1 && <div style={styles.comment_text} onClick={this.onClick}>
                         {comment.audio_id
                             ? <AudioPlayer key={comment.audio_id} audio_id={comment.audio_id} length={comment.d}/>
@@ -327,6 +345,7 @@ class Post extends React.Component {
             new_id={this.new_id}
             users={this.props.users}
             comment={comment}
+            louzhu={this.props.post && comment.openid==this.props.post.openid}
             onClick={this.onClick(comment._id)} />;
     }
     render() {
@@ -471,6 +490,7 @@ var styles = {
         color: '#000000'
     },
     comments: {
+        marginTop: 10,
         borderTop: '1px solid #dfdfdd'
     },
     dd: {
