@@ -1,5 +1,6 @@
 import React from 'react';
 import CssButton from './CssButton';
+import PopupHelper from '../../utility/PopupHelper';
 
 export default class Recorder extends React.Component {
     constructor() {
@@ -84,6 +85,17 @@ export default class Recorder extends React.Component {
         });
         this.setState({playing: null, f: 0});
     }
+    upload_voice = () => {
+        var { audio_id } = this.state;
+        return new Promise((resolve, reject) => {
+            wx.uploadVoice({
+                localId: audio_id,
+                isShowProgressTips: 0,
+                success: res => resolve(res.serverId),
+                fail: reject
+            })
+        });
+    }
     render() {
         var { recording, audio_id, playing, d, progress } = this.state;
         d = Math.floor(d / 1000 + 0.5);
@@ -135,7 +147,7 @@ var styles = {
         display: 'table',
         tableLayout: 'fixed',
         width: '100%',
-        marginTop: 36,
+        marginTop: 33,
         height: 64
     },
     d2: {

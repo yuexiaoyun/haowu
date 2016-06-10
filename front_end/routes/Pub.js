@@ -18,43 +18,36 @@ class Pub extends React.Component {
         super();
         this.state = {};
     }
-    // 上传：目前只能上传到微信的服务器上
+    upload_image = () => {
+        var { local_pic_id } = this.props;
+        return new Promise((resolve, reject) => {
+            wx.uploadImage({
+                localId: local_pic_id,
+                isShowProgressTips: 0,
+                success: res => resolve(res.serverId),
+                fail: reject
+            });
+        });
+    }
     pub = () => {
         var { audio_id } = this.state;
         if (audio_id) {
-            var pic_id = this.props.local_pic_id;
-            showProgress('发布中', new Promise((resolve, reject) => {
-                wx.uploadVoice({
-                    localId: audio_id,
-                    isShowProgressTips: 0,
-                    success: res => {
-                        var audio_server_id = res.serverId;
-                        wx.uploadImage({
-                            localId: pic_id,
-                            isShowProgressTips: 0,
-                            success: res => {
-                                var pic_server_id = res.serverId;
-                                var url = '/api/pub_post?' + qs.stringify({
-                                    pic_id: pic_server_id,
-                                    audio_id: audio_server_id,
-                                    length: this.state.d
-                                });
-                                update(url).then(data => {
-                                        resolve('发布成功');
-                                        hashHistory.go(-1);
-                                    }).catch(e => {
-                                        resolve('发布失败');
-                                    });
-                            },
-                            fail: res => {
-                                resolve('发布失败');
-                            }
-                        });
-                    },
-                    fail: res => {
-                        resolve('发布失败');
-                    }
+            showProgress('发布中', Promise.all([
+                this.refs.recorder.upload_voice(),
+                this.upload_image()
+            ]).then(data => {
+                var url = '/api/pub_post?' + qs.stringify({
+                    audio_id: data[0],
+                    pic_id: data[1],
+                    length: this.state.d
                 });
+                return update(url);
+            }).then(()=> {
+                hashHistory.go(-1);
+                return '发布成功';
+            }).catch(err => {
+                alert(err);
+                return '发布失败';
             }));
         }
     }
@@ -68,7 +61,7 @@ class Pub extends React.Component {
                     <span style={styles.dummy} />
                     <img src={pic_id} style={styles.image}/>
                 </div>
-                <Recorder onData={data=>this.setState(data)}/>
+                <Recorder ref='recorder' onData={data=>this.setState(data)}/>
                 <BottomButton txt='发布' disabled={!this.state.audio_id} onClick={this.pub}/>
             </div>
         );

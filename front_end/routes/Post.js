@@ -5,6 +5,7 @@ import screenSize from '../utility/screen_size';
 import showProgress from '../utility/show_progress';
 import update from '../utility/update';
 import CssButton from './components/CssButton';
+import Recorder from './components/Recorder';
 import Loader from './components/Loader';
 import fconf from '../fconf';
 import { hashHistory } from 'react-router';
@@ -43,7 +44,7 @@ var NameSpan = ({user}) => {
 class Post extends React.Component {
     constructor() {
         super();
-        this.state = {};
+        this.state = { record: false };
     }
     preview = (e) => {
         var { post } = this.props;
@@ -76,33 +77,56 @@ class Post extends React.Component {
                 });
         }
     }
+    pub = (c) => {
+        var { record, reply_user, reply_comment } = this.state;
+        if (reply_user && reply_comment) {
+            var url = '/api/pub_reply?' + qs.stringify({
+                ...c,
+                openid: reply_user,
+                comment_id: reply_comment
+            });
+        } else {
+            var url = '/api/pub_comment?' + qs.stringify({
+                ...c,
+                post_id: this.props.post._id
+            });
+        }
+        return update(url)
+            .then(()=>{
+                this.refs.input.value = '';
+                this.setState({
+                    record: false,
+                    reply_user: null,
+                    reply_comment: null
+                });
+                if (record && this.refs.record) {
+                    this.refs.record.clear();
+                }
+            });
+    }
     send = (e) => {
         e.stopPropagation();
         try {
-            var text = this.refs.input.value;
-            if (text.length > 0 && text.length <= 40) {
-                if (this.state.reply_user && this.state.reply_comment) {
-                    var url = '/api/pub_reply?' + qs.stringify({
-                        text: text,
-                        openid: this.state.reply_user,
-                        comment_id: this.state.reply_comment
+            var { record, audio_id, d, reply_user, reply_comment } = this.state;
+            if (record) {
+                if (!audio_id)
+                    return;
+                var p = this.refs.recorder.upload_voice()
+                    .then((server_id) => {
+                        this.pub({
+                            audio_id: server_id,
+                            d
+                        })
                     });
-                } else {
-                    var url = '/api/pub_comment?' + qs.stringify({
-                        text: text,
-                        post_id: this.props.post._id
-                    });
-                }
-                showProgress('发布中', update(url)
-                    .then(()=>{
-                        this.refs.input.value = '';
-                    })
-                    .catch((err)=>{
-                        PopupHelper.toast('发布失败');
-                    }));
+            } else {
+                var text = this.refs.input.value;
+                if (!text || text.length > 40)
+                    return;
+                var p = this.pub({ text });
             }
+            showProgress('发布中', p)
+                .catch(()=>PopupHelper.toast('发布失败'));
         } catch(err) {
-            alert(err);
         }
     }
     componentDidMount() {
@@ -110,16 +134,51 @@ class Post extends React.Component {
         update('/api/update_post_detail?_id=' + params.id);
     }
     clear_reply = () => {
-        if (!this.refs.input.value) {
+        if (!this.refs.input.value && !this.state.record) {
             this.setState({
                 reply_comment: null,
                 reply_user: null
             });
         }
     }
+    toggleRecord = () => {
+        this.setState({
+            record: !this.state.record
+        });
+    }
+    renderInput() {
+        var { post, user, users } = this.props;
+        var { record, err, reply_user } = this.state;
+        var show_record_btn = post && post.openid == window.openid;
+        var placeholder = reply_user ? ('回复' + users[reply_user].nickname) : '请输入评论';
+        if (record)
+            placeholder = `语音${reply_user ? ('回复' + users[reply_user].nickname) : '评论'}`;
+        return (
+            <div style={styles.input_d(record)} onClick={(e)=>e.stopPropagation()}>
+                <div style={styles.input_text}>
+                    { show_record_btn && <span style={styles.record_btn} onClick={this.toggleRecord}>
+                        <CssButton
+                            className={record ? 'image-btn_keyboard' : 'image-btn_speech'}
+                            width={30}
+                            height={30}
+                        />
+                    </span> }
+                    <input
+                        style={styles.input(show_record_btn)}
+                        ref="input"
+                        disabled={record}
+                        placeholder={placeholder} />
+                    <span style={styles.send} onClick={this.send}>发送</span>
+                </div>
+                { record && <Recorder ref='recorder' onData={data=>{
+                    this.setState(data)
+                }} /> }
+            </div>
+        )
+    }
     render() {
         var { post, user, users, like_users, comments } = this.props;
-        var { err } = this.state;
+        var { record, err } = this.state;
         var d = post && Math.floor((post.length + 500) / 1000) || 0;
         // TODO: 图片的显示有问题
         // TODO: 记录进入详情页的次数？
@@ -201,14 +260,8 @@ class Post extends React.Component {
                         </div>
                     );
                 }) }
-                <div style={{width: '100%', height: 60, clear:'both', overflow:'hidden'}} />
-                <div style={styles.input_d} onClick={(e)=>e.stopPropagation()}>
-                    <input
-                        style={styles.input}
-                        ref="input"
-                        placeholder={this.state.reply_user ? ('回复' + users[this.state.reply_user].nickname) : '请输入评论'} />
-                    <span style={styles.send} onClick={this.send}>发送</span>
-                </div>
+                <div style={{width: '100%', height: 48 + (record ? 132 : 0), clear:'both', overflow:'hidden'}} />
+                { this.renderInput() }
             </div>
         )
     }
@@ -344,30 +397,44 @@ var styles = {
         lineHeight: '24px',
         border: '1px solid rgba(0, 0, 0, 0.15)',
     },
-    input_d: {
-        height: 60,
+    input_d: (record) => ({
+        height: 48 + (record ? 132 : 0),
         position: 'fixed',
         left: 0,
         right: 0,
         bottom: 0,
         zIndex: 10,
-        paddingTop: 13,
+        backgroundColor: '#ffffff',
+        WebkitBackfaceVisibility: 'hidden', // Make sure the bar is visible when a modal animates in.
+        BackfaceVisibility: 'hidden'
+    }),
+    input_text: {
+        paddingTop: 6,
         paddingLeft: 8,
         backgroundColor: '#f1f1f1',
         borderTop: '1px solid #dfdfdd',
-        WebkitBackfaceVisibility: 'hidden', // Make sure the bar is visible when a modal animates in.
-        BackfaceVisibility: 'hidden'
+        borderBottom: '1px solid #dfdfdd',
+        height: 48
     },
-    input: {
-        width: screenSize().width - 70,
-        height: 34,
+    record_btn: {
+        display: 'inline-block',
+        width: 52,
+        paddingLeft: 7,
+        paddingRight: 15
+    },
+    input: (show_record_btn) => ({
+        width: screenSize().width - 70 - (show_record_btn ? 52 : 0),
+        height: 32,
         paddingLeft: 15,
         backgroundColor: '#ffffff',
         borderRadius: 5,
         border: '1px solid #dfdfdd',
-    },
+    }),
     send: {
-        lineHeight: '34px',
-        paddingLeft: 15
+        display: 'inline-block',
+        marginTop: 3,
+        lineHeight: '32px',
+        paddingLeft: 15,
+        color: '#999999'
     }
 }
