@@ -153,6 +153,7 @@ router.get('/pub_reply', function *() {
         yield qiniu.sync(reply.audio_id),
         yield qiniu.pfop(reply.audio_id);
     }
+    comment.uptime = new Date();
     comment.replies.push(reply);
     yield comment.save();
     reply = comment.replies[comment.replies.length - 1];
