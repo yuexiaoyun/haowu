@@ -111,8 +111,8 @@ export default class Feed {
         };
         var update = await Post.update(q, d);
         if (update.nModified > 0) {
-            var q = { openid: openid, target: _id };
-            await Notification.remove(q);
+            var q = { target: _id };
+            await Notification.remove(q).exec();
             return [
                 createAction('delete_my_post')(_id),
                 createAction('posts')(_.object([_id],[null]))
