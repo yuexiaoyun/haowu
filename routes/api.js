@@ -116,10 +116,9 @@ router.get('/pub_post', function *() {
 });
 
 router.get('/pub_reply', function *() {
-    // 获取原评论信息
+    // 获取原评论信息，注意在被删除的评论下面仍然能接着回复，所以没有status=1的限制
     var comment = yield Comment.findOne({
-        _id: this.query.comment_id,
-        status: 1
+        _id: this.query.comment_id
     }).exec();
     if (!comment)
         this.throw(404);
@@ -233,6 +232,36 @@ router.get('/pub_comment', function *() {
     };
     console.log(this.body);
 });
+
+router.get('/delete_comment', function *() {
+    // 获取原评论信息
+    var q = {
+        _id: this.query._id,
+        openid: this.session.openid,
+        status: 1
+    };
+    var d = {
+        $set: {
+            status: 0
+        }
+    };
+    var comment = yield Comment.findOneAndUpdate(q, d, { new: true });
+    if (!comment)
+        this.throw(404);
+    yield Notification.remove({
+        type: 'comment',
+        comment_id: this.query._id
+    });
+    this.body = {
+        result: 'ok',
+        new_id: comment._id,
+        actions: [
+            createAction('update_comment')(comment)
+        ]
+    };
+    console.log(JSON.stringify(this.body));
+});
+
 
 router.get('/delete_reply', function *() {
     // 获取原评论信息

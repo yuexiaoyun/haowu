@@ -58,7 +58,7 @@ class Reply extends React.Component {
                     .catch(()=>PopupHelper.toast('删除失败')));
             }
         } else {
-            onClick(this.props.reply.openid);
+            onClick(reply.openid);
         }
     }
     render() {
@@ -83,17 +83,31 @@ class Comment extends React.Component {
             dom.scrollIntoViewIfNeeded(true);
         }
     }
+    onClick = () => {
+        var { comment, onClick } = this.props;
+        if (comment.openid == window.openid) {
+            if (confirm('你确认删除您发布的这条评论么？')) {
+                showProgress('删除中', update('/api/delete_comment?_id=' + comment._id)
+                    .catch(()=>PopupHelper.toast('删除失败')));
+            }
+        } else {
+            onClick(comment.openid);
+        }
+    }
     render() {
         try {
             var { comment, onClick, new_id, users } = this.props;
             return (
                 <div style={styles.comment}>
-                    <UserCard _id={comment._id} user={users[comment.openid]} onClick={onClick(comment.openid)}/>
-                    <div style={styles.comment_text} onClick={onClick(comment.openid)}>
+                    <UserCard _id={comment._id} user={users[comment.openid]} onClick={this.onClick}/>
+                    { comment.status == 1 && <div style={styles.comment_text} onClick={this.onClick}>
                         {comment.audio_id
                             ? <AudioPlayer key={comment.audio_id} audio_id={comment.audio_id} length={comment.d}/>
                             : comment.text}
-                    </div>
+                    </div> }
+                    { comment.status == 0 && <div style={styles.comment_text}>
+                        [该评论已被原作者删除]
+                    </div> }
                     { comment.replies.length > 0 && <div style={styles.replies}>
                         { comment.replies.map((reply)=>(
                             <Reply key={reply._id} new_id={new_id} reply={reply} users={users} onClick={onClick} active={true}/>
@@ -307,6 +321,8 @@ class Post extends React.Component {
                     </div> }
                 </div> }
                 { comments && comments.map(comment=>{
+                    if (comment.status == 0 && comment.replies.length == 0)
+                        return null;
                     var onClick = (openid)=>(e)=>{
                         e.stopPropagation();
                         this.refs.input.focus();
