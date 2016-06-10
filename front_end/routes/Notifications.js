@@ -1,5 +1,6 @@
 import React from 'react';
 import CommonCard from './components/CommonCard';
+import AudioPlayer from './components/AudioPlayer';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
 import { hashHistory } from 'react-router';
@@ -23,19 +24,35 @@ class Notifications extends React.Component {
         return <div>{ notifications && notifications.map(
             (n) => {
                 var user = users[n.openid2];
+                var action = {
+                    like: '赞',
+                    sub: '订阅',
+                    comment: '评论',
+                    reply: '回复'
+                }[n.type] || '';
                 return <CommonCard
+                    key={n._id}
                     openid={n.openid2}
                     avatar={user.headimgurl}
-                    txt={`${user.nickname} ${n.type=='like' ? '赞' : '订阅'}了你`}
-                    pic_id={n.type == 'like' ? n.post.pic_id : null}
+                    txt={`${user.nickname} ${action}了你`}
+                    pic_id={n.post ? n.post.pic_id : null}
                     new_item={!clear_badge_time || n.uptime > clear_badge_time}
-                    onClick={n.type=='like' ? ()=>{hashHistory.push('/post/' + n.post._id)} : null}
-                />;
+                    onClick={n.post ? ()=>{hashHistory.push('/post/' + n.post._id)} : null}
+                >
+                    { n.audio_id && <AudioPlayer audio_id={n.audio_id} length={n.d} /> }
+                    { n.text && n.text != '' && <span style={styles.text}>{n.text}</span>}
+                </CommonCard>;
             }
         )}</div>;
     }
 }
-
+var styles = {
+    text: {
+        color: '#666666',
+        fontSize: 14,
+        lineHeight: '16px'
+    }
+}
 export default connect(state=>({
     users: state.users,
     clear_badge_time: state.clear_badge_time,

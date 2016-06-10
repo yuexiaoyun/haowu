@@ -6,24 +6,16 @@ export default class Badge {
     constructor(openid) {
         this.openid = openid;
     }
-    async count() {
-        if (!this.user)
-            this.user = await User.findOne({openid: this.openid}).select('clear_badge').exec();
-        var q = this.user.clear_badge
-            ? { uptime: { $gt: this.user.clear_badge} }
-            : {};
-        q = {...q, openid: this.openid};
-        return await Notification.count(q);
-    }
     async clear() {
         return await User.update({openid: this.openid}, {clear_badge: new Date()}).exec();
     }
+    // TODO: 这里要做性能优化
     async list() {
         var docs = await Notification.find({openid: this.openid}).sort({uptime:-1}).exec();
         var results = [];
         for (var d of docs) {
             d = d.toObject();
-            if (d.type == 'like') {
+            if (d.type != 'sub') {
                 d.post = await Post.findOne({_id: d.target}).select('pic_id').exec();
             }
             results.push(d);
