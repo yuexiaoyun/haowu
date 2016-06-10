@@ -11,6 +11,7 @@ var Feed = require('../models/Feed');
 var qiniu = require('../utility/qiniu');
 var wechat = require('../utility/wechat').api;
 var mongoose = require('mongoose');
+var { notifyLike, notifyComment, notifyReply, notifySub, notifyPub } = require('../utility/msg');
 
 import _ from 'underscore'
 import {createAction} from 'redux-actions'
@@ -58,16 +59,7 @@ router.get('/like', function *() {
     if (update.nModified > 0) {
         var doc = yield Post.findOne({_id: this.query._id}).select('openid').exec();
         // TODO: 自己给自己点赞不发通知
-        yield wechat.sendTemplate(
-            doc.openid,
-            'FRTOKz43duOUsJI2BQdQGSd4qpl0r7g0RvEJewx5zkA',
-            conf.site + '/app/post/' + this.query._id,
-            '#FF0000', {
-                first: {
-                    value: this.session.userInfo.nickname,
-                    color: "#173177"
-                }
-            });
+        console.log(yield notifyLike(this.session, doc));
         var query = {
             openid: doc.openid,
             openid2: this.session.openid,
@@ -158,7 +150,7 @@ router.get('/pub_reply', function *() {
     }
     comment.replies.push(reply);
     yield comment.save();
-    var reply_id = comment.replies[comment.replies.length - 1]._id.toString();
+    reply = comment.replies[comment.replies.length - 1];
 
     // 发送站内通知
     var notification = new Notification();
@@ -167,27 +159,13 @@ router.get('/pub_reply', function *() {
     notification.type = 'reply';
     notification.target = comment.post_id;
     notification.comment_id = comment._id;
-    notification.reply_id = reply_id;
+    notification.reply_id = reply._id;
     notification.audio_id = reply.audio_id;
     notification.d = reply.d;
     notification.text = reply.text;
     notification.uptime = new Date();
     yield notification.save();
-
-    yield wechat.sendTemplate(
-        this.query.openid,
-        'EmQHRZ1nyZ1bNAE3R7bflOgmE3kYXT0pn_RXLaaFHQk',
-        `${conf.site}/app/post/${comment.post_id}/comments/${comment._id}/replies/${reply_id}`,
-        '#FF0000', {
-            first: {
-                value: this.session.userInfo.nickname,
-                color: "#173177"
-            },
-            second: {
-                value: reply.audio_id ? '[语音]' : reply.text,
-                color: "#000000"
-            }
-        });
+    yield notifyReply(this.session, comment, reply);
 
     this.body = {
         result: 'ok',
@@ -238,22 +216,7 @@ router.get('/pub_comment', function *() {
     yield notification.save();
 
     // 发送公众号通知
-    // TODO: 把几处发公众号通知的地方，放到一个文件中
-    yield wechat.sendTemplate(
-        post.openid,
-        'jGs_WM8l95bgGzyeBnQfphxM0rxEiEkUau3VV3r51wM',
-        conf.site + '/app/post/' + this.query.post_id + '/comments/' + comment._id,
-        '#FF0000', {
-            first: {
-                value: this.session.userInfo.nickname,
-                color: "#173177"
-            },
-            second: {
-                value: comment.audio_id ? '[语音]' : comment.text,
-                color: "#000000"
-            }
-        });
-
+    yield notifyComment(this.session, post, comment);
     this.body = {
         result: 'ok',
         actions: [

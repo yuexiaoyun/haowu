@@ -19,7 +19,6 @@ import qs from 'querystring';
 // TODO: 相对时间的重刷
 var UserCard = ({user, onClick, _id}) => {
     var avatarClick = (e)=>{
-        e.stopPropagation();
         hashHistory.push('detail/' + user.openid);
     }
     return (
@@ -47,7 +46,6 @@ class Post extends React.Component {
         this.state = {};
     }
     preview = (e) => {
-        e.stopPropagation();
         var { post } = this.props;
         wx.previewImage({
             current: fconf.qiniu.site + post.pic_id,
@@ -55,7 +53,6 @@ class Post extends React.Component {
         });
     }
     like = (e) => {
-        e.stopPropagation();
         var { post, dispatch } = this.props;
         dispatch(createAction('like')(post._id));
         var url = '/api/like?' + qs.stringify({
@@ -64,7 +61,6 @@ class Post extends React.Component {
         fetch(url, {credentials: 'same-origin'});
     }
     deletePost = (e) => {
-        e.stopPropagation();
         if (confirm('您确认要删除么？')) {
             var { post } = this.props;
             var url = '/api/delete_post?' + qs.stringify({
@@ -112,15 +108,13 @@ class Post extends React.Component {
     componentDidMount() {
         var { params } = this.props;
         update('/api/update_post_detail?_id=' + params.id);
-        try {
-            this.refs.input.addEventListener('blur', ()=>{
-                this.setState({
-                    reply_comment: null,
-                    reply_user: null
-                });
+    }
+    clear_reply = () => {
+        if (!this.refs.input.value) {
+            this.setState({
+                reply_comment: null,
+                reply_user: null
             });
-        } catch(err) {
-            alert(err);
         }
     }
     render() {
@@ -130,7 +124,7 @@ class Post extends React.Component {
         // TODO: 图片的显示有问题
         // TODO: 记录进入详情页的次数？
         return (
-            <div style={styles.post}>
+            <div style={styles.post} onClick={this.clear_reply}>
                 <Helmet title={'发布详情'} />
                 { user && <UserCard user={user} _id={post._id} /> }
                 { post && <div className="card-content image-icon_image_loading"
@@ -172,7 +166,6 @@ class Post extends React.Component {
                     { like_users.map(user => (<img
                         src={user.headimgurl}
                         onClick={(e)=>{
-                            e.stopPropagation();
                             hashHistory.push('detail/' + user.openid)
                         }}
                         style={styles.like_user} />)) }

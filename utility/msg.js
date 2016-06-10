@@ -1,23 +1,50 @@
-var api = require('./wechat').api;
-var co = require('co');
-var conf = require('../conf');
+import { api as wechat } from './wechat'
+import conf from '../conf'
 
-var topcolor = '#FF0000'; // 顶部颜色
-var data = {
-     first: {
-       "value":'文案文案文案文案文案文案很多的文案',
-       "color":"#173177"
-     }
-};
-co.wrap(function *() {
-    yield api.sendTemplate(
-        'o4yMIwu6cBQEadLOAhw9TDU6zA60',
-        'H8d58VWxWVi1KHRwkzdNvOKS_OuEaVYVDroSJByKvk8',
-        conf.site + '/app/post/574062b788749448d5c4efaf',
-        topcolor,
-        data);
-})().then(function(data) {
+// TODO 调研微信能不能删除模板消息
+export function notifyLike(session, post) {
+    return wechat.sendTemplate(
+        post.openid,
+        'FRTOKz43duOUsJI2BQdQGSd4qpl0r7g0RvEJewx5zkA',
+        conf.site + '/app/post/' + post._id,
+        '#FF0000', {
+            first: {
+                value: session.userInfo.nickname,
+                color: "#173177"
+            }
+        });
+}
 
-}).catch(function(err) {
-    console.log(err);
-});
+export function notifyComment(session, post, comment) {
+    return wechat.sendTemplate(
+        post.openid,
+        'jGs_WM8l95bgGzyeBnQfphxM0rxEiEkUau3VV3r51wM',
+        conf.site + '/app/post/' + post._id + '/comments/' + comment._id,
+        '#FF0000', {
+            first: {
+                value: session.userInfo.nickname,
+                color: "#173177"
+            },
+            second: {
+                value: comment.audio_id ? '[语音]' : comment.text,
+                color: "#000000"
+            }
+        });
+}
+
+export function notifyReply(session, comment, reply) {
+    return wechat.sendTemplate(
+        reply.openid2,
+        'EmQHRZ1nyZ1bNAE3R7bflOgmE3kYXT0pn_RXLaaFHQk',
+        `${conf.site}/app/post/${comment.post_id}/comments/${comment._id}/replies/${reply._id}`,
+        '#FF0000', {
+            first: {
+                value: session.userInfo.nickname,
+                color: "#173177"
+            },
+            second: {
+                value: reply.audio_id ? '[语音]' : reply.text,
+                color: "#000000"
+            }
+        });
+}

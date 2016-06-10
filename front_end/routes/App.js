@@ -10,6 +10,7 @@ import { get_badge_count } from '../reselectors'
 import Home from './Home'
 import Me from './Me'
 
+// TODO: 点击Home键刷新Feed流
 class App extends React.Component {
     take_photo = () => {
         wx.chooseImage({
