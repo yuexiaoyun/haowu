@@ -173,6 +173,7 @@ router.get('/pub_reply', function *() {
 
     this.body = {
         result: 'ok',
+        new_id: reply._id,
         actions: [
             createAction('update_comment')(comment)
         ]
@@ -223,6 +224,7 @@ router.get('/pub_comment', function *() {
     yield notifyComment(this.session, post, comment);
     this.body = {
         result: 'ok',
+        new_id: comment._id,
         actions: [
             createAction('update_comment')(comment)
         ]

@@ -1,4 +1,5 @@
 import React from 'react'
+import { findDOMNode } from 'react-dom'
 import Helmet from 'react-helmet'
 import PostCard from './components/PostCard'
 import screenSize from '../utility/screen_size';
@@ -40,6 +41,59 @@ var NameSpan = ({user}) => {
         hashHistory.push('detail/' + user.openid);
     }
     return <span style={styles.name} onClick={avatarClick}><strong>{user.nickname}</strong></span>;
+};
+
+class Reply extends React.Component {
+    componentDidMount() {
+        if (this.props.new_id == this.props.reply._id) {
+            var dom = findDOMNode(this);
+            dom.scrollIntoViewIfNeeded(true);
+        }
+    }
+    render() {
+        try {
+            var { reply, onClick, users } = this.props;
+            return (
+                <div style={styles.reply_text} onClick={onClick(reply.openid)}>
+                    <NameSpan user={users[reply.openid]} />{' 回复 '}<NameSpan user={users[reply.openid2]} />：
+                    {reply.audio_id ? <AudioPlayer key={reply.audio_id} audio_id={reply.audio_id} length={reply.d}/>: reply.text}
+                </div>
+            );
+        } catch(err) {
+            alert(err);
+        }
+    }
+}
+
+class Comment extends React.Component {
+    componentDidMount() {
+        if (this.props.new_id == this.props.comment._id) {
+            var dom = findDOMNode(this);
+            dom.scrollIntoViewIfNeeded(true);
+        }
+    }
+    render() {
+        try {
+            var { comment, onClick, new_id, users } = this.props;
+            return (
+                <div style={styles.comment}>
+                    <UserCard _id={comment._id} user={users[comment.openid]} onClick={onClick(comment.openid)}/>
+                    <div style={styles.comment_text} onClick={onClick(comment.openid)}>
+                        {comment.audio_id
+                            ? <AudioPlayer key={comment.audio_id} audio_id={comment.audio_id} length={comment.d}/>
+                            : comment.text}
+                    </div>
+                    { comment.replies.length > 0 && <div style={styles.replies}>
+                        { comment.replies.map((reply)=>(
+                            <Reply key={reply._id} new_id={new_id} reply={reply} users={users} onClick={onClick} active={true}/>
+                        )) }
+                    </div>}
+                </div>
+            );
+        } catch(err) {
+            alert(err);
+        }
+    }
 };
 
 class Post extends React.Component {
@@ -92,18 +146,19 @@ class Post extends React.Component {
                 post_id: this.props.post._id
             });
         }
-        return update(url)
-            .then(()=>{
-                this.refs.input.value = '';
-                this.setState({
-                    record: false,
-                    reply_user: null,
-                    reply_comment: null
-                });
-                if (record && this.refs.record) {
-                    this.refs.record.clear();
-                }
+        return update(url, (data) => {
+            this.new_id = data.new_id;
+        }).then(()=>{
+            this.refs.input.value = '';
+            this.setState({
+                record: false,
+                reply_user: null,
+                reply_comment: null
             });
+            if (record && this.refs.record) {
+                this.refs.record.clear();
+            }
+        });
     }
     send = (e) => {
         e.stopPropagation();
@@ -246,22 +301,7 @@ class Post extends React.Component {
                             reply_user: openid
                         });
                     };
-                    return (
-                        <div style={styles.comment} key={comment._id}>
-                            <UserCard _id={comment._id} user={users[comment.openid]} onClick={onClick(comment.openid)}/>
-                            <div style={styles.comment_text} onClick={onClick(comment.openid)}>
-                                {comment.audio_id ? <AudioPlayer key={comment.audio_id} audio_id={comment.audio_id} length={comment.d}/>: comment.text}
-                            </div>
-                            { comment.replies.length > 0 && <div style={styles.replies}>
-                            { comment.replies.length > 0 && comment.replies.map((reply)=>(
-                                <div style={styles.reply_text} key={reply._id} onClick={onClick(reply.openid)}>
-                                    <NameSpan user={users[reply.openid]} />{' 回复 '}<NameSpan user={users[reply.openid2]} />：
-                                    {reply.audio_id ? <AudioPlayer key={reply.audio_id} audio_id={reply.audio_id} length={reply.d}/>: reply.text}
-                                </div>
-                            )) }
-                            </div>}
-                        </div>
-                    );
+                    return <Comment key={comment._id} new_id={this.new_id} users={users} comment={comment} onClick={onClick} />;
                 }) }
                 <div style={{width: '100%', height: 48 + (record ? 132 : 0), clear:'both', overflow:'hidden'}} />
                 { this.renderInput() }
