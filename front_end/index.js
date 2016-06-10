@@ -34,12 +34,11 @@ if (entry.substring(0, 5) == '/post') {
     entry = null;
 }
 
-// TODO useScroll貌似没解决滚动条的问题
 // TODO 精简CSS
 // TODO 各种出错处理，比如语音播放
 render(
     <Provider store={store}>
-        <Router history={hashHistory} render={applyRouterMiddleware(useScroll)}>
+        <Router history={hashHistory} render={applyRouterMiddleware(useScroll())}>
             <Route path="/detail/:id" component={Detail} />
             <Route path="/pub" component={Pub} />
             <Route path="/post/:id" component={Post} />
