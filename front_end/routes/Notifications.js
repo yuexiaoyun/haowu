@@ -30,6 +30,11 @@ class Notifications extends React.Component {
                     comment: '评论',
                     reply: '回复'
                 }[n.type] || '';
+                var url = n.post ? ('/post/' + n.post._id) : null;
+                if (n.type == 'reply')
+                    url += `/${n.reply_id}`;
+                else if(n.type == 'comment')
+                    url += `/${n.comment_id}`;
                 return <CommonCard
                     key={n._id}
                     openid={n.openid2}
@@ -37,7 +42,7 @@ class Notifications extends React.Component {
                     txt={`${user.nickname} ${action}了你`}
                     pic_id={n.post ? n.post.pic_id : null}
                     new_item={!clear_badge_time || n.uptime > clear_badge_time}
-                    onClick={n.post ? ()=>{hashHistory.push('/post/' + n.post._id)} : null}
+                    onClick={url ? ()=>{hashHistory.push(url)} : null}
                 >
                     { n.audio_id && <AudioPlayer audio_id={n.audio_id} length={n.d} /> }
                     { n.text && n.text != '' && <span style={styles.text}>{n.text}</span>}

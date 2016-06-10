@@ -19,7 +19,7 @@ export function notifyComment(session, post, comment) {
     return wechat.sendTemplate(
         post.openid,
         'jGs_WM8l95bgGzyeBnQfphxM0rxEiEkUau3VV3r51wM',
-        conf.site + '/app/post/' + post._id + '/comments/' + comment._id,
+        conf.site + '/app/post/' + post._id + '/' + comment._id,
         '#FF0000', {
             first: {
                 value: session.userInfo.nickname,
@@ -36,7 +36,7 @@ export function notifyReply(session, comment, reply) {
     return wechat.sendTemplate(
         reply.openid2,
         'EmQHRZ1nyZ1bNAE3R7bflOgmE3kYXT0pn_RXLaaFHQk',
-        `${conf.site}/app/post/${comment.post_id}/comments/${comment._id}/replies/${reply._id}`,
+        `${conf.site}/app/post/${comment.post_id}/${reply._id}`,
         '#FF0000', {
             first: {
                 value: session.userInfo.nickname,

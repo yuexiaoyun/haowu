@@ -132,7 +132,7 @@ router.get('/pub_reply', function *() {
 
     // 检查回复的人确实在评论或者回复里
     var openids = [comment.openid, ...comment.replies.map((reply)=>reply.openid)];
-    if (openids.indexOf(this.session.openid) < 0)
+    if (openids.indexOf(this.query.openid) < 0)
         this.throw(404);
 
     // 保存回复

@@ -97,9 +97,10 @@ class Comment extends React.Component {
 };
 
 class Post extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = { record: false };
+        this.new_id = props.params.new_id;
     }
     preview = (e) => {
         var { post } = this.props;

@@ -43,6 +43,7 @@ render(
             <Route path="/detail/:id" component={Detail} />
             <Route path="/pub" component={Pub} />
             <Route path="/post/:id" component={Post} />
+            <Route path="/post/:id/:new_id" component={Post} />
             <Route path="/sub_list" component={SubList} />
             <Route path="/" component={App} >
                 <Route path="home" ref='home' component={Home} />
