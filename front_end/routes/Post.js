@@ -355,14 +355,15 @@ class Post extends React.Component {
             <div style={styles.post} onClick={this.clear_reply}>
                 <Helmet title={'发布详情'} />
                 { user && <UserCard user={user} _id={post._id} /> }
-                { post && <div className="card-content image-icon_image_loading"
+                { post && <div className="image-icon_image_loading"
                     style={{
                         height: screenSize().width,
                         backgroundColor: '#f8f8f8',
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',
                         backgroundSize: '24px 24px',
-                        position: 'relative'
+                        position: 'relative',
+                        overflow: 'hidden'
                     }}>
                     <img src={fconf.qiniu.site + post.pic_id}
                         style={post.w > post.h ? {height: '100%'} : {width: '100%'}}

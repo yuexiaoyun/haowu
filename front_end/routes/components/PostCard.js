@@ -32,7 +32,7 @@ class PostCard extends React.Component {
         var { user, post } = this.props;
         return (
             <div className="card facebook-card" ref='card'>
-                <div className="card-content image-icon_image_loading"
+                <div className="image-icon_image_loading"
                     style={{
                         height: this.picHeight(),
                         backgroundColor: '#f8f8f8',
