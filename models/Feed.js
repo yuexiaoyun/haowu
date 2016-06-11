@@ -19,6 +19,7 @@ export default class Feed {
             q = { ...q, _id: {$lt: beforeid} }
         var posts = await Post.find(q).sort({_id:-1}).limit(21).exec();
         var feed_end = 1;
+        console.log(posts.length);
         if (posts.length == 21) {
             feed_end = 0;
             posts = _.first(posts, 20);
@@ -31,11 +32,13 @@ export default class Feed {
         user_ids = users.map(user => user._id)
 
         var user_map = _.object(user_ids, users.map(user=>User.toBrowser(user, user_id)));
+        console.log(user_map);
         console.log(user_id);
         var postids = _.chain(posts)
             .filter((post) => (user_map[post.user_id].status == 1 || post.user_id == user_id))
             .map((post) => post._id)
             .value();
+        console.log(postids);
         return [
             createAction('users')(user_map),
             createAction('posts')(_.object(postids, posts.map(post=>Post.toBrowser(post, user_id)))),

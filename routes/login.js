@@ -25,8 +25,10 @@ module.exports = function *() {
     console.log(userInfo);
     var doc = yield User.findOne({unionid: userInfo.unionid});
     console.log(doc);
-    if (!doc)
+    if (!doc) {
         doc = new User();
+        doc.status = 1;
+    }
     Object.assign(doc, userInfo);
     console.log(doc);
     yield doc.save();

@@ -111,6 +111,7 @@ router.get('/pub_post', function *() {
         result: 'ok',
         actions: [
             createAction('feed_ids')([]),
+            createAction('feed_end')(0),
             createAction('user_post_ids')(_.object([this.session.user_id],[[]]))
         ]
     };
