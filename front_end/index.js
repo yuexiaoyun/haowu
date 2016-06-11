@@ -7,8 +7,10 @@ import { render, findDOMNode } from 'react-dom';
 import { applyRouterMiddleware, Router, Route, Link, hashHistory } from 'react-router'
 import useScroll from 'react-router-scroll';
 import { Provider } from 'react-redux'
-import { createStore, combineReducers } from 'redux'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { createAction } from 'redux-actions';
+import optimist from 'redux-optimist';
+import optimistPromiseMiddleware from 'redux-optimist-promise';
 
 import App from './routes/App'
 import Home from './routes/Home'
@@ -23,7 +25,9 @@ import PopupHelper from './utility/PopupHelper'
 import * as reducers from './reducers'
 import { setStore } from './utility/update'
 
-let store = createStore(combineReducers(reducers));
+let store = (applyMiddleware(
+    optimistPromiseMiddleware()
+)(createStore))(optimist(combineReducers(reducers)));
 setStore(store);
 var entry = window.location.pathname.substring(4);
 if (entry.substring(0, 5) == '/post') {
@@ -31,7 +35,6 @@ if (entry.substring(0, 5) == '/post') {
     setTimeout(()=>hashHistory.push(entry), 0);
 } else {
     hashHistory.replace(entry);
-    entry = null;
 }
 
 // TODO 精简CSS

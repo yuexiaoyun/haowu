@@ -1,6 +1,7 @@
 import React from 'react';
 import { hashHistory } from 'react-router';
 import fconf from '../../fconf';
+import * as actions from '../../actions';
 import AudioPlayer from './AudioPlayer';
 import CssButton from './CssButton'
 import { connect } from 'react-redux'
@@ -25,11 +26,8 @@ class PostCard extends React.Component {
     }
     like = () => {
         var { post, dispatch } = this.props;
-        dispatch(createAction('like')(post._id));
-        var url = '/api/like?' + qs.stringify({
-            _id: post._id
-        });
-        fetch(url, {credentials: 'same-origin'});
+        alert(actions);
+        dispatch(actions.like(post._id));
     }
     render() {
         var { user, post } = this.props;

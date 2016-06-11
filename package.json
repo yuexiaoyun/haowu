@@ -55,6 +55,8 @@
     "react-spinner": "0.2.6",
     "redux": "3.5.2",
     "redux-actions": "0.9.0",
+    "redux-optimist": "0.0.2",
+    "redux-optimist-promise": "0.7.1",
     "redux-promise": "0.5.3",
     "reselect": "2.5.1",
     "soundmanager2": "2.97.20150601",

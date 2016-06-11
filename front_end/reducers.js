@@ -1,6 +1,7 @@
 import { handleActions } from 'redux-actions';
 import _ from 'underscore';
 
+// TODO: Baobab重写？
 // TODO: 各种分页加载
 export var local_pic_id = handleActions({
     take_pic: (state, action) => (action.payload)
@@ -79,7 +80,23 @@ export var posts = handleActions({
 export var users = handleActions({
     users: (state, action) => ({
         ...state, ...action.payload
-    })
+    }),
+    sub: (state, action) => {
+        var { openid, sub } = action.payload;
+        var user = state[openid];
+        if (user) {
+            user = {
+                ...user,
+                subbed: sub
+            };
+            return {
+                ...state,
+                ..._.object([openid], [user])
+            }
+        } else {
+            return state;
+        }
+    }
 }, {});
 // 帖子详情页的ID与内容对应
 export var post_details = handleActions({

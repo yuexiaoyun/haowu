@@ -10,6 +10,7 @@ import Recorder from './components/Recorder';
 import AudioPlayer from './components/AudioPlayer';
 import Loader from './components/Loader';
 import fconf from '../fconf';
+import * as actions from '../actions';
 import { hashHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions'
@@ -209,11 +210,7 @@ class Post extends React.Component {
     }
     like = (e) => {
         var { post, dispatch } = this.props;
-        dispatch(createAction('like')(post._id));
-        var url = '/api/like?' + qs.stringify({
-            _id: post._id
-        });
-        fetch(url, {credentials: 'same-origin'});
+        dispatch(actions.like(post._id));
     }
     deletePost = (e) => {
         if (confirm('您确认要删除么？')) {

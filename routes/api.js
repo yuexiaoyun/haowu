@@ -352,11 +352,8 @@ router.get('/sub', function *() {
             uptime: new Date()
         }, { upsert: true }));
     }
-    var user = yield User.findOne(q).select('openid headimgurl nickname subids').exec();
-    var users = _.object([user.openid], [User.toBrowser(user, this.session.openid)])
     this.body = yield {
-        result: 'ok',
-        actions: [createAction('users')(users)]
+        result: 'ok'
     };
 });
 
@@ -369,11 +366,8 @@ router.get('/unsub', function *() {
         }
     };
     var update = yield User.update(q, d);
-    var user = yield User.findOne(q).select('openid headimgurl nickname subids').exec();
-    var users = _.object([user.openid], [User.toBrowser(user, this.session.openid)])
     this.body = yield {
-        result: 'ok',
-        actions: [createAction('users')(users)]
+        result: 'ok'
     };
     console.log(JSON.stringify(this.body));
 });

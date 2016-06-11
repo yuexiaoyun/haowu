@@ -1,15 +1,18 @@
 import React from 'react';
 import CssButton from './CssButton';
 import update from '../../utility/update';
+import * as actions from '../../actions';
 import { Link, hashHistory } from 'react-router';
 import PopupHelper from '../../utility/PopupHelper';
 import showProgress from '../../utility/show_progress';
 import { connect } from 'react-redux'
 
-var UserTopCard = ({user, subids}) => {
+var UserTopCard = ({user, subids, dispatch}) => {
     var sub = () => {
-        var id = user.openid;
-        showProgress('操作中', update(`/api/${user.subbed ? 'unsub' : 'sub'}?openid=${id}`));
+        dispatch(actions.sub({
+            sub: !user.subbed,
+            openid: user.openid
+        }));
     }
     return (
         <div>
