@@ -323,6 +323,7 @@ router.get('/sub', function *() {
     var update = yield User.update(q, d);
     console.log(update);
     if (update.nModified > 0) {
+        /*
         yield wechat.sendTemplate(
             this.query.user_id,
             '3JFrw9e6GFGUKjAHBWZCvSYyKl9u-JGIf7Idn5VSolU',
@@ -333,6 +334,7 @@ router.get('/sub', function *() {
                     color: "#173177"
                 }
             });
+        */
         var query = {
             user_id: this.query.user_id,
             user_id2: this.session.user_id,

@@ -43,7 +43,7 @@ module.exports = function *() {
           'chooseCard',
           'openCard'
         ],
-        url: conf.site + this.originalUrl
+        url: `http://${this.host}${this.originalUrl}`
     };
     try {
         var params = yield *api.getJsConfig(param);

@@ -41,7 +41,8 @@ app.use(mount('/login', require('./routes/login')));
 app.use(function *(next) {
     if (!this.session.user_id) {
         var origin = conf.site + '/login?' + qs.stringify({
-            target: `http://${this.host}${this.originalUrl}`
+            target: this.originalUrl,
+            host: this.host
         });
         var url = oauth.getAuthorizeURL(origin, 'state', 'snsapi_userinfo');
         this.redirect(url);

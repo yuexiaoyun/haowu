@@ -2,6 +2,11 @@ var oauth = require('../utility/wechat').oauth;
 var User = require('../mongodb_models/user').Model;
 
 module.exports = function *() {
+    console.log(this.originalUrl);
+    if (this.query.host != this.host) {
+        this.redirect(`http://${this.query.host}/${this.originalUrl}`);
+        return;
+    }
     var code = this.query.code;
     var userInfo = yield new Promise((resolve, reject) => {
         oauth.getAccessToken(code, (err, result) => {
