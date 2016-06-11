@@ -7,8 +7,8 @@ var mongo = require('../utility/mongo');
 var schema = new mongoose.Schema({
     // 微信unionid
     unionid: { type: String },
-    // 微信user_id
-    user_id: { type: String },
+    // 微信openid
+    openid: { type: String },
     // 昵称
     nickname: { type: String },
     // 性别: 1为男，2为女

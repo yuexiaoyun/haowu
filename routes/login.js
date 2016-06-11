@@ -14,7 +14,10 @@ module.exports = function *() {
                     if (err)
                         reject(err);
                     else
-                        resolve(result);
+                        resolve({
+                            openid: openid,
+                            ...result
+                        });
                 });
             }
         });
