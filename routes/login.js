@@ -4,7 +4,9 @@ var User = require('../mongodb_models/user').Model;
 module.exports = function *() {
     console.log(this.originalUrl);
     if (this.query.host != this.host) {
-        this.redirect(`http://${this.query.host}/${this.originalUrl}`);
+        var url = `http://${this.query.host}/${this.originalUrl}`
+        console.log(url);
+        this.redirect(url);
         return;
     }
     var code = this.query.code;
