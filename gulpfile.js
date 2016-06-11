@@ -60,7 +60,8 @@ gulp.task('default', ['css'], function() {
         debug: false
     };
 
-    var onErr = function() {
+    var onErr = function(err) {
+        console.log(err);
         process.exit(1);
     }
 

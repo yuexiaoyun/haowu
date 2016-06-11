@@ -8,6 +8,7 @@
     "babel-core": "^6.9.0",
     "babelify": "6.4.0",
     "browserify": "13.0.1",
+    "bson": "0.4.23",
     "co": "4.6.0",
     "co-request": "1.0.0",
     "co-wechat-api": "2.4.0",
