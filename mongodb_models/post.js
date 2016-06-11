@@ -18,8 +18,6 @@ var schema = new mongoose.Schema({
     h: { type: Number },
     // 所有点了赞的用户的user_id
     likes: [{ type: String }],
-    // 所有听过语音的用户user_id（该字段可能从这个表里去掉，另开新表）
-    reads: [{ type: String }],
     // status=0：已被删除
     // status=1：正常状态
     // status=2：已屏蔽；其他人在主Feed流里不可见
@@ -31,6 +29,7 @@ schema.index({ user_id: 1 });
 var Model = mongo.conn.model('post', schema);
 module.exports.Model = Model;
 
+// TODO: likes不要先取到应用端，而是直接在mongdb里处理
 Model.toBrowser = (doc, user_id) => {
     doc = doc.toObject();
     doc.me_like = doc.likes && doc.likes.indexOf(user_id) >= 0;

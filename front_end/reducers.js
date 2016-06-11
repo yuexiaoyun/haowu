@@ -2,7 +2,7 @@ import { handleActions } from 'redux-actions';
 import _ from 'underscore';
 import Immutable from 'immutable'
 
-// TODO: Baobab重写？
+// TODO: 全部用immutablejs重写？
 // TODO: 各种分页加载
 export var local_pic_id = handleActions({
     take_pic: (state, action) => (action.payload)
@@ -134,7 +134,9 @@ export var post_details = handleActions({
 export var clear_badge_time = handleActions({
     clear_badge_time: (state, action) => action.payload
 }, null);
+
 // 我听过的语音
 export var reads = handleActions({
+    reads: (state, action) => state.merge(action.payload),
     read: (state, action) => state.add(action.payload)
 }, Immutable.Set());

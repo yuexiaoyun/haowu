@@ -3,12 +3,14 @@ import {Model as Post} from '../mongodb_models/post'
 import {Model as User} from '../mongodb_models/user'
 import {Model as Notification} from '../mongodb_models/notification'
 import {Model as Comment} from '../mongodb_models/comment'
+import {Model as Audio} from '../mongodb_models/audio'
 import createError from 'http-errors'
 import Badge from './Badge'
 import _ from 'underscore'
 
 export default class Feed {
     static async load(user_id, beforeid) {
+        // 获取原始的Post列表 status=2的Post仅作者本人可见
         var q = {
             $or: [
                 { status: 1 },
@@ -19,38 +21,47 @@ export default class Feed {
             q = { ...q, _id: {$lt: beforeid} }
         var posts = await Post.find(q).sort({_id:-1}).limit(21).exec();
         var feed_end = 1;
-        console.log(posts.length);
         if (posts.length == 21) {
             feed_end = 0;
             posts = _.first(posts, 20);
         }
-        var postids = posts.map(post => post._id)
+
+        // 获取Post的作者信息
         var user_ids = _.uniq(posts.map(post => post.user_id))
         var users = await User.find({
             _id: { $in: user_ids }
         }).select('_id headimgurl nickname subids status').exec()
         user_ids = users.map(user => user._id)
-
         var user_map = _.object(user_ids, users.map(user=>User.toBrowser(user, user_id)));
-        console.log(user_map);
-        console.log(user_id);
-        var postids = _.chain(posts)
-            .filter((post) => (user_map[post.user_id].status == 1 || post.user_id == user_id))
-            .map((post) => post._id)
-            .value();
-        console.log(postids);
+
+        // 作者status != 1则仅作者本人可见
+        posts = _.filter(posts, (post) => (user_map[post.user_id].status == 1 || post.user_id == user_id));
+        var postids = posts.map((post) => post._id);
+
+        // 获取所有语音是否已听
+        var audio_ids = posts.map(post => post.audio_id);
+        var docs = await Audio.find({
+            audio_id: { $in: audio_ids },
+            reads: user_id
+        }).select('audio_id').exec();
+        var reads = docs.map(doc=>doc.audio_id);
+
         return [
             createAction('users')(user_map),
             createAction('posts')(_.object(postids, posts.map(post=>Post.toBrowser(post, user_id)))),
             createAction('feed_end')(feed_end),
+            createAction('reads')(reads),
             createAction(beforeid ? 'feed_ids_more' : 'feed_ids')(postids)
         ]
     }
     // TODO: 点赞列表和评论、评论回复的分页
     static async loadPostDetail(user_id, _id) {
+        // 获取原始Post
         var post = await Post.findOne({_id:_id, status: {$ne: 0}}).exec();
         if (!post)
             throw(createError(404));
+
+        // 获取评论、回复和所有评论、回复、点赞中出现的user_id对应的用户
         var comments = await Comment.find({post_id: _id, status: 1}).sort({_id:1}).exec();
         var comment_user_ids = comments.map((comment)=>comment.user_id);
         var replies = _.flatten(comments.map((comment)=>comment.replies));
@@ -65,13 +76,30 @@ export default class Feed {
             ])
         }}).exec();
         var user_ids = users.map(user=>user._id);
-        return  [
+
+        // 获取原贴、评论、回复中出现的语音是否已读
+        var comment_audio_ids = comments.map(comment => comment.audio_id);
+        var reply_audio_ids = replies.map(reply => reply.audio_id);
+        var audio_ids = _.uniq(_.compact([
+            post.audio_id,
+            ...comment_audio_ids,
+            ...reply_audio_ids
+        ]));
+        console.log(audio_ids);
+        var docs = await Audio.find({
+            audio_id: { $in: audio_ids },
+            reads: user_id
+        }).select('audio_id').exec();
+        var reads = docs.map(doc=>doc.audio_id);
+
+        return [
             createAction('users')(_.object(user_ids, users.map(user=>User.toBrowser(user, user_id)))),
             createAction('posts')(_.object([_id], [Post.toBrowser(post, user_id)])),
             createAction('post_details')(_.object([_id], [{
                 likes: post.likes,
                 comments: comments
-            }]))
+            }])),
+            createAction('reads')(reads)
         ]
     }
     static async loadByUser(user_id, user_id2) {
@@ -99,9 +127,20 @@ export default class Feed {
             _id: { $in: user_ids }
         }).select('_id headimgurl nickname subids status').exec()
         user_ids = users.map(user => user._id)
+
+        // 互动区的所有语音
+        var audio_ids = results[2].map(notification=>notification.audio_id);
+        audio_ids = _.compact(audio_ids);
+        var docs = await Audio.find({
+            audio_id: { $in: audio_ids },
+            reads: user_id
+        }).select('audio_id').exec();
+        var reads = docs.map(doc=>doc.audio_id);
+
         return [
             createAction('users')(_.object(user_ids, users.map(user=>User.toBrowser(user, user_id)))),
             createAction('clear_badge_time')(results[1].clear_badge || null),
+            createAction('reads')(reads),
             createAction('notifications')(results[2]),
             createAction('subids')(results[1].subids),
             ...results[0]

@@ -1,5 +1,6 @@
 var router = require('koa-router')();
 var conf = require('../conf');
+var debug = require('debug')('app');
 
 var User = require('../mongodb_models/user').Model;
 var Post = require('../mongodb_models/post').Model;
@@ -27,28 +28,28 @@ router.get('/update_feeds', function *() {
         result: 'ok',
         actions: yield Feed.load(this.session.user_id, this.query.beforeid)
     };
-    console.log(JSON.stringify(this.body.actions));
+    debug(this.body.actions);
 });
 router.get('/delete_post', function *() {
     this.body = {
         result: 'ok',
         actions: yield Feed.deletePost(this.session.user_id, this.query._id)
     };
-    console.log(JSON.stringify(this.body.actions));
+    debug(JSON.stringify(this.body.actions));
 });
 router.get('/update_user_detail', function *() {
     this.body = {
         result: 'ok',
         actions: yield Feed.loadByUser(this.session.user_id, this.query._id)
     };
-    console.log(JSON.stringify(this.body.actions[1]));
+    debug(JSON.stringify(this.body.actions[1]));
 });
 router.get('/update_post_detail', function *() {
     this.body = {
         result: 'ok',
         actions: yield Feed.loadPostDetail(this.session.user_id, this.query._id)
     };
-    console.log(JSON.stringify(this.body.actions));
+    debug(JSON.stringify(this.body.actions));
 });
 router.get('/like', function *() {
     var q = { _id: this.query._id, status: {$ne: 0} };
@@ -354,13 +355,13 @@ router.get('/unsub', function *() {
 });
 
 router.get('/read', function *() {
-    var q = { audio_id: this.query.audio_id};
+    var q = { audio_id: this.query.audio_id };
     var d = {
         $addToSet: {
             reads: this.session.user_id
         }
     };
-    var update = yield Audio.update(q, d, {upset: true});
+    var update = yield Audio.update(q, d, {upsert: true});
     this.body = yield {
         result: 'ok'
     };

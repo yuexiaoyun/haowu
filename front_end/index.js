@@ -39,6 +39,7 @@ if (entry.substring(0, 5) == '/post') {
 
 // TODO 精简CSS
 // TODO 各种出错处理，比如语音播放
+// TODO 微信的JS打进bundle
 render(
     <Provider store={store}>
         <Router history={hashHistory} render={applyRouterMiddleware(useScroll())}>

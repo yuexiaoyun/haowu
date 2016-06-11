@@ -12,6 +12,7 @@
     "co": "4.6.0",
     "co-request": "1.0.0",
     "co-wechat-api": "2.4.0",
+    "debug": "2.2.0",
     "envify": "3.4.0",
     "es6-promise": "3.2.1",
     "gulp": "3.9.1",

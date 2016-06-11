@@ -40,6 +40,7 @@ schema.index({ unionid: 1 }, { unique: 1});
 var Model = mongo.conn.model('user', schema);
 module.exports.Model = Model;
 
+// TODO: subbed不要先取到应用端，而是在MongoDB处理
 Model.toBrowser = (doc, user_id) => {
     doc = doc.toObject();
     doc.subbed = doc.subids && doc.subids.indexOf(user_id) >= 0;
