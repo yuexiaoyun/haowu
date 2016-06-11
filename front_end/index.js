@@ -60,5 +60,5 @@ render(
 );
 
 wx.error(function (res) {
-    PopupHelper.toast(res.errMsg);
+    PopupHelper.toast('当前版本暂不支持发布和分享功能');
 });
