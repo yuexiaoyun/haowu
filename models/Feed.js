@@ -101,7 +101,7 @@ export default class Feed {
         user_ids = users.map(user => user._id)
         return [
             createAction('users')(_.object(user_ids, users.map(user=>User.toBrowser(user, user_id)))),
-            createAction('clear_badge_time')(results[1].clear_badge),
+            createAction('clear_badge_time')(results[1].clear_badge || null),
             createAction('notifications')(results[2]),
             createAction('subids')(results[1].subids),
             ...results[0]

@@ -10,7 +10,7 @@ var FeedList = ({ids, posts, users, showUser}) => {
             <div style={styles.d2()} key={'d1'}>{
                 ids && ids.map((id, i) => {
                     if (i % 2 == 0) {
-                        return <PostCard key={id} post={posts[id]} user={showUser && users[posts[id]._id] || null}/>;
+                        return <PostCard key={id} post={posts[id]} user={showUser && users[posts[id].user_id] || null}/>;
                     } else {
                         return null;
                     }
@@ -19,7 +19,7 @@ var FeedList = ({ids, posts, users, showUser}) => {
             <div style={styles.d2()} key={'d2'}>{
                 ids && ids.map((id, i) => {
                     if (i % 2 == 1) {
-                        return <PostCard key={id} post={posts[id]} user={showUser && users[posts[id]._id] || null}/>;
+                        return <PostCard key={id} post={posts[id]} user={showUser && users[posts[id].user_id] || null}/>;
                     } else {
                         return null;
                     }
