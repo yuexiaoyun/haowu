@@ -79,18 +79,6 @@ router.get('/like', function *() {
         update
     };
 });
-router.get('/read', function *() {
-    var q = { _id: this.query._id };
-    var d = {
-        $addToSet: {
-            reads: this.session.user_id
-        }
-    };
-    this.body = yield {
-        result: 'ok',
-        update: Post.update(q, d)
-    };
-});
 
 router.get('/pub_post', function *() {
     console.log('here');
