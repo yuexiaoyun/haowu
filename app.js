@@ -39,12 +39,10 @@ app.use(mount('/agent', function *() {
 }));
 app.use(mount('/login', require('./routes/login')));
 app.use(function *(next) {
-    console.log(this.originalUrl);
     if (!this.session.user_id) {
         var origin = conf.site + '/login?' + qs.stringify({
-            target: this.originalUrl
+            target: `http://${this.host}${this.originalUrl}`
         });
-        console.log(origin);
         var url = oauth.getAuthorizeURL(origin, 'state', 'snsapi_userinfo');
         this.redirect(url);
     } else {

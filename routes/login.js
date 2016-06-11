@@ -22,18 +22,15 @@ module.exports = function *() {
             }
         });
     });
-    console.log(userInfo);
     var doc = yield User.findOne({unionid: userInfo.unionid});
-    console.log(doc);
     if (!doc) {
         doc = new User();
         doc.status = 1;
     }
     Object.assign(doc, userInfo);
-    console.log(doc);
     yield doc.save();
     this.session.user_id = doc._id.toString();
     this.session.userInfo = userInfo;
-    console.log(this.query.target);
+    console.log('redirect to:' + this.query.target);
     this.redirect(this.query.target);
 }
