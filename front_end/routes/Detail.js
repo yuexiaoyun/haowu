@@ -17,7 +17,7 @@ class Detail extends React.Component {
     }
     componentDidMount() {
         var id = this.props.params.id;
-        var url = (id == window.openid) ? '/api/update_me' : '/api/update_user_detail?openid=' + id;
+        var url = (id == window.user_id) ? '/api/update_me' : '/api/update_user_detail?_id=' + id;
         update(url)
             .catch((err) => this.setState({err}));
     }

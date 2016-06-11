@@ -3,14 +3,14 @@ import fconf from '../../fconf';
 import { Link, hashHistory } from 'react-router';
 import _ from 'underscore';
 
-export default ({openid, avatar, txt, pic_id, new_item, children, onClick}) => {
+export default ({user_id, avatar, txt, pic_id, new_item, children, onClick}) => {
     children = _.compact(children);
     var has_children = children && children.length>0;
     return (
         <div style={styles.d(new_item)} onClick={onClick || ()=>{}}>
             <div style={styles.d1} onClick={(e)=>{
                 e.stopPropagation();
-                hashHistory.push('detail/' + openid);
+                hashHistory.push('detail/' + user_id);
             }}>
                 <img src={avatar} style={styles.avatar} />
             </div>

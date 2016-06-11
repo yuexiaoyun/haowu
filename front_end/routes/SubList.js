@@ -12,10 +12,10 @@ var SubList = ({ subids, users }) => (
             (id) => {
                 var user = users[id];
                 return <CommonCard
-                    openid={user.openid}
+                    user_id={user._id}
                     avatar={user.headimgurl}
                     txt={user.nickname}
-                    onClick={()=>(hashHistory.push('detail/'+user.openid))}
+                    onClick={()=>(hashHistory.push('detail/'+user._id))}
                 />;
             }
         )}

@@ -3,15 +3,15 @@ var Post = require('../mongodb_models/post').Model;
 var Notification = require('../mongodb_models/notification').Model;
 
 export default class Badge {
-    constructor(openid) {
-        this.openid = openid;
+    constructor(user_id) {
+        this.user_id = user_id;
     }
     async clear() {
-        return await User.update({openid: this.openid}, {clear_badge: new Date()}).exec();
+        return await User.update({_id: this.user_id}, {clear_badge: new Date()}).exec();
     }
     // TODO: 这里要做性能优化
     async list() {
-        var docs = await Notification.find({openid: this.openid}).sort({uptime:-1}).exec();
+        var docs = await Notification.find({user_id: this.user_id}).sort({uptime:-1}).exec();
         var results = [];
         for (var d of docs) {
             d = d.toObject();

@@ -96,7 +96,7 @@ wx.ready(function () {
     });
     alert('已注册获取“分享到 QQ”状态事件');
   };
-  
+
   // 2.4 监听“分享到微博”按钮点击、自定义分享内容及分享结果接口
   document.querySelector('#onMenuShareWeibo').onclick = function () {
     wx.onMenuShareWeibo({
@@ -493,11 +493,11 @@ wx.ready(function () {
       cardList: [
         {
           cardId: 'pDF3iY9tv9zCGCj4jTXFOo1DxHdo',
-          cardExt: '{"code": "", "openid": "", "timestamp": "1418301401", "signature":"ad9cf9463610bc8752c95084716581d52cd33aa0"}'
+          cardExt: '{"code": "", "user_id": "", "timestamp": "1418301401", "signature":"ad9cf9463610bc8752c95084716581d52cd33aa0"}'
         },
         {
           cardId: 'pDF3iY9tv9zCGCj4jTXFOo1DxHdo',
-          cardExt: '{"code": "", "openid": "", "timestamp": "1418301401", "signature":"ad9cf9463610bc8752c95084716581d52cd33aa0"}'
+          cardExt: '{"code": "", "user_id": "", "timestamp": "1418301401", "signature":"ad9cf9463610bc8752c95084716581d52cd33aa0"}'
         }
       ],
       success: function (res) {
@@ -572,4 +572,3 @@ wx.ready(function () {
 wx.error(function (res) {
   alert(res.errMsg);
 });
-

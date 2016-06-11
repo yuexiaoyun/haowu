@@ -1,7 +1,6 @@
 var api = require('../utility/wechat').api;
 var conf = require('../conf');
 var Badge = require('../models/Badge');
-var User = require('../mongodb_models/user').Model;
 
 module.exports = function *() {
     var param = {
@@ -54,7 +53,7 @@ module.exports = function *() {
     }
     this.render('base', {
         js_params: JSON.stringify(params),
-        openid: this.session.openid
+        user_id: this.session.user_id
     });
     console.log(this.body);
 }

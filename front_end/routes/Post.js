@@ -23,7 +23,7 @@ import qs from 'querystring';
 // TODO: 相对时间的重刷
 var UserCard = ({user, onClick, louzhu, _id}) => {
     var avatarClick = (e)=>{
-        hashHistory.push('detail/' + user.openid);
+        hashHistory.push('detail/' + user._id);
     }
     var styles = {
         d: {
@@ -58,7 +58,7 @@ var UserCard = ({user, onClick, louzhu, _id}) => {
             lineHeight: '12px',
             color: '#999999'
         },
-        openid: {
+        user_id: {
             display: 'inline-block',
             verticalAlign: 'middle',
             width: 40,
@@ -77,7 +77,7 @@ var UserCard = ({user, onClick, louzhu, _id}) => {
             <div>
                 <div style={styles.name_line}>
                     <span style={styles.name}><strong>{user.nickname}</strong></span>
-                    { louzhu && <span style={styles.openid}>楼主</span> }
+                    { louzhu && <span style={styles.user_id}>楼主</span> }
                 </div>
                 <div style={styles.time}>{ fromObjectId(_id) }</div>
             </div>
@@ -89,7 +89,7 @@ var UserCard = ({user, onClick, louzhu, _id}) => {
 var NameSpan = ({user}) => {
     var avatarClick = (e)=>{
         e.stopPropagation();
-        hashHistory.push('detail/' + user.openid);
+        hashHistory.push('detail/' + user._id);
     }
     return <span style={styles.name} onClick={avatarClick}><strong>{user.nickname}</strong></span>;
 };
@@ -103,13 +103,13 @@ class Reply extends React.Component {
     }
     onClick = (e) => {
         var { reply, onClick } = this.props;
-        if (reply.openid == window.openid) {
+        if (reply.user_id == window.user_id) {
             if (confirm('你确认删除您发布的这条回复么？')) {
                 showProgress('删除中', update('/api/delete_reply?_id=' + reply._id)
                     .catch(()=>PopupHelper.toast('删除失败')));
             }
         } else {
-            onClick(reply.openid)(e);
+            onClick(reply.user_id)(e);
         }
     }
     render() {
@@ -117,7 +117,7 @@ class Reply extends React.Component {
             var { reply, users } = this.props;
             return (
                 <div style={styles.reply_text} onClick={this.onClick}>
-                    <NameSpan user={users[reply.openid]} />{' 回复 '}<NameSpan user={users[reply.openid2]} />：
+                    <NameSpan user={users[reply.user_id]} />{' 回复 '}<NameSpan user={users[reply.user_id2]} />：
                     {reply.audio_id ? <AudioPlayer key={reply.audio_id} audio_id={reply.audio_id} length={reply.d}/>: reply.text}
                 </div>
             );
@@ -136,13 +136,13 @@ class Comment extends React.Component {
     }
     onClick = (e) => {
         var { comment, onClick } = this.props;
-        if (comment.openid == window.openid) {
+        if (comment.user_id == window.user_id) {
             if (confirm('你确认删除您发布的这条评论么？')) {
                 showProgress('删除中', update('/api/delete_comment?_id=' + comment._id)
                     .catch(()=>PopupHelper.toast('删除失败')));
             }
         } else {
-            onClick(comment.openid)(e);
+            onClick(comment.user_id)(e);
         }
     }
     render() {
@@ -171,7 +171,7 @@ class Comment extends React.Component {
             }
             return (
                 <div style={styles.comment}>
-                    <UserCard _id={comment._id} louzhu={louzhu} user={users[comment.openid]} onClick={this.onClick}/>
+                    <UserCard _id={comment._id} louzhu={louzhu} user={users[comment.user_id]} onClick={this.onClick}/>
                     { comment.status == 1 && <div style={styles.comment_text} onClick={this.onClick}>
                         {comment.audio_id
                             ? <AudioPlayer key={comment.audio_id} audio_id={comment.audio_id} length={comment.d}/>
@@ -233,7 +233,7 @@ class Post extends React.Component {
         if (reply_user && reply_comment) {
             var url = '/api/pub_reply?' + qs.stringify({
                 ...c,
-                openid: reply_user,
+                user_id: reply_user,
                 comment_id: reply_comment
             });
         } else {
@@ -301,7 +301,7 @@ class Post extends React.Component {
     renderInput() {
         var { post, user, users } = this.props;
         var { record, err, reply_user } = this.state;
-        var show_record_btn = post && post.openid == window.openid;
+        var show_record_btn = post && post.user_id == window.user_id;
         var placeholder = reply_user ? ('回复' + users[reply_user].nickname) : '请输入评论';
         if (record)
             placeholder = `语音${reply_user ? ('回复' + users[reply_user].nickname) : '评论'}`;
@@ -328,12 +328,12 @@ class Post extends React.Component {
             </div>
         )
     }
-    onClick = (comment_id)=>(openid)=>(e)=>{
+    onClick = (comment_id)=>(user_id)=>(e)=>{
         e.stopPropagation();
         this.refs.input.focus();
         this.setState({
             reply_comment: comment_id,
-            reply_user: openid
+            reply_user: user_id
         });
     }
     renderComment = (comment) => {
@@ -342,7 +342,7 @@ class Post extends React.Component {
             new_id={this.new_id}
             users={this.props.users}
             comment={comment}
-            louzhu={this.props.post && comment.openid==this.props.post.openid}
+            louzhu={this.props.post && comment.user_id==this.props.post.user_id}
             onClick={this.onClick(comment._id)} />;
     }
     render() {
@@ -395,10 +395,10 @@ class Post extends React.Component {
                     { like_users.map(user => (<img
                         src={user.headimgurl}
                         onClick={(e)=>{
-                            hashHistory.push('detail/' + user.openid)
+                            hashHistory.push('detail/' + user._id)
                         }}
                         style={styles.like_user} />)) }
-                    { post.openid == window.openid && <div style={styles.delete} onClick={this.deletePost}>
+                    { post.user_id == window.user_id && <div style={styles.delete} onClick={this.deletePost}>
                         <CssButton
                             className={"image-btn_detail_delete"}
                             onClick={this.delete}
@@ -427,13 +427,13 @@ class Post extends React.Component {
 export default connect((state, props) => {
     var users = state.users;
     var post = state.posts[props.params.id];
-    var user = post && users[post.openid];
+    var user = post && users[post.user_id];
     var post_detail = state.post_details[props.params.id];
     var like_users = (()=> {
         if (post && post_detail && post_detail.likes) {
-            var likes = _.filter(post_detail.likes, id=>(id!=window.openid));
+            var likes = _.filter(post_detail.likes, id=>(id!=window.user_id));
             if (post.me_like)
-                likes = [window.openid, ...likes];
+                likes = [window.user_id, ...likes];
             return likes.map(id=>users[id]);
         }
         return null;
@@ -442,8 +442,8 @@ export default connect((state, props) => {
     var comments = [];
     post && post_detail && post_detail.comments && post_detail.comments.map(comment => {
         if (comment.status == 1 || comment.replies.length > 0) {
-            var openids = [comment.openid, ...comment.replies.map(reply=>reply.openid)];
-            if (openids.indexOf(post.openid) >= 0)
+            var user_ids = [comment.user_id, ...comment.replies.map(reply=>reply.user_id)];
+            if (user_ids.indexOf(post.user_id) >= 0)
                 comments_top.push(comment);
             else
                 comments.push(comment);

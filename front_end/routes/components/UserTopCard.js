@@ -11,7 +11,7 @@ var UserTopCard = ({user, subids, dispatch}) => {
     var sub = () => {
         dispatch(actions.sub({
             sub: !user.subbed,
-            openid: user.openid
+            user_id: user._id
         }));
     }
     return (
@@ -32,7 +32,7 @@ var UserTopCard = ({user, subids, dispatch}) => {
             <div style={styles.d2}>
                 <img src={user.headimgurl} style={styles.avatar}></img>
                 <div style={styles.n}>{user.nickname}</div>
-                { user.openid != window.openid && <div style={styles.d20}>
+                { user._id != window.user_id && <div style={styles.d20}>
                     <span style={styles.sub} onClick={sub}>{user.subbed ? '已订阅' : '订阅'}</span>
                 </div> || <div style={styles.d20}>
                     <span style={styles.sub} onClick={()=>(subids && subids.length>0 && hashHistory.push('sub_list'))}>

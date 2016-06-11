@@ -1,5 +1,6 @@
 import { handleActions } from 'redux-actions';
 import _ from 'underscore';
+import Immutable from 'immutable'
 
 // TODO: Baobab重写？
 // TODO: 各种分页加载
@@ -28,12 +29,12 @@ export var feed_end = handleActions({
 export var user_post_ids = handleActions({
     user_post_ids: (state, action) => ({...state, ...action.payload}),
     delete_my_post: (state, action) => {
-        var my_post_ids = state[window.openid];
+        var my_post_ids = state[window.user_id];
         if (my_post_ids) {
             my_post_ids = _.filter(my_post_ids, item=>(item!=action.payload))
             var r = {
                 ...state,
-                ..._.object([window.openid], [my_post_ids])
+                ..._.object([window.user_id], [my_post_ids])
             };
             return r;
         } else {
@@ -82,8 +83,8 @@ export var users = handleActions({
         ...state, ...action.payload
     }),
     sub: (state, action) => {
-        var { openid, sub } = action.payload;
-        var user = state[openid];
+        var { user_id, sub } = action.payload;
+        var user = state[user_id];
         if (user) {
             user = {
                 ...user,
@@ -91,7 +92,7 @@ export var users = handleActions({
             };
             return {
                 ...state,
-                ..._.object([openid], [user])
+                ..._.object([user_id], [user])
             }
         } else {
             return state;
@@ -133,3 +134,7 @@ export var post_details = handleActions({
 export var clear_badge_time = handleActions({
     clear_badge_time: (state, action) => action.payload
 }, null);
+// 我听过的语音
+export var reads = handleActions({
+    read: (state, action) => state.add(action.payload)
+}, Immutable.Set());

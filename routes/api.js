@@ -4,6 +4,7 @@ var conf = require('../conf');
 var User = require('../mongodb_models/user').Model;
 var Post = require('../mongodb_models/post').Model;
 var Comment = require('../mongodb_models/comment').Model;
+var Audio = require('../mongodb_models/audio').Model;
 var Notification = require('../mongodb_models/notification').Model;
 var Badge = require('../models/Badge');
 var Feed = require('../models/Feed');
@@ -24,28 +25,28 @@ import {createAction} from 'redux-actions'
 router.get('/update_feeds', function *() {
     this.body = {
         result: 'ok',
-        actions: yield Feed.load(this.session.openid, this.query.beforeid)
+        actions: yield Feed.load(this.session.user_id, this.query.beforeid)
     };
     console.log(JSON.stringify(this.body.actions));
 });
 router.get('/delete_post', function *() {
     this.body = {
         result: 'ok',
-        actions: yield Feed.deletePost(this.session.openid, this.query._id)
+        actions: yield Feed.deletePost(this.session.user_id, this.query._id)
     };
     console.log(JSON.stringify(this.body.actions));
 });
 router.get('/update_user_detail', function *() {
     this.body = {
         result: 'ok',
-        actions: yield Feed.loadByUser(this.session.openid, this.query.openid)
+        actions: yield Feed.loadByUser(this.session.user_id, this.query._id)
     };
     console.log(JSON.stringify(this.body.actions[1]));
 });
 router.get('/update_post_detail', function *() {
     this.body = {
         result: 'ok',
-        actions: yield Feed.loadPostDetail(this.session.openid, this.query._id)
+        actions: yield Feed.loadPostDetail(this.session.user_id, this.query._id)
     };
     console.log(JSON.stringify(this.body.actions));
 });
@@ -53,18 +54,18 @@ router.get('/like', function *() {
     var q = { _id: this.query._id, status: {$ne: 0} };
     var d = {
         $addToSet: {
-            likes: this.session.openid
+            likes: this.session.user_id
         }
     };
     var update = yield Post.update(q, d);
     console.log(update);
     if (update.nModified > 0) {
-        var doc = yield Post.findOne({_id: this.query._id}).select('openid').exec();
+        var doc = yield Post.findOne({_id: this.query._id}).select('user_id').exec();
         // TODO: 自己给自己点赞不发通知
-        console.log(yield notifyLike(this.session, doc));
+        //console.log(yield notifyLike(this.session, doc));
         var query = {
-            openid: doc.openid,
-            openid2: this.session.openid,
+            user_id: doc.user_id,
+            user_id2: this.session.user_id,
             type: 'like',
             target: this.query._id
         }
@@ -82,7 +83,7 @@ router.get('/read', function *() {
     var q = { _id: this.query._id };
     var d = {
         $addToSet: {
-            reads: this.session.openid
+            reads: this.session.user_id
         }
     };
     this.body = yield {
@@ -95,7 +96,7 @@ router.get('/pub_post', function *() {
     console.log('here');
     var post = new Post();
     Object.assign(post, this.query);
-    post.openid = this.session.openid;
+    post.user_id = this.session.user_id;
     yield [
         qiniu.sync(post.audio_id),
         qiniu.sync(post.pic_id)
@@ -110,7 +111,7 @@ router.get('/pub_post', function *() {
         result: 'ok',
         actions: [
             createAction('feed_ids')([]),
-            createAction('user_post_ids')(_.object([this.session.openid],[[]]))
+            createAction('user_post_ids')(_.object([this.session.user_id],[[]]))
         ]
     };
 });
@@ -127,25 +128,25 @@ router.get('/pub_reply', function *() {
     var post = yield Post.findOne({
         _id: comment.post_id,
         status: {$ne: 0}
-    }).select('openid').exec();
+    }).select('user_id').exec();
     if (!post)
         this.throw(404);
 
     // 检查回复的人确实在评论或者回复里
-    var openids = [comment.openid, ...comment.replies.map((reply)=>reply.openid)];
-    if (openids.indexOf(this.query.openid) < 0)
+    var user_ids = [comment.user_id, ...comment.replies.map((reply)=>reply.user_id)];
+    if (user_ids.indexOf(this.query.user_id) < 0)
         this.throw(404);
 
     // 保存回复
     // TODO: 竞态条件下comment.save()会失败
     var reply = {
-        openid: this.session.openid,
-        openid2: this.query.openid,
+        user_id: this.session.user_id,
+        user_id2: this.query.user_id,
         text: this.query.text,
         audio_id: this.query.audio_id,
         d: this.query.d
     }
-    if (this.session.openid != post.openid) {
+    if (this.session.user_id != post.user_id) {
         delete reply.audio_id;
         delete reply.d;
     }
@@ -160,8 +161,8 @@ router.get('/pub_reply', function *() {
 
     // 发送站内通知
     var notification = new Notification();
-    notification.openid = reply.openid2;
-    notification.openid2 = reply.openid;
+    notification.user_id = reply.user_id2;
+    notification.user_id2 = reply.user_id;
     notification.type = 'reply';
     notification.target = comment.post_id;
     notification.comment_id = comment._id;
@@ -171,7 +172,7 @@ router.get('/pub_reply', function *() {
     notification.text = reply.text;
     notification.uptime = new Date();
     yield notification.save();
-    yield notifyReply(this.session, comment, reply);
+    //yield notifyReply(this.session, comment, reply);
 
     this.body = {
         result: 'ok',
@@ -188,7 +189,7 @@ router.get('/pub_comment', function *() {
     var post = yield Post.findOne({
         _id: this.query.post_id,
         status: {$ne: 0}
-    }).select('openid').exec();
+    }).select('user_id').exec();
 
     if (!post)
         this.throw(404);
@@ -196,8 +197,8 @@ router.get('/pub_comment', function *() {
     // 开始生成这一条评论。注意只有楼主才能用语音评论
     var comment = new Comment();
     Object.assign(comment, this.query);
-    comment.openid = this.session.openid;
-    if (post.openid != this.session.openid) {
+    comment.user_id = this.session.user_id;
+    if (post.user_id != this.session.user_id) {
         comment.audio_id = null;
         comment.d = null;
     }
@@ -211,8 +212,8 @@ router.get('/pub_comment', function *() {
 
     // 发送站内通知
     var notification = new Notification();
-    notification.openid = post.openid;
-    notification.openid2 = this.session.openid;
+    notification.user_id = post.user_id;
+    notification.user_id2 = this.session.user_id;
     notification.type = 'comment';
     notification.target = this.query.post_id;
     notification.comment_id = comment._id;
@@ -223,7 +224,7 @@ router.get('/pub_comment', function *() {
     yield notification.save();
 
     // 发送公众号通知
-    yield notifyComment(this.session, post, comment);
+    // yield notifyComment(this.session, post, comment);
     this.body = {
         result: 'ok',
         new_id: comment._id,
@@ -238,7 +239,7 @@ router.get('/delete_comment', function *() {
     // 获取原评论信息
     var q = {
         _id: this.query._id,
-        openid: this.session.openid,
+        user_id: this.session.user_id,
         status: 1
     };
     var d = {
@@ -274,7 +275,7 @@ router.get('/delete_reply', function *() {
         $pull: {
             replies: {
                 _id: this.query._id,
-                openid: this.session.openid
+                user_id: this.session.user_id
             }
         }
     };
@@ -297,43 +298,32 @@ router.get('/delete_reply', function *() {
     console.log(JSON.stringify(this.body));
 });
 
-router.get('/fetch_post_detail', function *() {
-    var post = yield Post.findOne({
-        _id: this.query._id
-    }).exec();
-    var like_users = yield User.find({
-        openid: { $in: post.likes }
-    }).exec();
-    this.body = { result: 'ok', post, like_users };
-    console.log(this.body);
-});
-
 router.get('/update_me', function *() {
     this.body = {
         result: 'ok',
-        actions: yield Feed.loadMe(this.session.openid)
+        actions: yield Feed.loadMe(this.session.user_id)
     };
     console.log(JSON.stringify(this.body.actions));
 });
 
 router.get('/clear_badge', function *() {
-    var clear = yield new Badge(this.session.openid).clear();
+    var clear = yield new Badge(this.session.user_id).clear();
     console.log(clear);
     this.body = { result: 'ok', clear: clear };
 });
 
 router.get('/sub', function *() {
-    var q = { openid: this.query.openid };
+    var q = { _id: this.query._id };
     var d = {
         $addToSet: {
-            subids: this.session.openid
+            subids: this.session.user_id
         }
     };
     var update = yield User.update(q, d);
     console.log(update);
     if (update.nModified > 0) {
         yield wechat.sendTemplate(
-            this.query.openid,
+            this.query.user_id,
             '3JFrw9e6GFGUKjAHBWZCvSYyKl9u-JGIf7Idn5VSolU',
             conf.site + '/app/me/notifications',
             '#FF0000', {
@@ -343,8 +333,8 @@ router.get('/sub', function *() {
                 }
             });
         var query = {
-            openid: this.query.openid,
-            openid2: this.session.openid,
+            user_id: this.query.user_id,
+            user_id2: this.session.user_id,
             type: 'sub'
         }
         console.log(yield Notification.update(query, {
@@ -359,13 +349,27 @@ router.get('/sub', function *() {
 
 //TODO: 取消订阅时取消对应的通知
 router.get('/unsub', function *() {
-    var q = { openid: this.query.openid };
+    var q = { _id: this.query._id };
     var d = {
         $pull: {
-            subids: this.session.openid
+            subids: this.session.user_id
         }
     };
     var update = yield User.update(q, d);
+    this.body = yield {
+        result: 'ok'
+    };
+    console.log(JSON.stringify(this.body));
+});
+
+router.get('/read', function *() {
+    var q = { audio_id: this.query.audio_id};
+    var d = {
+        $addToSet: {
+            reads: this.session.user_id
+        }
+    };
+    var update = yield Audio.update(q, d, {upset: true});
     this.body = yield {
         result: 'ok'
     };

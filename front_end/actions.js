@@ -1,22 +1,17 @@
 import { createAction } from 'redux-actions';
 import { parse_online_json } from './utility/fetch_utils'
 
-export var like = createAction('like', (payload)=>payload, (payload)=>{
-    var url = '/api/like?_id=' + payload;
-    var promise = fetch(url, {credentials: 'same-origin'})
-        .then(parse_online_json);
-    return {
-        promise,
-        optimist: true
-    }
-});
+function createOptimistAction(name, f) {
+    return createAction(name, (payload)=>payload, (payload)=>{
+        var promise = fetch(f(payload), {credentials: 'same-origin'})
+            .then(parse_online_json);
+        return {
+            promise,
+            optimist: true
+        }
+    });
+}
 
-export var sub = createAction('sub', (payload)=>payload, (payload)=>{
-    var url = `/api/${payload.sub ? 'sub' : 'unsub'}?openid=${payload.openid}`;
-    var promise = fetch(url, {credentials: 'same-origin'})
-        .then(parse_online_json);
-    return {
-        promise,
-        optimist: true
-    }
-});
+export var like = createOptimistAction('like', payload=>('/api/like?_id=' + payload));
+export var read = createOptimistAction('read', payload=>('/api/read?_id=' + payload));
+export var sub = createOptimistAction('sub', payload=>(`/api/${payload.sub ? 'sub' : 'unsub'}?user_id=${payload.user_id}`));

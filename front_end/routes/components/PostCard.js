@@ -16,7 +16,7 @@ class PostCard extends React.Component {
     }
     gotoDetail = () => {
         var { user } = this.props;
-        hashHistory.push('detail/' + user.openid);
+        hashHistory.push('detail/' + user._id);
     }
     picHeight = () => {
         var { post } = this.props;
@@ -26,7 +26,6 @@ class PostCard extends React.Component {
     }
     like = () => {
         var { post, dispatch } = this.props;
-        alert(actions);
         dispatch(actions.like(post._id));
     }
     render() {

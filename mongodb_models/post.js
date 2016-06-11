@@ -4,8 +4,8 @@ var mongo = require('../utility/mongo');
 
 // 主贴
 var schema = new mongoose.Schema({
-    // 发布者的openid
-    openid: { type: String },
+    // 发布者的user_id
+    user_id: { type: String },
     // 图片id，可以用来拼原图和各尺寸缩略图的URL
     pic_id: { type: String },
     // 语音id，用来拼语音mp3文件的URL
@@ -16,9 +16,9 @@ var schema = new mongoose.Schema({
     w: { type: Number },
     // 精确的原图高度
     h: { type: Number },
-    // 所有点了赞的用户的openid
+    // 所有点了赞的用户的user_id
     likes: [{ type: String }],
-    // 所有听过语音的用户openid（该字段可能从这个表里去掉，另开新表）
+    // 所有听过语音的用户user_id（该字段可能从这个表里去掉，另开新表）
     reads: [{ type: String }],
     // status=0：已被删除
     // status=1：正常状态
@@ -26,15 +26,15 @@ var schema = new mongoose.Schema({
     status: { type: Number }
 });
 
-schema.index({ openid: 1 });
+schema.index({ user_id: 1 });
 
 var Model = mongo.conn.model('post', schema);
 module.exports.Model = Model;
 
-Model.toBrowser = (doc, openid) => {
+Model.toBrowser = (doc, user_id) => {
     doc = doc.toObject();
-    doc.me_like = doc.likes && doc.likes.indexOf(openid) >= 0;
-    doc.me_read = doc.reads && doc.reads.indexOf(openid) >= 0;
+    doc.me_like = doc.likes && doc.likes.indexOf(user_id) >= 0;
+    doc.me_read = doc.reads && doc.reads.indexOf(user_id) >= 0;
     doc.read_count = doc.reads.length;
     delete doc.likes;
     delete doc.reads;

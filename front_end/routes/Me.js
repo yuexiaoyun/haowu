@@ -39,8 +39,8 @@ class Me extends React.Component {
 }
 
 module.exports = connect(state=>({
-    user: state.users[window.openid],
-    ids: state.user_post_ids[window.openid],
+    user: state.users[window.user_id],
+    ids: state.user_post_ids[window.user_id],
     badge_count: get_badge_count(state)
 }))(Me);
 

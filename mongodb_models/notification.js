@@ -4,10 +4,10 @@ var mongo = require('../utility/mongo');
 
 // 互动区通知
 var schema = new mongoose.Schema({
-    // 通知接收方openid
-    openid: { type: String },
-    // 通知发起方openid
-    openid2: { type: String },
+    // 通知接收方user_id
+    user_id: { type: String },
+    // 通知发起方user_id
+    user_id2: { type: String },
     // 通知类型
     // sub: 订阅
     // like：点赞
@@ -30,7 +30,7 @@ var schema = new mongoose.Schema({
     uptime: { type: Date }
 });
 
-schema.index({ openid: 1, uptime: -1});
+schema.index({ user_id: 1, uptime: -1});
 
 var Model = mongo.conn.model('notification', schema);
 module.exports.Model = Model;

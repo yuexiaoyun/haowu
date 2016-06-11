@@ -39,7 +39,7 @@ app.use(mount('/agent', function *() {
 }));
 app.use(mount('/login', require('./routes/login')));
 app.use(function *(next) {
-    if (!this.session.openid) {
+    if (!this.session.user_id) {
         var origin = conf.site + '/login?' + qs.stringify({
             target: this.url
         });

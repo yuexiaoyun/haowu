@@ -4,8 +4,8 @@ var mongo = require('../utility/mongo');
 
 // 评论
 var schema = new mongoose.Schema({
-    // 评论者的openid
-    openid: { type: String },
+    // 评论者的user_id
+    user_id: { type: String },
     // 主贴的_id
     post_id: { type: String },
     // 评论文本，仅当评论类型为文本的时候
@@ -16,10 +16,10 @@ var schema = new mongoose.Schema({
     d: { type: Number },
     // 回复
     replies: [{
-        // 回复者的openid
-        openid: { type: String },
-        // 被回复者的openid
-        openid2: { type: String },
+        // 回复者的user_id
+        user_id: { type: String },
+        // 被回复者的user_id
+        user_id2: { type: String },
         // 回复文本，仅当回复类型为文本的时候
         text: { type: String },
         // 回复语音id，仅当回复类型为语音的时候

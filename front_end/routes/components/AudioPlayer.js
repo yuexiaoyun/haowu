@@ -1,5 +1,6 @@
 import React from 'react';
 import fconf from '../../fconf';
+import * as actions from '../../actions';
 import CssButton from './CssButton'
 import Sound from 'react-sound'
 import { connect } from 'react-redux'
@@ -11,6 +12,10 @@ class AudioPlayer extends React.Component {
         super();
         this.state = {i: 3};
     }
+    componentDidMount() {
+        if (this.props.playing)
+            this.timer = setInterval(this.refresh, 10);
+    }
     play_audio = (e) => {
         e.stopPropagation();
         var { audio_id, playing } = this.props;
@@ -18,12 +23,7 @@ class AudioPlayer extends React.Component {
             this.stop_play();
         } else {
             this.props.dispatch(createAction('play_sound')(audio_id));
-            /*
-            var url = '/api/read?' + qs.stringify({
-                _id: this.props.post._id
-            });
-            fetch(url, {credentials: 'same-origin'});
-            */
+            this.props.dispatch(actions.read(audio_id));
             this.timer = setInterval(this.refresh, 10);
         }
     }
@@ -41,12 +41,15 @@ class AudioPlayer extends React.Component {
     }
     render() {
         var { read, length, audio_id, playing } = this.props;
-        var { i } = this.state;
         length = Math.floor(length / 1000 + 0.5);
+        if (playing)
+            var className = "image-btn_home_play" + this.state.i;
+        else
+            var className = read ? 'image-btn_home_play3' : "image-btn_home_play_weidu";
         return (
             <span style={styles.audio(read)} onClick={this.play_audio}>
                 <CssButton
-                    className={"image-btn_home_play"+ (playing ? i : 3)}
+                    className={className}
                     width={16}
                     height={16}/>
                 <span style={styles.audio_length}>{`${length}"`}</span>
@@ -60,10 +63,13 @@ class AudioPlayer extends React.Component {
     }
 }
 
-export default connect((state, props)=>({
-    playing: (state.sound_id == props.audio_id),
-    sound_playing: state.sound_playing
-}))(AudioPlayer);
+export default connect((state, props)=>{
+    return {
+        playing: (state.sound_id == props.audio_id),
+        sound_playing: state.sound_playing,
+        read: state.reads.has(props.audio_id)
+    }
+})(AudioPlayer);
 
 var styles = {
     audio: (read) => ({

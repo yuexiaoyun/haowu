@@ -23,7 +23,7 @@ class Notifications extends React.Component {
         var { clear_badge_time } = this.state;
         return <div>{ notifications && notifications.map(
             (n) => {
-                var user = users[n.openid2];
+                var user = users[n.user_id2];
                 var action = {
                     like: '赞',
                     sub: '订阅',
@@ -37,7 +37,7 @@ class Notifications extends React.Component {
                     url += `/${n.comment_id}`;
                 return <CommonCard
                     key={n._id}
-                    openid={n.openid2}
+                    user_id={n.user_id2}
                     avatar={user.headimgurl}
                     txt={`${user.nickname} ${action}了你`}
                     pic_id={n.post ? n.post.pic_id : null}

@@ -5,8 +5,10 @@ var mongo = require('../utility/mongo');
 
 // 用户
 var schema = new mongoose.Schema({
-    // 微信openid
-    openid: { type: String },
+    // 微信unionid
+    unionid: { type: String },
+    // 微信user_id
+    user_id: { type: String },
     // 昵称
     nickname: { type: String },
     // 性别: 1为男，2为女
@@ -23,7 +25,7 @@ var schema = new mongoose.Schema({
     headimgurl: { type: String },
     // 特权，微信提供的字段，我们暂时不用
     privilege: [{ type: String }],
-    // 所有订阅了该用户的用户的openid
+    // 所有订阅了该用户的用户的user_id
     subids: [{ type: String }],
     // 上次清除通知未读标记的时间：所有在此时间之后创建的通知（notification）视作未读
     clear_badge: { type: Date },
@@ -33,14 +35,14 @@ var schema = new mongoose.Schema({
     status: { type: Number }
 });
 
-schema.index({ openid: 1 }, { unique: 1});
+schema.index({ unionid: 1 }, { unique: 1});
 
 var Model = mongo.conn.model('user', schema);
 module.exports.Model = Model;
 
-Model.toBrowser = (doc, openid) => {
+Model.toBrowser = (doc, user_id) => {
     doc = doc.toObject();
-    doc.subbed = doc.subids && doc.subids.indexOf(openid) >= 0;
+    doc.subbed = doc.subids && doc.subids.indexOf(user_id) >= 0;
     delete doc.subids;
     return doc;
 }
