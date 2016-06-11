@@ -1,0 +1,38 @@
+.tab {
+    display: table;
+    width: 100%;
+    height: 44px;
+    table-layout: fixed;
+    border-top: @border-default;
+    border-bottom: @border-default;
+}
+.tab-item {
+    display: table-cell;
+    position: relative;
+    padding-top: 12px;
+    color: @color-text-secondary;
+    font-size: 14px;
+    text-align: center;
+    .active {
+        margin: 0 auto;
+        background-color: @color-text-secondary;
+        width: 60px;
+        height: 2px;
+    }
+    .badge {
+        position: absolute;
+        top: 13px;
+        left: 50%;
+        z-index: 100;
+        height: 16px;
+        min-width: 16px;
+        padding: 0 4px;
+        font-size: 12px;
+        line-height: .8rem;
+        color: white;
+        vertical-align: top;
+        background-color: @color-primary;
+        border-radius: 10px;
+        margin-left: 20px;
+    }
+}

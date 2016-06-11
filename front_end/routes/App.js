@@ -35,7 +35,7 @@ class App extends React.Component {
                     {children}
                     <div style={{width: '100%', height: '2.5rem', clear:'both', overflow:'hidden'}} />
                     <nav className="bar bar-tab">
-                        <span className={"tab-item"} onClick={()=>{
+                        <span className={"bar-tab-item"} onClick={()=>{
                             if (location.pathname=='/home') {
                                 this.refs.home.getWrappedInstance().reload();
                                 //this._home.getWrappedInstance().reload();
@@ -44,10 +44,10 @@ class App extends React.Component {
                         }}>
                             <span className={"setting-icon image-btn_tabbar_home" + (location.pathname=='/home' ? '_selected' : '')} />
                         </span>
-                        <span className={"tab-item"} onClick={this.take_photo}>
+                        <span className={"bar-tab-item"} onClick={this.take_photo}>
                             <span className="setting-icon image-btn_tabbar_photo"></span>
                         </span>
-                        <span className={"tab-item"} onClick={()=>{
+                        <span className={"bar-tab-item"} onClick={()=>{
                             hashHistory.replace('/me/posts');
                         }}>
                             <span className={"setting-icon image-btn_tabbar_me"

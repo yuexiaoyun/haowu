@@ -45,17 +45,10 @@ class Notifications extends React.Component {
                     onClick={url ? ()=>{hashHistory.push(url)} : null}
                 >
                     { n.audio_id && <AudioPlayer audio_id={n.audio_id} length={n.d} /> }
-                    { n.text && n.text != '' && <span style={styles.text}>{n.text}</span>}
+                    { n.text && n.text != '' && <span className='comment-text'>{n.text}</span>}
                 </CommonCard>;
             }
         )}</div>;
-    }
-}
-var styles = {
-    text: {
-        color: '#666666',
-        fontSize: 14,
-        lineHeight: '16px'
     }
 }
 export default connect(state=>({

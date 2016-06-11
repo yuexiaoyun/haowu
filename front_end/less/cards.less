@@ -7,13 +7,41 @@
     margin-right: 5px;
     position: relative;
     border-radius: 5px;
-    font-size: 0.7rem;
     overflow: hidden;
-}
-.facebook-card{
-    .card-content {
+    .picture {
+        background-color: #f8f8f8;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 24px 24px;
         img {
             display: block;
+            width: 100%;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+    }
+    .audio-line {
+        padding: 10px 10px 8px 6px;
+        .praise {
+            display: inline-block;
+            vertical-align: middle;
+            width: 20px;
+            height: 20px;
+            background-size: 20px 20px;
+            float: right;
+        }
+    }
+    .user-line {
+        padding: 8px 12px 12px;
+        .avatar {
+            width: 34px;
+            height: 34px;
+            float: left;
+        }
+        .nickname {
+            line-height: 34px;
+            font-size: 12px;
+            margin-left: 5px;
         }
     }
 }

@@ -47,12 +47,8 @@ class AudioPlayer extends React.Component {
         else
             var className = read ? 'image-btn_home_play3' : "image-btn_home_play_weidu";
         return (
-            <span style={styles.audio(read)} onClick={this.play_audio}>
-                <CssButton
-                    className={className}
-                    width={16}
-                    height={16}/>
-                <span style={styles.audio_length}>{`${length}"`}</span>
+            <span className={`audioplayer ${className}`} onClick={this.play_audio}>
+                {`${length}"`}
                 { playing && <Sound
                     url={fconf.qiniu.site + audio_id + '_mp3'}
                     playStatus={Sound.status.PLAYING}
@@ -70,19 +66,3 @@ export default connect((state, props)=>{
         read: state.reads.has(props.audio_id)
     }
 })(AudioPlayer);
-
-var styles = {
-    audio: (read) => ({
-        display: 'inline-block',
-        borderRadius: 12,
-        height: 24,
-        paddingLeft: 6,
-        backgroundColor: '#ff6b6b'
-    }),
-    audio_length: {
-        marginLeft: 15,
-        lineHeight: '24px',
-        color: '#ffffff',
-        marginRight: 10
-    }
-};

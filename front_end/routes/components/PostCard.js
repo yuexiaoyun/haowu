@@ -31,33 +31,23 @@ class PostCard extends React.Component {
     render() {
         var { user, post } = this.props;
         return (
-            <div className="card facebook-card" ref='card'>
-                <div className="image-icon_image_loading"
+            <div className="card" ref='card'>
+                <div className="picture image-icon_image_loading"
                     style={{
-                        height: this.picHeight(),
-                        backgroundColor: '#f8f8f8',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundSize: '24px 24px'
+                        height: this.picHeight()
                     }}>
                     <img src={fconf.qiniu.site + post.pic_id + '-c167'}
-                        style={{width:'100%', overflow:'hidden',borderRadius:5}}
                         onClick={()=>hashHistory.push('post/' + post._id)}/>
                 </div>
-                <div style={styles.d1}>
+                <div className="audio-line">
                     <AudioPlayer audio_id={post.audio_id} length={post.length}/>
-                    <span style={styles.praise}>
-                        <CssButton
-                            className={post.me_like ? "image-btn_praise_selected" : "image-btn_praise_default"}
-                            style={{float:'right'}}
-                            onClick={this.like}
-                            width={20}
-                            height={20}/>
-                    </span>
+                    <span
+                        className={`praise ${post.me_like ? "image-btn_praise_selected" : "image-btn_praise_default"}`}
+                        onClick={this.like}/>
                 </div>
-                { user && <div style={styles.d2} onClick={this.gotoDetail}>
-                    <img src={user.headimgurl} width="34" height="34" style={styles.avatar}/>
-                    <span style={styles.name}><strong>{user.nickname}</strong></span>
+                { user && <div className='user-line' onClick={this.gotoDetail}>
+                    <img className='avatar' src={user.headimgurl} />
+                    <span className='nickname'>{user.nickname}</span>
                 </div> }
             </div>
         );
@@ -68,42 +58,3 @@ module.exports = connect((state)=>({
     sound_id: state.sound_id,
     sound_playing: state.sound_playing
 }))(PostCard);
-
-var styles = {
-    d1: {
-        display: 'table',
-        paddingLeft: 6,
-        paddingTop: 10,
-        paddingBottom: 8,
-        width: '100%'
-    },
-    d2: {
-        width: '100%',
-        paddingLeft: 12,
-        paddingTop: 8,
-        paddingBottom: 12,
-    },
-    praise: {
-        display: 'table-cell',
-        width: '100%',
-        verticalAlign: 'middle',
-        align: 'right',
-        textAlign: 'right',
-        paddingRight: 10
-    },
-    avatar: {
-        float: 'left',
-        width: 34,
-        height: 34,
-        overflow: 'hidden',
-        borderRadius: '50%'
-    },
-    name: {
-        align: 'left',
-        textAlign: 'left',
-        lineHeight: '34px',
-        paddingLeft: 5,
-        verticalAlign: 'middle',
-        fontSize: 12
-    }
-}

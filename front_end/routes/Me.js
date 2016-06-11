@@ -21,14 +21,14 @@ class Me extends React.Component {
         return (
             <div>
                 { user && <UserTopCard user={user} />}
-                <div style={styles.d3}>
-                    <div style={styles.d30} onClick={()=>hashHistory.replace('/me/posts')}>
+                <div className='tab'>
+                    <div className='tab-item' onClick={()=>hashHistory.replace('/me/posts')}>
                         <div>分享动态</div>
-                        { location.pathname=='/me/posts' && <div style={styles.d30u} /> }
+                        { location.pathname=='/me/posts' && <div className='active' /> }
                     </div>
-                    <div style={styles.d30} onClick={()=>hashHistory.replace('/me/notifications')}>
+                    <div className='tab-item' onClick={()=>hashHistory.replace('/me/notifications')}>
                         <div>互动区{(badge_count > 0) && <span className="badge">{badge_count}</span>}</div>
-                        { location.pathname=='/me/notifications' && <div style={styles.d30u} /> }
+                        { location.pathname=='/me/notifications' && <div className='active' /> }
                     </div>
                 </div>
                 { !ids && !err && <Loader /> }
@@ -43,28 +43,3 @@ module.exports = connect(state=>({
     ids: state.user_post_ids[window.user_id],
     badge_count: get_badge_count(state)
 }))(Me);
-
-var styles = {
-    d3: {
-        display: 'table',
-        width: '100%',
-        height: 44,
-        tableLayout: 'fixed',
-        borderTop: '1px solid #dfdfdd',
-        borderBottom: '1px solid #dfdfdd'
-    },
-    d30: {
-        position: 'relative',
-        display: 'table-cell',
-        paddingTop: 12,
-        textAlign: 'center',
-        color: '#666666',
-        fontSize: 14
-    },
-    d30u: {
-        margin: '0px auto',
-        backgroundColor: '#666666',
-        width: 60,
-        height: 2
-    }
-};
