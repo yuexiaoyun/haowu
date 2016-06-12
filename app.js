@@ -34,10 +34,15 @@ app.use(logger());
 // TODO: 在线的日志系统
 // TODO: 服务器部署的时候前面要挡一层nginx（或者另一层node）做各种处理，例如防恶意攻击等
 // TODO: 某现成的统计平台
+
+app.use(gzip());
 app.use(mount('/agent', function *() {
     this.body = this.query.echostr;
 }));
+// TODO: 调试专用，线上需要去掉
+app.use(mount('/internal_login', require('./routes/internal_login')));
 app.use(mount('/login', require('./routes/login')));
+app.use(mount('/static', serve('static')));
 app.use(function *(next) {
     if (!this.session.user_id) {
         var origin = conf.site + '/login?' + qs.stringify({
@@ -52,6 +57,4 @@ app.use(function *(next) {
 });
 app.use(mount('/app', require('./routes/app')));
 app.use(mount('/api', require('./routes/api')));
-app.use(gzip());
-app.use(mount('/static', serve('static')));
 app.listen(8080);
