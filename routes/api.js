@@ -60,19 +60,21 @@ router.get('/like', function *() {
     };
     var update = yield Post.update(q, d);
     console.log(update);
-    if (update.nModified > 0 && doc.user_id != this.session.user_id) {
+    if (update.nModified > 0) {
         var doc = yield Post.findOne({_id: this.query._id}).select('user_id').exec();
-        //console.log(yield notifyLike(this.session, doc));
-        var query = {
-            user_id: doc.user_id,
-            user_id2: this.session.user_id,
-            type: 'like',
-            target: this.query._id
+        if (doc.user_id != this.session.user_id) {
+            console.log(yield notifyLike(this.session, doc));
+            var query = {
+                user_id: doc.user_id,
+                user_id2: this.session.user_id,
+                type: 'like',
+                target: this.query._id
+            }
+            console.log(yield Notification.update(query, {
+                ...query,
+                uptime: new Date()
+            }, { upsert: true }));
         }
-        console.log(yield Notification.update(query, {
-            ...query,
-            uptime: new Date()
-        }, { upsert: true }));
     }
     this.body = yield {
         result: 'ok',
@@ -161,7 +163,7 @@ router.get('/pub_reply', function *() {
     notification.text = reply.text;
     notification.uptime = new Date();
     yield notification.save();
-    //yield notifyReply(this.session, comment, reply);
+    console.log(yield notifyReply(this.session, comment, reply));
 
     this.body = {
         result: 'ok',
@@ -214,7 +216,7 @@ router.get('/pub_comment', function *() {
         yield notification.save();
 
         // 发送公众号通知
-        // yield notifyComment(this.session, post, comment);
+        console.log(yield notifyComment(this.session, post, comment));
     }
     this.body = {
         result: 'ok',

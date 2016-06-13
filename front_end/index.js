@@ -42,6 +42,7 @@ if (entry.substring(0, 5) == '/post') {
 // TODO 精简CSS
 // TODO 各种出错处理，比如语音播放
 // TODO 微信的JS打进bundle
+// TODO 图片要根据屏幕宽度，做很多套适配的样式
 render(
     <Provider store={store}>
         <Router history={hashHistory} render={applyRouterMiddleware(useScroll())}>
