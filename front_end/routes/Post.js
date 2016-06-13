@@ -204,6 +204,8 @@ class Post extends React.Component {
                         })
                     });
             } else {
+                if (!input || input.length == 0)
+                    return;
                 var p = this.pub({ text: input });
             }
             showProgress('发布中', p)
