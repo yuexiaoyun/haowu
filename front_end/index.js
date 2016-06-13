@@ -29,6 +29,7 @@ let store = (applyMiddleware(
     optimistPromiseMiddleware()
 )(createStore))(optimist(combineReducers(reducers)), {},
     window.devToolsExtension && window.devToolsExtension());
+setStore(store);
 
 var entry = window.location.pathname.substring(4);
 if (entry.substring(0, 5) == '/post') {
