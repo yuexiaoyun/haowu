@@ -27,8 +27,9 @@ import { setStore } from './utility/update'
 
 let store = (applyMiddleware(
     optimistPromiseMiddleware()
-)(createStore))(optimist(combineReducers(reducers)));
-setStore(store);
+)(createStore))(optimist(combineReducers(reducers)), {},
+    window.devToolsExtension && window.devToolsExtension());
+
 var entry = window.location.pathname.substring(4);
 if (entry.substring(0, 5) == '/post') {
     hashHistory.replace('/home');
