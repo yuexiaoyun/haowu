@@ -20,6 +20,7 @@ import PopupHelper from '../utility/PopupHelper';
 import _ from 'underscore';
 import qs from 'querystring';
 
+// TODO: 对评论和回复内容的Server端验证
 // TODO: 相对时间的重刷
 var UserCard = ({user, onClick, louzhu, _id}) => {
     var avatarClick = (e)=>{
@@ -28,7 +29,7 @@ var UserCard = ({user, onClick, louzhu, _id}) => {
     return (
         <div className="user-line" onClick={onClick || avatarClick}>
             <img className='avatar' src={user.headimgurl}  onClick={avatarClick}/>
-            <div className='nickname'>{user.nickname} { louzhu && <span className='louzhu'>楼主</span> }</div>
+            <div className='nickname'>{user.nickname} { louzhu && <span className='louzhu'>物主</span> }</div>
             <div className='text-secondary'>{ fromObjectId(_id) }</div>
         </div>
     );
@@ -53,10 +54,12 @@ class Reply extends React.Component {
     onClick = (e) => {
         var { reply, onClick } = this.props;
         if (reply.user_id == window.user_id) {
+            /*
             if (confirm('你确认删除您发布的这条回复么？')) {
                 showProgress('删除中', update('/api/delete_reply?_id=' + reply._id)
                     .catch(()=>PopupHelper.toast('删除失败')));
             }
+            */
         } else {
             onClick(reply.user_id)(e);
         }
@@ -86,10 +89,12 @@ class Comment extends React.Component {
     onClick = (e) => {
         var { comment, onClick } = this.props;
         if (comment.user_id == window.user_id) {
+            /*
             if (confirm('你确认删除您发布的这条评论么？')) {
                 showProgress('删除中', update('/api/delete_comment?_id=' + comment._id)
                     .catch(()=>PopupHelper.toast('删除失败')));
             }
+            */
         } else {
             onClick(comment.user_id)(e);
         }
@@ -173,8 +178,8 @@ class Post extends React.Component {
         return update(url, (data) => {
             this.new_id = data.new_id;
         }).then(()=>{
-            this.refs.input.value = '';
             this.setState({
+                input: '',
                 record: false,
                 reply_user: null,
                 reply_comment: null
@@ -187,7 +192,7 @@ class Post extends React.Component {
     send = (e) => {
         e.stopPropagation();
         try {
-            var { record, audio_id, d, reply_user, reply_comment } = this.state;
+            var { record, audio_id, d, reply_user, reply_comment, input } = this.state;
             if (record) {
                 if (!audio_id)
                     return;
@@ -199,10 +204,7 @@ class Post extends React.Component {
                         })
                     });
             } else {
-                var text = this.refs.input.value;
-                if (!text || text.length > 40)
-                    return;
-                var p = this.pub({ text });
+                var p = this.pub({ text: input });
             }
             showProgress('发布中', p)
                 .catch(()=>PopupHelper.toast('发布失败'));
@@ -280,7 +282,7 @@ class Post extends React.Component {
                 { comments_top.length > 0 &&
                     <div className='comments'>
                         <div className='comments-header'>
-                            <span className='ym'/>楼主参与的互动
+                            <span className='ym'/>物主参与的互动
                         </div>
                         { comments_top.map(this.renderComment) }
                     </div>
@@ -298,15 +300,27 @@ class Post extends React.Component {
             </div>
         )
     }
+    handleChange = (event) => {
+        if (event.target.value.length <= 40) {
+            this.setState({input: event.target.value});
+        } else {
+            var { reply_user } = this.state;
+            var txt = `${reply_user ? '评论' : '回复'}不能超过40字`;
+            PopupHelper.toast(txt);
+        }
+    }
+    // TODO input
     renderInput() {
         var { post, user, users } = this.props;
-        var { record, err, reply_user } = this.state;
+        var { record, err, reply_user, input } = this.state;
         var show_record_btn = post && post.user_id == window.user_id;
         var me_like = post && post.me_like;
         var btn_cnt = show_record_btn ? 2 : 1;
-        var placeholder = reply_user ? ('回复' + users[reply_user].nickname) : '请输入评论';
+        var placeholder = (reply_user ? ('回复' + users[reply_user].nickname) : '请输入评论')
+            + '（不超过40字）';
         if (record)
             placeholder = `语音${reply_user ? ('回复' + users[reply_user].nickname) : '评论'}`;
+        var disable_send = record ? !this.state.audio_id : !input;
         return (
             <div className={`comment-input ${record?'comment-input-audio':'comment-input-text'}`}
                 onClick={(e)=>e.stopPropagation()}>
@@ -314,11 +328,14 @@ class Post extends React.Component {
                     onClick={this.like}/>
                 { show_record_btn && <div className={`btn ${record ? 'image-btn_keyboard' : 'image-btn_speech'}`}
                     onClick={this.toggleRecord}/> }
-                <div className='send' onClick={this.send}>发送</div>
+                <div className={`send ${disable_send ? 'send-disable' : ''}`} onClick={this.send}>发送</div>
                 <div className={`input with${btn_cnt}`}>
                     <input
+                        type="text"
                         ref="input"
+                        value={record ? '' : input}
                         disabled={record}
+                        onChange={this.handleChange}
                         placeholder={placeholder} />
                 </div>
                 { record && <Recorder ref='recorder' onData={data=>{

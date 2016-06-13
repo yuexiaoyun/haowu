@@ -185,7 +185,7 @@ router.get('/pub_comment', function *() {
     if (!post)
         this.throw(404);
 
-    // 开始生成这一条评论。注意只有楼主才能用语音评论
+    // 开始生成这一条评论。注意只有物主才能用语音评论
     var comment = new Comment();
     Object.assign(comment, this.query);
     comment.user_id = this.session.user_id;
