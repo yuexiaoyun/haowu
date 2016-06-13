@@ -256,7 +256,7 @@ class Post extends React.Component {
                     style={{
                         height: screenSize().width,
                     }}>
-                    <img src={fconf.qiniu.site + post.pic_id}
+                    <img src={fconf.qiniu.site + post.pic_id + '-c720'}
                         style={post.w > post.h ? {height: '100%'} : {width: '100%'}}
                         onClick={this.preview}/>
                 </div> }
@@ -275,7 +275,7 @@ class Post extends React.Component {
                 { post && <div className="author-line" onClick={()=>hashHistory.push('/detail/' + user._id)}>
                     <img className='avatar' src={user.headimgurl} />
                     <span className='nickname'>{user.nickname}</span>
-                    <span className='text-secondary'>{ fromObjectId(user._id) }发布</span>
+                    <span className='text-secondary'>{ fromObjectId(post._id) }发布</span>
                 </div> }
                 { comments_top.length > 0 &&
                     <div className='comments'>
