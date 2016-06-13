@@ -57,4 +57,4 @@ app.use(function *(next) {
 });
 app.use(mount('/app', require('./routes/app')));
 app.use(mount('/api', require('./routes/api')));
-app.listen(8080);
+app.listen(conf.port || 80);
