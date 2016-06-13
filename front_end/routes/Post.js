@@ -244,7 +244,7 @@ class Post extends React.Component {
             onClick={this.onClick(comment._id)} />;
     }
     render() {
-        var { post, user, users, comments, comments_top } = this.props;
+        var { post, user, users, comments, comments_top, like_count, read_count } = this.props;
         var { record, err } = this.state;
         var d = post && Math.floor((post.length + 500) / 1000) || 0;
         // TODO: 图片的显示有问题
@@ -262,13 +262,13 @@ class Post extends React.Component {
                 </div> }
                 { post && <div className='audio-line'>
                     <div className='audio-line-tab'>
-                        <span className='pull-right btn-default'>{`0人听过`}</span>
+                        <span className='pull-right btn-default'>{ like_count }人赞过</span>
                     </div>
                     <div className='audio-line-tab'>
                         <div className='lzw image-btn_play_start' />
                     </div>
                     <div className='audio-line-tab'>
-                        <span className='btn-default'>{`0人赞过`}</span>
+                        <span className='pull-left btn-default clearfix'>{ read_count }人听过</span>
                     </div>
                 </div> }
                 { post && <div className='audio-length'>{`${d}"`}</div> }
@@ -288,7 +288,7 @@ class Post extends React.Component {
                 { comments.length > 0 &&
                     <div className='comments'>
                         <div className='comments-header'>
-                            <span className='ym'/>其它评论
+                            <span className='ym'/>{comments_top.length > 0 ? '其它评论' : '评论'}
                         </div>
                         { comments.map(this.renderComment) }
                     </div>
@@ -337,6 +337,10 @@ export default connect((state, props) => {
     var post_detail = state.post_details[props.params.id];
     var comments_top = [];
     var comments = [];
+    var like_count = post ? (post.others_like_count + post.me_like) : 0;
+    var read_count = 0;
+    var me_read = post && state.reads.has(post.audio_id);
+    var read_count = post_detail ? (post_detail.others_read_count + me_read) : 0;
     post && post_detail && post_detail.comments && post_detail.comments.map(comment => {
         if (comment.status == 1 || comment.replies.length > 0) {
             var user_ids = [comment.user_id, ...comment.replies.map(reply=>reply.user_id)];
@@ -347,6 +351,6 @@ export default connect((state, props) => {
         }
     });
     return {
-        post, user, users, comments_top, comments
+        post, user, users, comments_top, comments, like_count, read_count
     };
 })(Post);

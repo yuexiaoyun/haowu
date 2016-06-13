@@ -33,8 +33,7 @@ module.exports.Model = Model;
 Model.toBrowser = (doc, user_id) => {
     doc = doc.toObject();
     doc.me_like = doc.likes && doc.likes.indexOf(user_id) >= 0;
-    doc.me_read = doc.reads && doc.reads.indexOf(user_id) >= 0;
-    doc.read_count = 0;
+    doc.others_like_count = doc.likes ? (doc.likes.length - (doc.me_like ? 1 : 0)) : 0;
     delete doc.likes;
     delete doc.reads;
     return doc;

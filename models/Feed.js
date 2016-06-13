@@ -66,11 +66,9 @@ export default class Feed {
         var comment_user_ids = comments.map((comment)=>comment.user_id);
         var replies = _.flatten(comments.map((comment)=>comment.replies));
         var reply_uids = replies.map((reply)=>reply.user_id);
-        var likes = post.likes || [];
         var users = await User.find({_id: {
             $in: _.uniq([
                 post.user_id,
-                ...likes,
                 ...comment_user_ids,
                 ...reply_uids
             ])
@@ -92,12 +90,18 @@ export default class Feed {
         }).select('audio_id').exec();
         var reads = docs.map(doc=>doc.audio_id);
 
+        var me_read = reads.indexOf(user_id) >= 0;
+        var audio = await Audio.findOne({
+            audio_id: post.audio_id
+        }).exec();
+        var others_read_count = audio ? (audio.reads.length - me_read ? 1 : 0) : 0;
+
         return [
             createAction('users')(_.object(user_ids, users.map(user=>User.toBrowser(user, user_id)))),
             createAction('posts')(_.object([_id], [Post.toBrowser(post, user_id)])),
             createAction('post_details')(_.object([_id], [{
-                likes: post.likes,
-                comments: comments
+                comments: comments,
+                others_read_count: others_read_count
             }])),
             createAction('reads')(reads)
         ]

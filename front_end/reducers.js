@@ -65,16 +65,6 @@ export var posts = handleActions({
         } else {
             return state;
         }
-    },
-    read: (state, action) => {
-        var id = action.payload;
-        var post = state[id];
-        if (post) {
-            post = {...post, me_read: true}
-            return {...state, ...(_.object([id], [post]))}
-        } else {
-            return state;
-        }
     }
 }, {});
 // 用户的ID与内容对应

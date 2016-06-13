@@ -60,9 +60,8 @@ router.get('/like', function *() {
     };
     var update = yield Post.update(q, d);
     console.log(update);
-    if (update.nModified > 0) {
+    if (update.nModified > 0 && doc.user_id != this.session.user_id) {
         var doc = yield Post.findOne({_id: this.query._id}).select('user_id').exec();
-        // TODO: 自己给自己点赞不发通知
         //console.log(yield notifyLike(this.session, doc));
         var query = {
             user_id: doc.user_id,
@@ -201,20 +200,22 @@ router.get('/pub_comment', function *() {
     yield comment.save();
 
     // 发送站内通知
-    var notification = new Notification();
-    notification.user_id = post.user_id;
-    notification.user_id2 = this.session.user_id;
-    notification.type = 'comment';
-    notification.target = this.query.post_id;
-    notification.comment_id = comment._id;
-    notification.audio_id = comment.audio_id;
-    notification.d = comment.d;
-    notification.text = comment.text;
-    notification.uptime = new Date();
-    yield notification.save();
+    if (this.session.user_id != post.user_id) {
+        var notification = new Notification();
+        notification.user_id = post.user_id;
+        notification.user_id2 = this.session.user_id;
+        notification.type = 'comment';
+        notification.target = this.query.post_id;
+        notification.comment_id = comment._id;
+        notification.audio_id = comment.audio_id;
+        notification.d = comment.d;
+        notification.text = comment.text;
+        notification.uptime = new Date();
+        yield notification.save();
 
-    // 发送公众号通知
-    // yield notifyComment(this.session, post, comment);
+        // 发送公众号通知
+        // yield notifyComment(this.session, post, comment);
+    }
     this.body = {
         result: 'ok',
         new_id: comment._id,
@@ -311,7 +312,7 @@ router.get('/sub', function *() {
     };
     var update = yield User.update(q, d);
     console.log(update);
-    if (update.nModified > 0) {
+    if (update.nModified > 0 && this.query.user_id != this.session.user_id) {
         /*
         yield wechat.sendTemplate(
             this.query.user_id,
