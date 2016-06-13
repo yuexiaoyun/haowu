@@ -21,7 +21,7 @@ var UserTopCard = ({user, subids, dispatch}) => {
                 <span className="arrow image-icon_me_up"/>
             </div> }
             { <div className='follow-line'>
-                <div>长按识别二维码，关注“物我”公众号</div>
+                <div>长按识别二维码，关注“物记”公众号</div>
                 <div>朋友互动不遗漏</div>
             </div> }
             <img className='avatar' src={user.headimgurl} />

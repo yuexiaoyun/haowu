@@ -31,7 +31,7 @@ class App extends React.Component {
             var current_tab = 0;
             return (
                 <div>
-                    <Helmet title='物我' />
+                    <Helmet title='物记' />
                     {children}
                     <div style={{width: '100%', height: '2.5rem', clear:'both', overflow:'hidden'}} />
                     <nav className="bar bar-tab">

@@ -12,11 +12,11 @@ export default ({user_id, avatar, txt, pic_id, new_item, children, onClick}) => 
                 e.stopPropagation();
                 hashHistory.push('detail/' + user_id);
             }} />
-            <div className='pull-left'>
+            <img className='picture' src={fconf.qiniu.site + pic_id + '-c167'} />
+            <div className="list-item-content">
                 <div className={`nickname${has_children ? '':' only'}`}>{ txt }</div>
                 { has_children && children }
             </div>
-            <img className='picture' src={fconf.qiniu.site + pic_id + '-c167'} />
         </div>
     )
 }

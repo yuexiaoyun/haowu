@@ -7,31 +7,35 @@
         float: left;
         margin: 15px 16px;
     }
-    .nickname {
-        font-size: 14px;
-        line-height: 40px;
-        color: @color-text-secondary;
-        font-weight: normal;
-    }
-    .only {
-        margin-top: 10px;
-    }
     .picture {
         float: right;
         margin: 10px 16px;
         width: 40px;
         height: 40px;
     }
-    .audioplayer {
-        margin-bottom: 8px;
-    }
-    .comment-text {
-        display: inline-block;
-        line-height: 20px;
-        margin-bottom: 10px;
+    .list-item-content {
+        margin: 10px 0 10px;
+        margin-left: 62px;
+        margin-right: 72px;
+        .nickname {
+            font-size: 14px;
+            color: @color-text-secondary;
+            font-weight: normal;
+        }
+        .only {
+            line-height: 40px;
+        }
+        .comment-text {
+            display: block;
+            margin-top: 5px;
+            line-height: 20px;
+        }
+        .audioplayer {
+            margin-top: 5px;
+        }
     }
 }
 
-.list-item .new_item {
+.new_item {
     background-color: #f1e8e8;
 }
