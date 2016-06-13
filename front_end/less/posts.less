@@ -1,0 +1,173 @@
+.post {
+    background-color: #ffffff;
+    width: 100%;
+    .picture {
+        background-color: @color-bg;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 24px 24px;
+        position: relative;
+        overflow: hidden;
+        img {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+        }
+    }
+    .audio-line {
+        .clearfix();
+        width: 100%;
+        height: 24px;
+        display: table;
+        margin-top: 10px;
+        table-layout: fixed;
+        .audio-line-tab {
+            .clearfix();
+            position: relative;
+            width: 100%;
+            display: table-cell;
+            .lzw {
+                position: absolute;
+                margin: -38px;
+                left: 50%;
+                margin-left: -36px;
+                width: 72px;
+                height: 72px;
+                border-radius: 50%;
+                background-color: #ffffff;
+                background-position: 6px 6px;
+                background-repeat: no-repeat;
+                background-size: 60px 60px;
+                z-index: 100;
+            }
+        }
+    }
+    .audio-length {
+        margin-top: 12px;
+        text-align: center;
+    }
+    .author-line {
+        padding: 16px 0 16px 15px;
+        line-height: 30px;
+        .avatar {
+            float: left;
+            margin-right: 10px;
+        }
+        .nickname {
+            margin-right: 10px
+        }
+    }
+    .comments {
+        .comments-header {
+            height: 50px;
+            border-top: 10px solid @color-bg;
+            line-height: 40px;
+            .ym {
+                float:left;
+                width: 6px;
+                height: 20px;
+                margin: 10px 10px 0 15px;
+                background-color: @color-primary;
+            }
+        }
+        .comment {
+            border-top: @border-default;
+            padding-right: 8px;
+            padding-bottom: 8px;
+            .user-line {
+                padding: 16px 0 16px 15px;
+                .avatar {
+                    float: left;
+                    margin-right: 10px;
+                }
+                .nickname {
+                    margin-top: -3px;
+                    margin-left: 5px;
+                    .louzhu {
+                        font-size: 10px;
+                        color: @color-primary;
+                    }
+                }
+                .text-secondary {
+                    margin-top: 2px;
+                    font-size: 11px;
+                }
+            }
+            .comment-text {
+                margin-left: 55px;
+                margin-top: -5px;
+                margin-bottom: 11px;
+                font-size: 15px;
+                line-height: 25px;
+            }
+            .comment-text-deleted {
+                color: @color-text-secondary;
+            }
+            .replies {
+                padding: 6px 8px;
+                margin-left: 55px;
+                font-size: 14px;
+                line-height: 24px;
+                background-color: @color-bg;
+                .reply-text {
+                    margin: 5px 0;
+                }
+            }
+        }
+    }
+    .comment-input {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 10;
+        padding: 8px 0 0 16px;
+        border-top: @border-default;
+        background-color: @color-bg;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        .btn {
+            float: left;
+            width: 42px;
+            height: 32px;
+            padding: 0 16px;
+            background-position: 0 1px;
+            background-size: 30px 30px;
+            background-repeat: no-repeat;
+        }
+        .send {
+            float: right;
+            width: 70px;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+        }
+        .input {
+            margin-right: 70px;
+            input {
+                width: 100%;
+                padding-left: 15px;
+                height: 32px;
+                border: @border-default;
+                border-radius: 5px;
+                background-color: #ffffff;
+            }
+        }
+        .with1 {
+            margin-left: 42px;
+        }
+        .with2 {
+            margin-left: 84px;
+        }
+        .send-disable {
+            color: @color-text-gray
+        }
+    }
+    .comment-input-text {
+        height: 48px;
+    }
+    .comment-input-audio {
+        height: 180px;
+    }
+}

@@ -62,7 +62,7 @@ export default class Feed {
             throw(createError(404));
 
         // 获取评论、回复和所有评论、回复、点赞中出现的user_id对应的用户
-        var comments = await Comment.find({post_id: _id, status: 1}).sort({_id:1}).exec();
+        var comments = await Comment.find({post_id: _id}).sort({_id: -1}).exec();
         var comment_user_ids = comments.map((comment)=>comment.user_id);
         var replies = _.flatten(comments.map((comment)=>comment.replies));
         var reply_uids = replies.map((reply)=>reply.user_id);

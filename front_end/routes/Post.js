@@ -25,62 +25,11 @@ var UserCard = ({user, onClick, louzhu, _id}) => {
     var avatarClick = (e)=>{
         hashHistory.push('detail/' + user._id);
     }
-    var styles = {
-        d: {
-            width: '100%',
-            paddingLeft: 20,
-            paddingTop: 15,
-            paddingBottom: 15,
-        },
-        avatar: {
-            float: 'left',
-            width: 30,
-            height: 30,
-            overflow: 'hidden',
-            borderRadius: '50%',
-            marginRight: 12
-        },
-        name_line: {
-            marginTop: -6,
-            height: 20,
-            marginBottom: 4,
-            align: 'left',
-            textAlign: 'left'
-        },
-        name: {
-            display: 'inline-block',
-            verticalAlign: 'middle',
-            fontSize: 15
-        },
-        time: {
-            textAlign: 'left',
-            fontSize: 12,
-            lineHeight: '12px',
-            color: '#999999'
-        },
-        user_id: {
-            display: 'inline-block',
-            verticalAlign: 'middle',
-            width: 40,
-            height: 20,
-            paddingTop: 2,
-            fontSize: 10,
-            marginLeft: 5,
-            paddingLeft: 10,
-            border: '1px solid #ff6b6b',
-            color: '#ff6b6b'
-        }
-    }
     return (
-        <div style={styles.d} onClick={onClick || avatarClick}>
-            <img src={user.headimgurl} width="34" height="34" style={styles.avatar} onClick={avatarClick}/>
-            <div>
-                <div style={styles.name_line}>
-                    <span style={styles.name}><strong>{user.nickname}</strong></span>
-                    { louzhu && <span style={styles.user_id}>楼主</span> }
-                </div>
-                <div style={styles.time}>{ fromObjectId(_id) }</div>
-            </div>
+        <div className="user-line" onClick={onClick || avatarClick}>
+            <img className='avatar' src={user.headimgurl}  onClick={avatarClick}/>
+            <div className='nickname'>{user.nickname} { louzhu && <span className='louzhu'>楼主</span> }</div>
+            <div className='text-secondary'>{ fromObjectId(_id) }</div>
         </div>
     );
 };
@@ -91,7 +40,7 @@ var NameSpan = ({user}) => {
         e.stopPropagation();
         hashHistory.push('detail/' + user._id);
     }
-    return <span style={styles.name} onClick={avatarClick}><strong>{user.nickname}</strong></span>;
+    return <span className={'nickname'} onClick={avatarClick}><strong>{user.nickname}</strong></span>;
 };
 
 class Reply extends React.Component {
@@ -116,7 +65,7 @@ class Reply extends React.Component {
         try {
             var { reply, users } = this.props;
             return (
-                <div style={styles.reply_text} onClick={this.onClick}>
+                <div className="reply-text" onClick={this.onClick}>
                     <NameSpan user={users[reply.user_id]} />{' 回复 '}<NameSpan user={users[reply.user_id2]} />：
                     {reply.audio_id ? <AudioPlayer key={reply.audio_id} audio_id={reply.audio_id} length={reply.d}/>: reply.text}
                 </div>
@@ -148,39 +97,18 @@ class Comment extends React.Component {
     render() {
         try {
             var { comment, louzhu, onClick, new_id, users } = this.props;
-            var styles = {
-                comment: {
-                    marginTop: 5,
-                    marginBottom: 5
-                },
-                comment_text: {
-                    marginLeft: 57,
-                    fontSize: 14,
-                    color: '#000000'
-                },
-                replies: {
-                    marginLeft: 51,
-                    marginRight: 10,
-                    marginTop: 15,
-                    paddingTop: 3,
-                    paddingBottom: 3,
-                    paddingLeft: 6,
-                    paddingRight: 6,
-                    backgroundColor: '#f1f1f1'
-                }
-            }
             return (
-                <div style={styles.comment}>
+                <div className='comment'>
                     <UserCard _id={comment._id} louzhu={louzhu} user={users[comment.user_id]} onClick={this.onClick}/>
-                    { comment.status == 1 && <div style={styles.comment_text} onClick={this.onClick}>
+                    { comment.status == 1 && <div className='comment-text' onClick={this.onClick}>
                         {comment.audio_id
                             ? <AudioPlayer key={comment.audio_id} audio_id={comment.audio_id} length={comment.d}/>
                             : comment.text}
                     </div> }
-                    { comment.status == 0 && <div style={styles.comment_text}>
-                        [该评论已被原作者删除]
+                    { comment.status == 0 && <div className='comment-text comment-text-deleted'>
+                        该评论已删除
                     </div> }
-                    { comment.replies.length > 0 && <div style={styles.replies}>
+                    { comment.replies.length > 0 && <div className='replies'>
                         { comment.replies.map((reply)=>(
                             <Reply key={reply._id} new_id={new_id} reply={reply} users={users} onClick={onClick} active={true}/>
                         )) }
@@ -298,36 +226,6 @@ class Post extends React.Component {
             record: !this.state.record
         });
     }
-    renderInput() {
-        var { post, user, users } = this.props;
-        var { record, err, reply_user } = this.state;
-        var show_record_btn = post && post.user_id == window.user_id;
-        var placeholder = reply_user ? ('回复' + users[reply_user].nickname) : '请输入评论';
-        if (record)
-            placeholder = `语音${reply_user ? ('回复' + users[reply_user].nickname) : '评论'}`;
-        return (
-            <div style={styles.input_d(record)} onClick={(e)=>e.stopPropagation()}>
-                <div style={styles.input_text}>
-                    { show_record_btn && <span style={styles.record_btn} onClick={this.toggleRecord}>
-                        <CssButton
-                            className={record ? 'image-btn_keyboard' : 'image-btn_speech'}
-                            width={30}
-                            height={30}
-                        />
-                    </span> }
-                    <input
-                        style={styles.input(show_record_btn)}
-                        ref="input"
-                        disabled={record}
-                        placeholder={placeholder} />
-                    <span style={styles.send} onClick={this.send}>发送</span>
-                </div>
-                { record && <Recorder ref='recorder' onData={data=>{
-                    this.setState(data)
-                }} /> }
-            </div>
-        )
-    }
     onClick = (comment_id)=>(user_id)=>(e)=>{
         e.stopPropagation();
         this.refs.input.focus();
@@ -346,79 +244,86 @@ class Post extends React.Component {
             onClick={this.onClick(comment._id)} />;
     }
     render() {
-        var { post, user, users, like_users, comments, comments_top } = this.props;
+        var { post, user, users, comments, comments_top } = this.props;
         var { record, err } = this.state;
         var d = post && Math.floor((post.length + 500) / 1000) || 0;
         // TODO: 图片的显示有问题
         // TODO: 记录进入详情页的次数？
         return (
-            <div style={styles.post} onClick={this.clear_reply}>
-                <Helmet title={'发布详情'} />
-                { user && <UserCard user={user} _id={post._id} /> }
-                { post && <div className="image-icon_image_loading"
+            <div className='post' onClick={this.clear_reply}>
+                <Helmet title={'详情'} />
+                { post && <div className="picture image-icon_image_loading"
                     style={{
                         height: screenSize().width,
-                        backgroundColor: '#f8f8f8',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundSize: '24px 24px',
-                        position: 'relative',
-                        overflow: 'hidden'
                     }}>
                     <img src={fconf.qiniu.site + post.pic_id}
                         style={post.w > post.h ? {height: '100%'} : {width: '100%'}}
-                        className="bgTranslate2"
                         onClick={this.preview}/>
                 </div> }
-                { post && <div style={styles.d1}>
-                    <div style={styles.d2}>
-                        { d + '"' }
+                { post && <div className='audio-line'>
+                    <div className='audio-line-tab'>
+                        <span className='pull-right btn-default'>{`0人听过`}</span>
                     </div>
-                    <div style={styles.d2}>
-                        <CssButton
-                        className='image-btn_play_start'
-                        width={60}
-                        height={60}/>
+                    <div className='audio-line-tab'>
+                        <div className='lzw image-btn_play_start' />
                     </div>
-                    <div style={styles.d2}>
-                        <span style={styles.reads}>{`${post.read_count}人听过`}</span>
+                    <div className='audio-line-tab'>
+                        <span className='btn-default'>{`0人赞过`}</span>
                     </div>
                 </div> }
-                { !like_users && !err && <Loader /> }
-                { post && like_users && <div style={styles.dd}>
-                    <div style={styles.praise}>
-                        <CssButton
-                            className={"image-btn_detail_praise" +(post.me_like ? "_selected" : "")}
-                            onClick={this.like}
-                            width={40}
-                            height={32}/>
-                    </div>
-                    { like_users.map(user => (<img
-                        src={user.headimgurl}
-                        onClick={(e)=>{
-                            hashHistory.push('detail/' + user._id)
-                        }}
-                        style={styles.like_user} />)) }
-                    { post.user_id == window.user_id && <div style={styles.delete} onClick={this.deletePost}>
-                        <CssButton
-                            className={"image-btn_detail_delete"}
-                            onClick={this.delete}
-                            width={40}
-                            height={32}/>
-                    </div> }
+                { post && <div className='audio-length'>{`${d}"`}</div> }
+                { post && <div className="author-line" onClick={()=>hashHistory.push('/detail/' + user._id)}>
+                    <img className='avatar' src={user.headimgurl} />
+                    <span className='nickname'>{user.nickname}</span>
+                    <span className='text-secondary'>{ fromObjectId(user._id) }发布</span>
                 </div> }
-                { comments_top.length > 0 && <div>
-                    <div style={styles.comments_top}>
-                        <span style={styles.comments_top_l} />
-                        <span style={styles.comments_top_text}>楼主参与的互动</span>
+                { comments_top.length > 0 &&
+                    <div className='comments'>
+                        <div className='comments-header'>
+                            <span className='ym'/>楼主参与的互动
+                        </div>
+                        { comments_top.map(this.renderComment) }
                     </div>
-                    { comments_top.map(this.renderComment) }
-                </div>}
-                { comments.length > 0 && <div style={styles.comments}>
-                    { comments.map(this.renderComment) }
-                </div>}
-                <div style={{width: '100%', height: 48 + (record ? 132 : 0), clear:'both', overflow:'hidden'}} />
+                }
+                { comments.length > 0 &&
+                    <div className='comments'>
+                        <div className='comments-header'>
+                            <span className='ym'/>其它评论
+                        </div>
+                        { comments.map(this.renderComment) }
+                    </div>
+                }
+                <div className={`${record?'comment-input-audio':'comment-input-text'}`} />
                 { this.renderInput() }
+            </div>
+        )
+    }
+    renderInput() {
+        var { post, user, users } = this.props;
+        var { record, err, reply_user } = this.state;
+        var show_record_btn = post && post.user_id == window.user_id;
+        var me_like = post && post.me_like;
+        var btn_cnt = show_record_btn ? 2 : 1;
+        var placeholder = reply_user ? ('回复' + users[reply_user].nickname) : '请输入评论';
+        if (record)
+            placeholder = `语音${reply_user ? ('回复' + users[reply_user].nickname) : '评论'}`;
+        return (
+            <div className={`comment-input ${record?'comment-input-audio':'comment-input-text'}`}
+                onClick={(e)=>e.stopPropagation()}>
+                <div className={`btn ${me_like ? 'image-btn_keyboard_praise_HL' : 'image-btn_keyboard_praise'}`}
+                    onClick={this.like}/>
+                { show_record_btn && <div className={`btn ${record ? 'image-btn_keyboard' : 'image-btn_speech'}`}
+                    onClick={this.toggleRecord}/> }
+                <div className='send' onClick={this.send}>发送</div>
+                <div className={`input with${btn_cnt}`}>
+                    <input
+                        ref="input"
+                        disabled={record}
+                        placeholder={placeholder} />
+                </div>
+                { record && <Recorder ref='recorder' onData={data=>{
+                    this.setState(data)
+                }} /> }
             </div>
         )
     }
@@ -430,15 +335,6 @@ export default connect((state, props) => {
     var post = state.posts[props.params.id];
     var user = post && users[post.user_id];
     var post_detail = state.post_details[props.params.id];
-    var like_users = (()=> {
-        if (post && post_detail && post_detail.likes) {
-            var likes = _.filter(post_detail.likes, id=>(id!=window.user_id));
-            if (post.me_like)
-                likes = [window.user_id, ...likes];
-            return likes.map(id=>users[id]);
-        }
-        return null;
-    })();
     var comments_top = [];
     var comments = [];
     post && post_detail && post_detail.comments && post_detail.comments.map(comment => {
@@ -451,137 +347,6 @@ export default connect((state, props) => {
         }
     });
     return {
-        post, user, users, like_users, comments_top, comments
+        post, user, users, comments_top, comments
     };
 })(Post);
-
-var styles = {
-    post: {
-        backgroundColor: '#ffffff'
-    },
-    reply_text: {
-        marginTop: 7,
-        marginBottom: 7,
-        fontSize: 14,
-        lineHeight: '22px',
-        color: '#000000'
-    },
-    comments_top: {
-        marginTop: 5,
-        clear: 'both',
-        width: '100%',
-        height: 20,
-    },
-    comments_top_l: {
-        float: 'left',
-        marginLeft: 15,
-        marginRight: 10,
-        width: 6,
-        height: 20,
-        backgroundColor: '#ff6b6b'
-    },
-    comments_top_text: {
-        display: 'inline-block',
-        marginTop: 0,
-        lineHeight: '20px',
-        fontSize: 14,
-        color: '#000000'
-    },
-    comments: {
-        marginTop: 10,
-        borderTop: '1px solid #dfdfdd'
-    },
-    dd: {
-        paddingTop: 4,
-        marginTop: 20,
-        height: 52
-    },
-    praise: {
-        float: 'left',
-        height: 32,
-        width: 48,
-        paddingTop: 3,
-        marginBottom: 0,
-        marginLeft: 15,
-        paddingRight: 8
-    },
-    like_user: {
-        width: 30,
-        height: 30,
-        overflow: 'hidden',
-        borderRadius: '50%',
-        marginLeft: 10
-    },
-    delete: {
-        float: 'right',
-        height: 32,
-        width: 40,
-        paddingTop: 3,
-        marginRight: 15,
-        marginBottom: 0
-    },
-    d1: {
-        display: 'table',
-        tableLayout: 'fixed',
-        width: '100%',
-        height: 64,
-        marginTop: 20
-    },
-    d2: {
-        display: 'table-cell',
-        textAlign: 'center',
-        align: 'center',
-        width: '100%',
-        verticalAlign: 'middle'
-    },
-    reads: {
-        display: 'inline-block',
-        paddingLeft: 20,
-        paddingRight: 20,
-        borderRadius: 12,
-        height: 24,
-        fontSize: 12,
-        lineHeight: '24px',
-        border: '1px solid rgba(0, 0, 0, 0.15)',
-    },
-    input_d: (record) => ({
-        height: 48 + (record ? 132 : 0),
-        position: 'fixed',
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 10,
-        backgroundColor: '#ffffff',
-        WebkitBackfaceVisibility: 'hidden', // Make sure the bar is visible when a modal animates in.
-        BackfaceVisibility: 'hidden'
-    }),
-    input_text: {
-        paddingTop: 6,
-        paddingLeft: 8,
-        backgroundColor: '#f1f1f1',
-        borderTop: '1px solid #dfdfdd',
-        borderBottom: '1px solid #dfdfdd',
-        height: 48
-    },
-    record_btn: {
-        display: 'inline-block',
-        width: 52,
-        paddingLeft: 7,
-        paddingRight: 15
-    },
-    input: (show_record_btn) => ({
-        width: screenSize().width - 70 - (show_record_btn ? 52 : 0),
-        height: 32,
-        paddingLeft: 15,
-        backgroundColor: '#ffffff',
-        borderRadius: 5,
-        border: '1px solid #dfdfdd',
-    }),
-    send: {
-        display: 'inline-block',
-        marginTop: 3,
-        lineHeight: '32px',
-        paddingLeft: 15,
-        color: '#999999'
-    }
-}

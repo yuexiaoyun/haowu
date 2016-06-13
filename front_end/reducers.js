@@ -119,7 +119,7 @@ export var post_details = handleActions({
                 comments.push(comment);
         });
         if (!exists)
-            comments.push(action.payload);
+            comments = [action.payload, ...comments];
         post_detail = {
             ...post_detail,
             comments: comments
