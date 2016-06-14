@@ -6,7 +6,6 @@ import AudioPlayer from './AudioPlayer';
 import CssButton from './CssButton'
 import { connect } from 'react-redux'
 import { createAction } from 'redux-actions'
-import { soundManager } from 'soundmanager2'
 import screenSize from '../../utility/screen_size'
 import qs from 'querystring'
 

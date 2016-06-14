@@ -23,13 +23,15 @@ import Post from './routes/Post'
 import SubList from './routes/SubList'
 import PopupHelper from './utility/PopupHelper'
 import * as reducers from './reducers'
-import { setStore } from './utility/update'
+import { setStore as s1 } from './utility/update'
+import { setStore as s2 } from './utility/audio_manager'
 
 let store = (applyMiddleware(
     optimistPromiseMiddleware()
 )(createStore))(optimist(combineReducers(reducers)), {},
     window.devToolsExtension && window.devToolsExtension());
-setStore(store);
+s1(store);
+s2(store);
 
 var entry = window.location.pathname.substring(4);
 if (entry.substring(0, 5) == '/post') {

@@ -4,15 +4,27 @@ import Immutable from 'immutable'
 
 // TODO: 全部用immutablejs重写？
 // TODO: 各种分页加载
+export var audio_player = handleActions({
+    load: (state, action) => ({
+        id: action.payload,
+        play_state: 'loading'
+    }),
+    play: (state, action) => ({
+        id: action.payload,
+        play_state: 'playing',
+        start: new Date(),
+        time: 0
+    }),
+    playing: (state, action) => ({
+        id: action.payload,
+        play_state: 'playing',
+        start: state.start,
+        time: new Date() - state.start
+    }),
+    ended: (state, action) => ({})
+}, {});
 export var local_pic_id = handleActions({
     take_pic: (state, action) => (action.payload)
-}, null);
-export var sound_id = handleActions({
-    play_sound: (state, action) => (action.payload),
-    stop_play: (state, action) => (action.payload == state ? null: state)
-}, null);
-export var sound_playing = handleActions({
-    play_sound: (state, action) => (new Date())
 }, null);
 
 // 首页feed的id列表
