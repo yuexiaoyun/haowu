@@ -34,6 +34,7 @@ app.use(logger());
 // TODO: 在线的日志系统
 // TODO: 服务器部署的时候前面要挡一层nginx（或者另一层node）做各种处理，例如防恶意攻击等
 // TODO: 某现成的统计平台
+// TODO：计算JS和CSS的md5，并挡一层缓存；验证H5 WebApp机制是否可用
 
 app.use(gzip());
 app.use(mount('/agent', function *() {
