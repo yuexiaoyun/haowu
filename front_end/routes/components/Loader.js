@@ -1,11 +1,11 @@
 import React from 'react';
 import LoadingView from './LoadingView';
 
-export default () => {
+export default ({no_text}) => {
     return (
         <div style={styles.d}>
             <div className='loader-circle image-image_loading' />
-            <div style={styles.txt}>加载中</div>
+            {!no_text && <div style={styles.txt}>加载中</div>}
         </div>
     );
 }

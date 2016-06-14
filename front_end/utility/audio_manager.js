@@ -21,13 +21,13 @@ export function play(id) {
         audio.pause();
     var url = fconf.qiniu.site + id + '_mp3';
     audio = new Audio(url);
-    console.log(url);
     current_id = id;
     audio.play();
     store.dispatch(createAction('load')(id));
-    audio.addEventListener('play', () => {
+    audio.addEventListener('canplay', () => {
+        console.log('canplay: ' + id);
         store.dispatch(read(id));
-        store.dispatch(createAction('play')(id));
+        store.dispatch(createAction('canplay')(id));
         timer = setInterval(() => {
             store.dispatch(createAction('playing')(id));
         }, 100);

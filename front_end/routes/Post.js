@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 import { createAction } from 'redux-actions'
 import { fromObjectId } from '../utility/format_time';
 import { parse_online_json } from '../utility/fetch_utils';
+import { play, stop } from '../utility/audio_manager';
 import PopupHelper from '../utility/PopupHelper';
 import _ from 'underscore';
 import qs from 'querystring';
@@ -247,8 +248,17 @@ class Post extends React.Component {
             louzhu={this.props.post && comment.user_id==this.props.post.user_id}
             onClick={this.onClick(comment._id)} />;
     }
+    play = () => {
+        var { post, playing, loading } = this.props;
+        if (post) {
+            if (playing || loading)
+                stop(post.audio_id);
+            else
+                play(post.audio_id);
+        }
+    }
     render() {
-        var { post, user, users, comments, comments_top, like_count, read_count } = this.props;
+        var { post, user, users, comments, comments_top, like_count, read_count, playing, loading, time } = this.props;
         var { record, err } = this.state;
         var d = post && Math.floor((post.length + 500) / 1000) || 0;
         // TODO: 图片的显示有问题
@@ -269,13 +279,17 @@ class Post extends React.Component {
                         <span className='pull-right btn-default'>{ like_count }人赞过</span>
                     </div>
                     <div className='audio-line-tab'>
-                        <div className='lzw image-btn_play_start' />
+                        <div
+                            onClick={this.play}
+                            className={`lzw ${(playing || loading) ? 'image-btn_play_stop' : 'image-btn_play_start'}`} />
                     </div>
                     <div className='audio-line-tab'>
                         <span className='pull-left btn-default clearfix'>{ read_count }人听过</span>
                     </div>
                 </div> }
-                { post && <div className='audio-length'>{`${d}"`}</div> }
+                { post && <div className='audio-length'>
+                    {loading ? <Loader no_text={true} />: `${playing ? time : d}"`}
+                </div> }
                 { post && <div className="author-line" onClick={()=>hashHistory.push('/detail/' + user._id)}>
                     <img className='avatar' src={user.headimgurl} />
                     <span className='nickname'>{user.nickname}</span>
@@ -360,6 +374,10 @@ export default connect((state, props) => {
     var read_count = 0;
     var me_read = post && state.reads.has(post.audio_id);
     var read_count = post_detail ? (post_detail.others_read_count + me_read) : 0;
+    var { id, play_state, time } = state.audio_player;
+    var playing = (post && id == post.audio_id && play_state == 'playing');
+    var loading = (post && id == post.audio_id && play_state == 'loading');
+    time = Math.floor(time / 1000 + 0.5);
     post && post_detail && post_detail.comments && post_detail.comments.map(comment => {
         if (comment.status == 1 || comment.replies.length > 0) {
             var user_ids = [comment.user_id, ...comment.replies.map(reply=>reply.user_id)];
@@ -370,6 +388,6 @@ export default connect((state, props) => {
         }
     });
     return {
-        post, user, users, comments_top, comments, like_count, read_count
+        post, user, users, comments_top, comments, like_count, read_count, playing, loading, time
     };
 })(Post);

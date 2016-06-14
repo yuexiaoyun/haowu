@@ -9,7 +9,7 @@ export var audio_player = handleActions({
         id: action.payload,
         play_state: 'loading'
     }),
-    play: (state, action) => ({
+    canplay: (state, action) => ({
         id: action.payload,
         play_state: 'playing',
         start: new Date(),

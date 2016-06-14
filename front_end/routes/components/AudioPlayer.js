@@ -9,24 +9,26 @@ import { play, stop } from '../../utility/audio_manager'
 class AudioPlayer extends React.Component {
     play_audio = (e) => {
         e.stopPropagation();
-        var { audio_id, playing } = this.props;
-        if (playing)
-            this.stop_play();
+        var { audio_id, playing, loading } = this.props;
+        if (playing || loading)
+            this.stop_play(e);
         else
             play(audio_id);
     }
-    stop_play = () => {
+    stop_play = (e) => {
         e.stopPropagation();
         var { audio_id } = this.props;
         stop(audio_id);
     }
     render() {
-        var { read, length, audio_id, playing, i } = this.props;
+        var { read, length, audio_id, playing, loading, i } = this.props;
         length = Math.floor(length / 1000 + 0.5);
         if (playing)
             var className = "image-btn_home_play" + i;
-        else
+        else if (!loading)
             var className = read ? 'image-btn_home_play3' : "image-btn_home_play_weidu";
+        else
+            var className = '';
         return (
             <span className={`audioplayer ${className}`} onClick={this.play_audio}>
                 {`${length}"`}
@@ -39,8 +41,10 @@ export default connect((state, props)=>{
     var { reads } = state;
     var { id, play_state, time } = state.audio_player;
     var playing = (id == props.audio_id && play_state == 'playing');
+    var loading = (id == props.audio_id && play_state == 'loading');
     return {
         playing,
+        loading,
         i: (playing && time && (Math.floor(time / 300) % 3 + 1) : 3),
         read: reads.has(props.audio_id)
     }
