@@ -9,6 +9,18 @@ var api = new WechatAPI(conf.appid, conf.secret, function *() {
 }, function *(token) {
     yield Config.update({key: 'wechat_token'}, {value: JSON.stringify(token)}, {upsert: true});
 });
+
+api.registerTicketHandle(function*(type) {
+    try {
+        var doc = yield Config.findOne({key: 'wechat_ticket_' + type}).exec();
+        return doc ? JSON.parse(doc.value) : null;
+    } catch (err) {
+        console.log(err);
+    }
+}, function*(type, value) {
+    yield Config.update({key: 'wechat_ticket_' + type}, {value: JSON.stringify(value)}, {upsert: true});
+});
+
 var oauth = new OAuth(conf.appid, conf.secret);
 
 module.exports = {

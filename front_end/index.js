@@ -21,6 +21,8 @@ import Pub from './routes/Pub'
 import Detail from './routes/Detail'
 import Post from './routes/Post'
 import SubList from './routes/SubList'
+import LikeList from './routes/LikeList'
+import ReadList from './routes/ReadList'
 import PopupHelper from './utility/PopupHelper'
 import * as reducers from './reducers'
 import { setStore as s1 } from './utility/update'
@@ -53,6 +55,8 @@ render(
             <Route path="/post/:id" component={Post} />
             <Route path="/post/:id/:new_id" component={Post} />
             <Route path="/sub_list" component={SubList} />
+            <Route path="/like_list/:id" component={LikeList} />
+            <Route path="/read_list/:id" component={ReadList} />
             <Route path="/" component={App} >
                 <Route path="home" ref='home' component={Home} />
                 <Route path="me" component={Me} >

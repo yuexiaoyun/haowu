@@ -276,7 +276,10 @@ class Post extends React.Component {
                 </div> }
                 { post && <div className='audio-line'>
                     <div className='audio-line-tab'>
-                        <span className='pull-right btn-default'>{ like_count }人赞过</span>
+                        <span className='pull-right btn-default'
+                            onClick={()=>(like_count > 0 && hashHistory.push('/like_list/'+post._id))}>
+                            { like_count }人赞过
+                        </span>
                     </div>
                     <div className='audio-line-tab'>
                         <div
@@ -284,7 +287,10 @@ class Post extends React.Component {
                             className={`lzw ${(playing || loading) ? 'image-btn_play_stop' : 'image-btn_play_start'}`} />
                     </div>
                     <div className='audio-line-tab'>
-                        <span className='pull-left btn-default clearfix'>{ read_count }人听过</span>
+                        <span className='pull-left btn-default clearfix'
+                            onClick={()=>(read_count > 0 && hashHistory.push('/read_list/'+post.audio_id))}>
+                            { read_count }人听过
+                        </span>
                     </div>
                 </div> }
                 { post && <div className='audio-length'>

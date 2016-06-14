@@ -1,19 +1,19 @@
 var router = require('koa-router')();
-var conf = require('../conf');
+var conf = require('../../conf');
 var debug = require('debug')('app');
 
-var User = require('../mongodb_models/user').Model;
-var Post = require('../mongodb_models/post').Model;
-var Comment = require('../mongodb_models/comment').Model;
-var Audio = require('../mongodb_models/audio').Model;
-var Notification = require('../mongodb_models/notification').Model;
-var Badge = require('../models/Badge');
-var Feed = require('../models/Feed');
+var User = require('../../mongodb_models/user').Model;
+var Post = require('../../mongodb_models/post').Model;
+var Comment = require('../../mongodb_models/comment').Model;
+var Audio = require('../../mongodb_models/audio').Model;
+var Notification = require('../../mongodb_models/notification').Model;
+var Badge = require('../../models/Badge');
+var Feed = require('../../models/Feed');
 
-var qiniu = require('../utility/qiniu');
-var wechat = require('../utility/wechat').api;
+var qiniu = require('../../utility/qiniu');
+var wechat = require('../../utility/wechat').api;
 var mongoose = require('mongoose');
-var { notifyLike, notifyComment, notifyReply, notifySub, notifyPub } = require('../utility/msg');
+var { notifyLike, notifyComment, notifyReply, notifySub, notifyPub } = require('../../utility/msg');
 
 import _ from 'underscore'
 import {createAction} from 'redux-actions'
@@ -22,6 +22,9 @@ import {createAction} from 'redux-actions'
 // TODO: 各种发布的hash去重
 // TODO: 防CSRF攻击处理
 // TODO: confirm弹太多会被关闭网页
+
+router.get('/update_post_like_uids', require('./update_post_like_uids'));
+router.get('/update_audio_read_uids', require('./update_audio_read_uids'));
 
 router.get('/update_feeds', function *() {
     this.body = {

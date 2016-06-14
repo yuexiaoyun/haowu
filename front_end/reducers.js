@@ -79,8 +79,18 @@ export var posts = handleActions({
         }
     }
 }, {});
+
 // 用户的ID与内容对应
+function update_users(state, action) {
+    var { users } = action.payload;
+    return {
+        ...state, ..._.object(users.map(user=>user._id), users)
+    };
+}
+
 export var users = handleActions({
+    update_post_like_uids: update_users,
+    update_audio_read_uids: update_users,
     users: (state, action) => ({
         ...state, ...action.payload
     }),
@@ -142,3 +152,19 @@ export var reads = handleActions({
     reads: (state, action) => state.merge(action.payload),
     read: (state, action) => state.add(action.payload)
 }, Immutable.Set());
+
+// 某一个具体帖子的赞列表
+export var post_like_uids = handleActions({
+    update_post_like_uids: (state, action) => {
+        var {_id, users} = action.payload;
+        return state.set(_id, users.map(user=>user._id));
+    }
+}, Immutable.Map());
+
+// 某一个具体语音的听过列表
+export var audio_read_uids = handleActions({
+    update_audio_read_uids: (state, action) => {
+        var {audio_id, users} = action.payload;
+        return state.set(audio_id, users.map(user=>user._id));
+    }
+}, Immutable.Map());
