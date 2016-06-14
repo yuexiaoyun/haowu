@@ -28,6 +28,30 @@ module.exports.dismiss = function() {
     ReactDOM.render(<div/>, document.getElementById('popup_container'));
 }
 
+module.exports.confirm = function(text, btn, f) {
+    var d = module.exports.dismiss;
+    module.exports.popup(
+        <div className='confirm'>
+            <div className='icon image-icon_warn_alert' />
+            <div className='text'>{text}</div>
+            <div className='btn btn1' onClick={()=>{d();f()}}>{btn}</div>
+            <div className='btn btn2' onClick={d}>取消</div>
+            <div className='close image-btn_delete_alert' onClick={d} />
+        </div>
+    );
+}
+
+module.exports.menu = function(items) {
+    var d = module.exports.dismiss;
+    ReactDOM.render(
+        <PopupWrapper onClose={d} bottom={true}>
+            <div className='menu'>
+                { items && items.map(item=><div className='ok' onClick={()=>{d();item.f();}}>{item.text}</div>) }
+                <div className='cancel' onClick={d}>取消</div>
+            </div>
+        </PopupWrapper>, document.getElementById('popup_container'));
+}
+
 module.exports.toast = function(text, timeout) {
     var toast = <div style={toastStyle}><span style={spanStyle}>{text}</span></div>;
     ReactDOM.render(toast, document.getElementById('toast_container'));

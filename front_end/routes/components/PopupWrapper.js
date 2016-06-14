@@ -83,10 +83,20 @@ export default class PopupWrapper extends React.Component {
             styles = {
                 position: 'absolute',
                 left: left + 'px',
-                top: top + 'px',
                 height: content_size.height + 'px',
                 width: content_size.width + 'px'
             };
+            if (this.props.bottom) {
+                styles = {
+                    ...styles,
+                    bottom: 0
+                }
+            } else {
+                styles = {
+                    ...styles,
+                    top: top
+                }
+            }
         } else {
             hideClass = ' popup_container_hide';
         }

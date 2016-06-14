@@ -146,8 +146,15 @@ class Post extends React.Component {
         var { post, dispatch } = this.props;
         dispatch(actions.like(post._id));
     }
-    deletePost = (e) => {
-        if (confirm('您确认要删除么？')) {
+    more = (e) => {
+        e.stopPropagation();
+        PopupHelper.menu([{
+            text: '删除',
+            f: this.deletePost
+        }]);
+    }
+    deletePost = () => {
+        PopupHelper.confirm('您确认要删除么', '删除', ()=>{
             var { post } = this.props;
             var url = '/api/delete_post?' + qs.stringify({
                 _id: post._id
@@ -160,7 +167,7 @@ class Post extends React.Component {
                 .catch((err)=>{
                     PopupHelper.toast('删除失败');
                 });
-        }
+        });
     }
     pub = (c) => {
         var { record, reply_user, reply_comment } = this.state;
@@ -298,6 +305,7 @@ class Post extends React.Component {
                 </div> }
                 { post && <div className="author-line" onClick={()=>hashHistory.push('/detail/' + user._id)}>
                     <img className='avatar' src={user.headimgurl} />
+                    { user._id == window.user_id && <div className='delete image-btn_more' onClick={this.more}/> }
                     <span className='nickname'>{user.nickname}</span>
                     <span className='text-secondary'>{ fromObjectId(post._id) }发布</span>
                 </div> }
