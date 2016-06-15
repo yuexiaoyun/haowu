@@ -10,6 +10,22 @@ function *getOpenid(user_id) {
     return doc && doc.openid;
 }
 
+export function *notifySub(session, user_id) {
+    var openid = yield getOpenid(user_id);
+    if (openid) {
+        return yield wechat.sendTemplate(
+            openid,
+            '3JFrw9e6GFGUKjAHBWZCvSYyKl9u-JGIf7Idn5VSolU',
+            conf.site + '/app/me/notifications',
+            '#FF0000', {
+                first: {
+                    value: session.userInfo.nickname,
+                    color: "#173177"
+                }
+            });
+    }
+}
+
 export function *notifyLike(session, post) {
     var openid = yield getOpenid(post.user_id);
     if (openid) {

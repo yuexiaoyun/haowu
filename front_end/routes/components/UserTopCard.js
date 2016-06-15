@@ -14,6 +14,12 @@ var UserTopCard = ({user, subids, dispatch}) => {
             user_id: user._id
         }));
     }
+    var preview = (e) => {
+        wx.previewImage({
+            current: user.headimgurl,
+            urls: [user.headimgurl]
+        });
+    }
     return (
         <div className='user-detail'>
             { <div className='share-line'>
@@ -24,7 +30,7 @@ var UserTopCard = ({user, subids, dispatch}) => {
                 <div>长按识别二维码，关注“物我”公众号</div>
                 <div>朋友互动不遗漏</div>
             </div> }
-            <img className='avatar' src={user.headimgurl} />
+            <img className='avatar' src={user.headimgurl} onClick={preview}/>
             <div className='nickname'>{user.nickname}</div>
             { user._id != window.user_id &&
                 <span className='btn-default' onClick={sub}>

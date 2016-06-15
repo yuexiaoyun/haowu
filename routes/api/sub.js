@@ -1,5 +1,6 @@
 import { Model as User } from '../../mongodb_models/user';
 import { Model as Notification } from '../../mongodb_models/notification';
+import { notifySub } from '../../utility/msg';
 
 export default function*() {
     var q = { _id: this.query._id };
@@ -10,21 +11,10 @@ export default function*() {
     };
     var update = yield User.update(q, d);
     console.log(update);
-    if (update.nModified > 0 && this.query.user_id != this.session.user_id) {
-        /*
-        yield wechat.sendTemplate(
-            this.query.user_id,
-            '3JFrw9e6GFGUKjAHBWZCvSYyKl9u-JGIf7Idn5VSolU',
-            conf.site + '/app/me/notifications',
-            '#FF0000', {
-                first: {
-                    value: this.session.userInfo.nickname,
-                    color: "#173177"
-                }
-            });
-        */
+    if (update.nModified > 0 && this.query._id != this.session.user_id) {
+        console.log(yield notifySub(this.session, this.query._id));
         var query = {
-            user_id: this.query.user_id,
+            user_id: this.query._id,
             user_id2: this.session.user_id,
             type: 'sub'
         }
