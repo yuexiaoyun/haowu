@@ -60,7 +60,8 @@ render(
             <Route path="/like_list/:id" component={LikeList} />
             <Route path="/read_list/:id" component={ReadList} />
             <Route path="/" component={App} >
-                <Route path="home" ref='home' component={Home} />
+                <Route path="home" component={Home} />
+                <Route path="home/:time" component={Home} />
                 <Route path="me" component={Me} >
                     <Route path="posts" component={MyPosts} />
                     <Route path="notifications" component={Notifications} />

@@ -29,6 +29,11 @@ class Home extends React.Component {
         update('/api/update_feeds')
             .then(()=>this.setState({reloading: false}));
     }
+    componentDidUpdate(prevProps) {
+        // 用户当前在首页，又点了一次底部TAB
+        if (this.props.params.time != prevProps.params.time && !this.state.reloading)
+            this.reload();
+    }
     render() {
         var { feed_ids, feed_end } = this.props;
         var { reloading, err } = this.state;

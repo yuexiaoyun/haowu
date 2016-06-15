@@ -16,6 +16,7 @@ class App extends React.Component {
         wx.chooseImage({
             count: 1,
             success: res => {
+                // TODO: 将path base64，去掉一个action
                 var path = res.localIds[0];
                 this.props.dispatch(createAction('take_pic')(path));
                 hashHistory.push('pub');
@@ -36,13 +37,10 @@ class App extends React.Component {
                     <div style={{width: '100%', height: '2.5rem', clear:'both', overflow:'hidden'}} />
                     <nav className="bar bar-tab">
                         <span className={"bar-tab-item"} onClick={()=>{
-                            if (location.pathname=='/home') {
-                                this.refs.home.getWrappedInstance().reload();
-                                //this._home.getWrappedInstance().reload();
-                            }
-                            hashHistory.replace('/home');
+                            hashHistory.replace('/home/' + Date.parse(new Date()));
                         }}>
-                            <span className={"setting-icon image-btn_tabbar_home" + (location.pathname=='/home' ? '_selected' : '')} />
+                            <span className={"setting-icon image-btn_tabbar_home" +
+                                (location.pathname.substring(0, 5)=='/home' ? '_selected' : '')} />
                         </span>
                         <span className={"bar-tab-item"} onClick={this.take_photo}>
                             <span className="setting-icon image-btn_tabbar_photo"></span>
