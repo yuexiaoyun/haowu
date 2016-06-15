@@ -21,10 +21,10 @@ import {createAction} from 'redux-actions'
 // TODO: 前后端一致的：发主贴、发评论、发回复的合法性检查
 // TODO: 各种发布的hash去重
 // TODO: 防CSRF攻击处理
-// TODO: confirm弹太多会被关闭网页
 
 router.get('/update_post_like_uids', require('./update_post_like_uids'));
 router.get('/update_audio_read_uids', require('./update_audio_read_uids'));
+router.get('/pub_post', require('./pub_post'));
 router.get('/sub', require('./sub'));
 router.get('/unsub', require('./unsub'));
 
@@ -84,31 +84,6 @@ router.get('/like', function *() {
     this.body = yield {
         result: 'ok',
         update
-    };
-});
-
-router.get('/pub_post', function *() {
-    console.log('here');
-    var post = new Post();
-    Object.assign(post, this.query);
-    post.user_id = this.session.user_id;
-    yield [
-        qiniu.sync(post.audio_id),
-        qiniu.sync(post.pic_id)
-    ];
-    yield qiniu.pfop(post.audio_id);
-    var info = JSON.parse(yield qiniu.stat(post.pic_id));
-    post.w = info.width;
-    post.h = info.height;
-    post.status = 1;
-    yield post.save();
-    this.body = {
-        result: 'ok',
-        actions: [
-            createAction('feed_ids')([]),
-            createAction('feed_end')(0),
-            createAction('user_post_ids')(_.object([this.session.user_id],[[]]))
-        ]
     };
 });
 

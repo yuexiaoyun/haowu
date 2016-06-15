@@ -29,16 +29,24 @@ export var local_pic_id = handleActions({
 
 // 首页feed的id列表
 export var feed_ids = handleActions({
+    pub_post: (state, action) => [],
     feed_ids: (state, action) => action.payload,
     feed_ids_more: (state, action) => [...state, ...action.payload],
     delete_my_post: (state, action) => _.filter(state, item=>(item!=action.payload))
 }, []);
 // 首页feed是否已完全加载
 export var feed_end = handleActions({
+    pub_post: (state, action) => 0,
     feed_end: (state, action) => action.payload
 }, 0);
 // 某个用户的发布列表
 export var user_post_ids = handleActions({
+    pub_post: (state, action) => {
+        return {
+            ...state,
+            ..._.object([window.openid], [[]])
+        }
+    },
     user_post_ids: (state, action) => ({...state, ...action.payload}),
     delete_my_post: (state, action) => {
         var my_post_ids = state[window.user_id];

@@ -10,6 +10,28 @@ function *getOpenid(user_id) {
     return doc && doc.openid;
 }
 
+export function *notifyPub(session, post) {
+    var doc = yield User.findOne({_id: session.user_id}).select('subids').exec();
+    var subids = doc.subids || [];
+    var docs = yield User.find({_id: {$in: subids}}).select('openid').exec();
+
+    for (var i in docs) {
+        var openid = docs[i].openid;
+        if (openid) {
+            console.log(yield wechat.sendTemplate(
+                openid,
+                'coonwl1GcNnQrZEyrdpa-Jls2V5rZHiUT-_RyeKndbk',
+                conf.site + '/app/post/' + post._id,
+                '#FF0000', {
+                    first: {
+                        value: session.userInfo.nickname,
+                        color: "#173177"
+                    }
+                }));
+        }
+    }
+}
+
 export function *notifySub(session, user_id) {
     var openid = yield getOpenid(user_id);
     if (openid) {
