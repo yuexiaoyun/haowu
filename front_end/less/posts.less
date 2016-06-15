@@ -141,46 +141,55 @@
         right: 0;
         bottom: 0;
         z-index: 10;
-        padding: 8px 0 0 16px;
+        padding-top: 8px;
         border-top: @border-default;
         background-color: @color-bg;
         backface-visibility: hidden;
         -webkit-backface-visibility: hidden;
-        .btn {
-            float: left;
-            width: 42px;
-            height: 32px;
-            padding: 0 16px;
-            background-position: 0 1px;
-            background-size: 30px 30px;
-            background-repeat: no-repeat;
-        }
-        .send {
-            float: right;
-            width: 58px;
-            height: 32px;
-            line-height: 32px;
-            text-align: center;
-        }
-        .input {
-            margin-right: 58px;
-            input {
-                width: 100%;
-                padding-left: 15px;
+        .input-line {
+            padding-left: 16px;
+            .btn {
+                float: left;
+                width: 42px;
                 height: 32px;
-                border: @border-default;
-                border-radius: 5px;
-                background-color: #ffffff;
+                padding: 0 16px;
+                background-position: 0 1px;
+                background-size: 30px 30px;
+                background-repeat: no-repeat;
             }
-        }
-        .with1 {
-            margin-left: 42px;
-        }
-        .with2 {
-            margin-left: 84px;
-        }
-        .send-disable {
-            color: @color-text-gray
+            .send {
+                float: right;
+                width: 58px;
+                height: 32px;
+                line-height: 32px;
+                text-align: center;
+            }
+            .input {
+                margin-right: 58px;
+                input {
+                    width: 100%;
+                    padding-left: 15px;
+                    height: 32px;
+                }
+                input:enabled {
+                    border: @border-default;
+                    border-radius: 5px;
+                    background-color: #ffffff;
+                }
+                input:disabled {
+                    background-color: @color-bg;
+                    border: none;
+                }
+            }
+            .with1 {
+                margin-left: 42px;
+            }
+            .with2 {
+                margin-left: 84px;
+            }
+            .send-disable {
+                color: @color-text-gray
+            }
         }
     }
     .comment-input-text {

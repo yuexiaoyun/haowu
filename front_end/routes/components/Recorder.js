@@ -99,62 +99,32 @@ export default class Recorder extends React.Component {
     render() {
         var { recording, audio_id, playing, d, progress } = this.state;
         d = Math.floor(d / 1000 + 0.5);
+        if (recording) {
+            var onClick = this.stop_audio;
+            var className = 'image-btn_tape_stop';
+        } else if (playing) {
+            var onClick = this.stop_play;
+            var className = 'image-btn_play_stop';
+        } else if (audio_id) {
+            var onClick = this.play_audio;
+            var className = 'image-btn_play_start';
+        } else {
+            var onClick = this.get_audio;
+            var className = 'image-btn_tape_start';
+        }
         return (
-            <div>
-                <div style={{backgroundColor:'#ff6b6b',width:''+ progress + '%',height:3}}></div>
-                <div style={styles.d1}>
-                    <div style={styles.d2}>
+            <div className='recorder'>
+                <div className='progress' style={{width:''+ progress + '%'}}></div>
+                <div className='record-line'>
+                    <div className='length'>
                         { d > 0 && d + '"' }
                     </div>
-                    <div style={styles.d2}>
-                        { !audio_id && !recording && <CssButton
-                            className='image-btn_tape_start'
-                            onClick={this.get_audio}
-                            width={60}
-                            height={60}/> }
-                        { recording && <CssButton
-                            className='image-btn_tape_stop'
-                            onClick={this.stop_audio}
-                            width={60}
-                            height={60}/> }
-                        { playing && <CssButton
-                            className='image-btn_play_stop'
-                            onClick={this.stop_play}
-                            width={60}
-                            height={60}/> }
-                        { audio_id && !playing && <CssButton
-                            className='image-btn_play_start'
-                            onClick={this.play_audio}
-                            width={60}
-                            height={60}/> }
-                    </div>
-                    <div style={styles.d2}>
-                        <CssButton
-                            className='image-btn_play_again'
-                            disabled={!audio_id || !!playing}
-                            onClick={this.clear}
-                            width={44}
-                            height={44}/>
-                    </div>
+                    <div className={'recorder-btn ' + className} onClick={onClick} />
+                    <div className={'delete-btn image-btn_play_again' + ((!audio_id || !!playing) ? '_disabled' : '')}
+                        onClick={this.clear}
+                        disabled={!audio_id || !!playing}/>
                 </div>
             </div>
         );
-    }
-}
-
-var styles = {
-    d1: {
-        display: 'table',
-        tableLayout: 'fixed',
-        width: '100%',
-        marginTop: 33,
-        height: 64
-    },
-    d2: {
-        display: 'table-cell',
-        textAlign: 'center',
-        align: 'center',
-        width: '100%',
-        verticalAlign: 'middle'
     }
 }

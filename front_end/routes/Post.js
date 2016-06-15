@@ -354,19 +354,21 @@ class Post extends React.Component {
         return (
             <div className={`comment-input ${record?'comment-input-audio':'comment-input-text'}`}
                 onClick={(e)=>e.stopPropagation()}>
-                <div className={`btn ${me_like ? 'image-btn_keyboard_praise_HL' : 'image-btn_keyboard_praise'}`}
-                    onClick={this.like}/>
-                { show_record_btn && <div className={`btn ${record ? 'image-btn_keyboard' : 'image-btn_speech'}`}
-                    onClick={this.toggleRecord}/> }
-                <div className={`send ${disable_send ? 'send-disable' : ''}`} onClick={this.send}>发送</div>
-                <div className={`input with${btn_cnt}`}>
-                    <input
-                        type="text"
-                        ref="input"
-                        value={record ? '' : input}
-                        disabled={record}
-                        onChange={this.handleChange}
-                        placeholder={placeholder} />
+                <div className='input-line' >
+                    <div className={`btn ${me_like ? 'image-btn_keyboard_praise_HL' : 'image-btn_keyboard_praise'}`}
+                        onClick={this.like}/>
+                    { show_record_btn && <div className={`btn ${record ? 'image-btn_keyboard' : 'image-btn_speech'}`}
+                        onClick={this.toggleRecord}/> }
+                    <div className={`send ${disable_send ? 'send-disable' : ''}`} onClick={this.send}>发送</div>
+                    <div className={`input with${btn_cnt}`}>
+                        <input
+                            type="text"
+                            ref="input"
+                            value={record ? '' : input}
+                            disabled={record}
+                            onChange={this.handleChange}
+                            placeholder={placeholder} />
+                    </div>
                 </div>
                 { record && <Recorder ref='recorder' onData={data=>{
                     this.setState(data)
