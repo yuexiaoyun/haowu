@@ -3,11 +3,12 @@ import { hashHistory } from 'react-router';
 import fconf from '../../fconf';
 import * as actions from '../../actions';
 import AudioPlayer from './AudioPlayer';
-import CssButton from './CssButton'
+import classNames from 'classnames';
 import { connect } from 'react-redux'
 import { createAction } from 'redux-actions'
 import screenSize from '../../utility/screen_size'
 import qs from 'querystring'
+
 
 class PostCard extends React.Component {
     constructor() {
@@ -29,6 +30,7 @@ class PostCard extends React.Component {
     }
     render() {
         var { user, post } = this.props;
+        var likes = post.others_like_count + (post.me_like ? 1 : 0)
         return (
             <div className="card" ref='card'>
                 <div className="picture image-icon_image_loading"
@@ -41,19 +43,25 @@ class PostCard extends React.Component {
                 <div className="audio-line">
                     <AudioPlayer audio_id={post.audio_id} length={post.length}/>
                     <span
-                        className={`praise ${post.me_like ? "image-btn_praise_selected" : "image-btn_praise_default"}`}
-                        onClick={this.like}/>
+                        className={classNames({
+                            'image-btn_praise_selected': post.me_like,
+                            'image-btn_praise_default': !post.me_like,
+                            'praise-count': likes > 0,
+                            'text-primary': post.me_like,
+                            'text-secondary': !post.me_like,
+                            'praise': true
+                        })}
+                        onClick={this.like}>
+                        { likes > 0 && likes }
+                    </span>
                 </div>
-                { user && <div className='user-line' onClick={this.gotoDetail}>
+                { user && <a className='user-line' onClick={()=>setTimeout(this.gotoDetail, 300)}>
                     <img className='avatar' src={user.headimgurl} />
                     <span className='nickname'>{user.nickname}</span>
-                </div> }
+                </a> }
             </div>
         );
     }
 }
 
-module.exports = connect((state)=>({
-    sound_id: state.sound_id,
-    sound_playing: state.sound_playing
-}))(PostCard);
+export default connect()(PostCard);

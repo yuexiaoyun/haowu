@@ -48,6 +48,7 @@ if (entry.substring(0, 5) == '/post') {
 // TODO 微信的JS打进bundle
 // TODO 图片要根据屏幕宽度，做很多套适配的样式
 // TODO 按钮的各种点击态
+// TODO CssButton组件需要全局去掉
 
 render(
     <Provider store={store}>

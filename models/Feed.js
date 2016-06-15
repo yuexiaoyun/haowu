@@ -83,18 +83,17 @@ export default class Feed {
             ...comment_audio_ids,
             ...reply_audio_ids
         ]));
-        console.log(audio_ids);
         var docs = await Audio.find({
             audio_id: { $in: audio_ids },
             reads: user_id
         }).select('audio_id').exec();
         var reads = docs.map(doc=>doc.audio_id);
-
-        var me_read = reads.indexOf(user_id) >= 0;
+        var me_read = reads.indexOf(post.audio_id) >= 0;
         var audio = await Audio.findOne({
             audio_id: post.audio_id
         }).exec();
-        var others_read_count = audio ? (audio.reads.length - me_read ? 1 : 0) : 0;
+
+        var others_read_count = audio ? (audio.reads.length - (me_read ? 1 : 0)) : 0;
 
         return [
             createAction('users')(_.object(user_ids, users.map(user=>User.toBrowser(user, user_id)))),

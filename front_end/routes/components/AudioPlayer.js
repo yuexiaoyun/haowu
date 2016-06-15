@@ -7,16 +7,19 @@ import { createAction } from 'redux-actions'
 import { play, stop } from '../../utility/audio_manager'
 
 class AudioPlayer extends React.Component {
+    componentWillUnmount() {
+        if (this.props.playing || this.props.loading)
+            this.stop_play();
+    }
     play_audio = (e) => {
         e.stopPropagation();
         var { audio_id, playing, loading } = this.props;
         if (playing || loading)
-            this.stop_play(e);
+            this.stop_play();
         else
             play(audio_id);
     }
-    stop_play = (e) => {
-        e.stopPropagation();
+    stop_play = () => {
         var { audio_id } = this.props;
         stop(audio_id);
     }

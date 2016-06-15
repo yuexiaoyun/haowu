@@ -279,6 +279,13 @@ class Post extends React.Component {
                 play(post.audio_id);
         }
     }
+    componentWillUnmount() {
+        var { post, playing, loading } = this.props;
+        if (post) {
+            if (playing || loading)
+                stop(post.audio_id);
+        }
+    }
     render() {
         var { post, user, users, comments, comments_top, like_count, read_count, playing, loading, time } = this.props;
         var { record, err } = this.state;
@@ -402,9 +409,8 @@ export default connect((state, props) => {
     var comments_top = [];
     var comments = [];
     var like_count = post ? (post.others_like_count + post.me_like) : 0;
-    var read_count = 0;
     var me_read = post && state.reads.has(post.audio_id);
-    var read_count = post_detail ? (post_detail.others_read_count + me_read) : 0;
+    var read_count = post_detail ? (post_detail.others_read_count + (me_read ? 1 : 0)) : 0;
     var { id, play_state, time } = state.audio_player;
     var playing = (post && id == post.audio_id && play_state == 'playing');
     var loading = (post && id == post.audio_id && play_state == 'loading');
