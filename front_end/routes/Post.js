@@ -17,6 +17,7 @@ import { createAction } from 'redux-actions'
 import { fromObjectId } from '../utility/format_time';
 import { parse_online_json } from '../utility/fetch_utils';
 import { play, stop } from '../utility/audio_manager';
+import { sub } from '../actions';
 import PopupHelper from '../utility/PopupHelper';
 import _ from 'underscore';
 import qs from 'querystring';
@@ -148,10 +149,24 @@ class Post extends React.Component {
     }
     more = (e) => {
         e.stopPropagation();
-        PopupHelper.menu([{
-            text: '删除',
-            f: this.deletePost
-        }]);
+        var { post, user } = this.props;
+        if (window.user_id == post.user_id) {
+            PopupHelper.menu([{
+                text: '删除',
+                f: this.deletePost
+            }]);
+        } else {
+            var text = user.subbed ? '取消订阅' : '订阅';
+            PopupHelper.menu([{
+                text,
+                f: ()=>{
+                    this.props.dispatch(sub({
+                        user_id: post.user_id,
+                        sub: user.subbed ? 0 : 1
+                    }));
+                }
+            }]);
+        }
     }
     deletePost = () => {
         PopupHelper.confirm('您确认要删除么', '删除', ()=>{
@@ -305,7 +320,7 @@ class Post extends React.Component {
                 </div> }
                 { post && <div className="author-line" onClick={()=>hashHistory.push('/detail/' + user._id)}>
                     <img className='avatar' src={user.headimgurl} />
-                    { user._id == window.user_id && <div className='delete image-btn_more' onClick={this.more}/> }
+                    <div className='delete image-btn_more' onClick={this.more}/>
                     <span className='nickname'>{user.nickname}</span>
                     <span className='text-secondary'>{ fromObjectId(post._id) }发布</span>
                 </div> }

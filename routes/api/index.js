@@ -25,6 +25,8 @@ import {createAction} from 'redux-actions'
 
 router.get('/update_post_like_uids', require('./update_post_like_uids'));
 router.get('/update_audio_read_uids', require('./update_audio_read_uids'));
+router.get('/sub', require('./sub'));
+router.get('/unsub', require('./unsub'));
 
 router.get('/update_feeds', function *() {
     this.body = {
@@ -308,57 +310,6 @@ router.get('/clear_badge', function *() {
     this.body = { result: 'ok', clear: clear };
 });
 
-router.get('/sub', function *() {
-    var q = { _id: this.query._id };
-    var d = {
-        $addToSet: {
-            subids: this.session.user_id
-        }
-    };
-    var update = yield User.update(q, d);
-    console.log(update);
-    if (update.nModified > 0 && this.query.user_id != this.session.user_id) {
-        /*
-        yield wechat.sendTemplate(
-            this.query.user_id,
-            '3JFrw9e6GFGUKjAHBWZCvSYyKl9u-JGIf7Idn5VSolU',
-            conf.site + '/app/me/notifications',
-            '#FF0000', {
-                first: {
-                    value: this.session.userInfo.nickname,
-                    color: "#173177"
-                }
-            });
-        */
-        var query = {
-            user_id: this.query.user_id,
-            user_id2: this.session.user_id,
-            type: 'sub'
-        }
-        console.log(yield Notification.update(query, {
-            ...query,
-            uptime: new Date()
-        }, { upsert: true }));
-    }
-    this.body = yield {
-        result: 'ok'
-    };
-});
-
-//TODO: 取消订阅时取消对应的通知
-router.get('/unsub', function *() {
-    var q = { _id: this.query._id };
-    var d = {
-        $pull: {
-            subids: this.session.user_id
-        }
-    };
-    var update = yield User.update(q, d);
-    this.body = yield {
-        result: 'ok'
-    };
-    console.log(JSON.stringify(this.body));
-});
 
 router.get('/read', function *() {
     var q = { audio_id: this.query.audio_id };
