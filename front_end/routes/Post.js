@@ -114,7 +114,7 @@ class Comment extends React.Component {
             */
         } else {
             onClick(comment.user_id)(e);
-            var dom = findDOMNode(this);
+            var dom = this.refs.text;
             setTimeout(()=>{
                 dom.scrollIntoViewIfNeeded(true);
                 scrollToViewPortBottom(dom);
@@ -127,12 +127,12 @@ class Comment extends React.Component {
             return (
                 <div className='comment'>
                     <UserCard _id={comment._id} louzhu={louzhu} user={users[comment.user_id]} onClick={this.onClick}/>
-                    { comment.status == 1 && <div className='comment-text' onClick={this.onClick}>
+                    { comment.status == 1 && <div className='comment-text' ref='text' onClick={this.onClick}>
                         {comment.audio_id
                             ? <AudioPlayer key={comment.audio_id} audio_id={comment.audio_id} length={comment.d}/>
                             : comment.text}
                     </div> }
-                    { comment.status == 0 && <div className='comment-text comment-text-deleted'>
+                    { comment.status == 0 && <div className='comment-text comment-text-deleted' ref='text'>
                         该评论已删除
                     </div> }
                     { comment.replies.length > 0 && <div className='replies'>
