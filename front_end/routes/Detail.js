@@ -33,7 +33,12 @@ class Detail extends React.Component {
                 <UserTopCard user={user} />
                 <div style={styles.d3} />
                 { !ids && !err && <Loader /> }
-                { ids && <FeedList ids={ids} /> }
+                { ids && ids.length > 0 && <FeedList ids={ids} /> }
+                { ids && ids.length == 0 && (
+                    <div className='empty image-image_404'>
+                        <div>Ta还没有发布任何一件好物</div>
+                    </div>
+                )}
             </div>
         );
     }

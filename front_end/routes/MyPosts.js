@@ -10,7 +10,16 @@ class MyPosts extends React.Component {
     }
     render() {
         var { ids } = this.props;
-        return ids && <FeedList ids={ids} /> || <Loader/>;
+        if (ids) {
+            return ids.length && <FeedList ids={ids} /> || (
+                <div className='empty image-image_404'>
+                    <div>我还没有发布任何一件好物</div>
+                    <div>这块空地好孤单</div>
+                </div>
+            );
+        } else {
+            return <Loader />;
+        }
     }
 }
 
