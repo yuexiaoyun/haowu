@@ -46,6 +46,16 @@ var NameSpan = ({user}) => {
     return <span className={'nickname'} onClick={avatarClick}><strong>{user.nickname}</strong></span>;
 };
 
+function scrollToViewPortBottom(elem) {
+    var defaultRect = {top: 0, left: 0};
+    var rect = (elem.getBoundingClientRect && elem.getBoundingClientRect()) || defaultRect;
+    var bottom = rect.top + elem.clientHeight;
+
+    var viewTop = document.body.scrollTop;
+    // TODO: 这里写死的48是输入框的高度
+    window.scrollTo(0, viewTop + bottom - window.innerHeight + 48);
+}
+
 class Reply extends React.Component {
     componentDidMount() {
         if (this.props.new_id == this.props.reply._id) {
@@ -64,6 +74,11 @@ class Reply extends React.Component {
             */
         } else {
             onClick(reply.user_id)(e);
+            var dom = findDOMNode(this);
+            setTimeout(()=>{
+                dom.scrollIntoViewIfNeeded(true);
+                scrollToViewPortBottom(dom);
+            },  300);
         }
     }
     render() {
@@ -99,6 +114,11 @@ class Comment extends React.Component {
             */
         } else {
             onClick(comment.user_id)(e);
+            var dom = findDOMNode(this);
+            setTimeout(()=>{
+                dom.scrollIntoViewIfNeeded(true);
+                scrollToViewPortBottom(dom);
+            }, 300);
         }
     }
     render() {
