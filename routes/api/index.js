@@ -27,14 +27,9 @@ router.get('/update_audio_read_uids', require('./update_audio_read_uids'));
 router.get('/pub_post', require('./pub_post'));
 router.get('/sub', require('./sub'));
 router.get('/unsub', require('./unsub'));
+router.get('/update_feeds', require('./update_feeds'));
+router.get('/update_user_detail', require('./update_user_detail'));
 
-router.get('/update_feeds', function *() {
-    this.body = {
-        result: 'ok',
-        actions: yield Feed.load(this.session.user_id, this.query.beforeid)
-    };
-    debug(this.body.actions);
-});
 router.get('/delete_post', function *() {
     this.body = {
         result: 'ok',
@@ -42,13 +37,7 @@ router.get('/delete_post', function *() {
     };
     debug(JSON.stringify(this.body.actions));
 });
-router.get('/update_user_detail', function *() {
-    this.body = {
-        result: 'ok',
-        actions: yield Feed.loadByUser(this.session.user_id, this.query._id)
-    };
-    debug(JSON.stringify(this.body.actions[1]));
-});
+
 router.get('/update_post_detail', function *() {
     this.body = {
         result: 'ok',
@@ -285,7 +274,6 @@ router.get('/clear_badge', function *() {
     this.body = { result: 'ok', clear: clear };
 });
 
-
 router.get('/read', function *() {
     var q = { audio_id: this.query.audio_id };
     var d = {
@@ -299,6 +287,5 @@ router.get('/read', function *() {
     };
     console.log(JSON.stringify(this.body));
 });
-
 
 module.exports = router.routes();

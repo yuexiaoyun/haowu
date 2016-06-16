@@ -429,8 +429,8 @@ export default connect((state, props) => {
     var comments_top = [];
     var comments = [];
     var like_count = post ? (post.others_like_count + post.me_like) : 0;
-    var me_read = post && state.reads.has(post.audio_id);
-    var read_count = post_detail ? (post_detail.others_read_count + (me_read ? 1 : 0)) : 0;
+    var audio = post && state.audios[post.audio_id];
+    var read_count = audio ? (audio.others_read_count + (audio.me_read ? 1 : 0)): 0;
     var { id, play_state, time } = state.audio_player;
     var playing = (post && id == post.audio_id && play_state == 'playing');
     var loading = (post && id == post.audio_id && play_state == 'loading');

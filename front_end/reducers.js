@@ -30,15 +30,24 @@ export var local_pic_id = handleActions({
 // 首页feed的id列表
 export var feed_ids = handleActions({
     pub_post: (state, action) => [],
-    feed_ids: (state, action) => action.payload,
-    feed_ids_more: (state, action) => [...state, ...action.payload],
+    update_feeds: (state, action) => {
+        var { posts, concat } = action.payload;
+        var ids = posts.map(post=>post._id);
+        if (concat)
+            return [...state, ...ids];
+        else
+            return ids;
+    },
     delete_my_post: (state, action) => _.filter(state, item=>(item!=action.payload))
 }, []);
+
 // 首页feed是否已完全加载
 export var feed_end = handleActions({
     pub_post: (state, action) => 0,
+    update_feeds: (state, action) => action.payload.feed_end,
     feed_end: (state, action) => action.payload
 }, 0);
+
 // 某个用户的发布列表
 export var user_post_ids = handleActions({
     pub_post: (state, action) => {
@@ -47,7 +56,13 @@ export var user_post_ids = handleActions({
             ..._.object([window.openid], [[]])
         }
     },
-    user_post_ids: (state, action) => ({...state, ...action.payload}),
+    update_user_detail: (state, action) => {
+        var { user_id, posts } = action.payload;
+        return {
+            ...state,
+            ..._.object([user_id], [posts.map(post=>post._id)])
+        }
+    },
     delete_my_post: (state, action) => {
         var my_post_ids = state[window.user_id];
         if (my_post_ids) {
@@ -62,17 +77,26 @@ export var user_post_ids = handleActions({
         }
     }
 }, {});
+
 // 自己的通知列表
 export var notifications = handleActions({
     notifications: (state, action) => action.payload,
     delete_my_post: (state, action) => _.filter(state, item=>(item.target!=action.payload))
 }, []);
+
 // 自己的被订阅列表
 export var subids = handleActions({
     subids: (state, action) => action.payload
 }, []);
+
 // 帖子的ID与内容对应
+function update_posts(state, action) {
+    var { posts } = action.payload;
+    return { ...state, ..._.object(posts.map(post=>post._id), posts) }
+}
 export var posts = handleActions({
+    update_feeds: update_posts,
+    update_user_detail: update_posts,
     posts: (state, action) => ({
         ...state, ...action.payload
     }),
@@ -99,6 +123,7 @@ function update_users(state, action) {
 export var users = handleActions({
     update_post_like_uids: update_users,
     update_audio_read_uids: update_users,
+    update_feeds: update_users,
     users: (state, action) => ({
         ...state, ...action.payload
     }),
@@ -150,16 +175,37 @@ export var post_details = handleActions({
         }
     }
 }, {});
+
 // 上一次清badge的时间
 export var clear_badge_time = handleActions({
     clear_badge_time: (state, action) => action.payload
 }, null);
 
-// 我听过的语音
-export var reads = handleActions({
-    reads: (state, action) => state.merge(action.payload),
-    read: (state, action) => state.add(action.payload)
-}, Immutable.Set());
+// 某一个具体语音的听过次数和我是否听过
+function update_audios(state, action) {
+    var { audios } = action.payload;
+    return { ...state, ..._.object(audios.map(audio=>audio.audio_id), audios) }
+}
+export var audios = handleActions({
+    update_feeds: update_audios,
+    update_user_detail: update_audios,
+    read: (state, action) => {
+        var audio_id = action.payload;
+        var audio = state[audio_id];
+        if (!audio) {
+            audio = {
+                me_read: true,
+                others_read_count: 0
+            }
+        } else {
+            audio = {
+                ...audio,
+                me_read: true
+            }
+        }
+        return { ...state, ..._.object([audio_id], [audio]) }
+    }
+}, {});
 
 // 某一个具体帖子的赞列表
 export var post_like_uids = handleActions({

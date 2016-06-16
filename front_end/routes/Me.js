@@ -31,8 +31,7 @@ class Me extends React.Component {
                         { location.pathname=='/me/notifications' && <div className='active' /> }
                     </div>
                 </div>
-                { !ids && !err && <Loader /> }
-                { ids && children }
+                { children }
             </div>
         );
     }
