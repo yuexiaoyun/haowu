@@ -28,6 +28,8 @@ import * as reducers from './reducers'
 import { setStore as s1 } from './utility/update'
 import { setStore as s2 } from './utility/audio_manager'
 
+import './utility/set_title';
+
 let store = (applyMiddleware(
     optimistPromiseMiddleware()
 )(createStore))(optimist(combineReducers(reducers)), {},

@@ -1,5 +1,4 @@
 import React from 'react';
-import Helmet from 'react-helmet';
 import qs from 'querystring';
 import { parse_online_json } from '../utility/fetch_utils';
 import update from '../utility/update';
@@ -51,12 +50,14 @@ class Pub extends React.Component {
             }));
         }
     }
+    componentDidMount() {
+        window.setTitle('发布好物');
+    }
     // TODO: 发布流程的界面还需要再调一下
     render() {
         var pic_id = this.props.local_pic_id;
         return (
             <div>
-                <Helmet title={'发布好物'} />
                 <div style={styles.image_d()}>
                     <span style={styles.dummy} />
                     <img src={pic_id} style={styles.image}/>

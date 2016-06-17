@@ -1,5 +1,4 @@
 import React from 'react';
-import Helmet from 'react-helmet'
 import { Link, hashHistory } from 'react-router';
 import FeedList from './components/FeedList';
 import UserTopCard from './components/UserTopCard';
@@ -17,9 +16,11 @@ class Detail extends React.Component {
     }
     componentDidMount() {
         var id = this.props.params.id;
+        var user = this.props.users[id];
         var url = (id == window.user_id) ? '/api/update_me' : '/api/update_user_detail?_id=' + id;
         update(url)
             .catch((err) => this.setState({err}));
+        window.setTitle(user.nickname + '的主页');
     }
     render() {
         var id = this.props.params.id;
@@ -29,7 +30,6 @@ class Detail extends React.Component {
         var ids = user_post_ids[id];
         return (
             <div className='absolute'>
-                <Helmet title={user.nickname + '的主页'} />
                 <UserTopCard user={user} />
                 <div style={styles.d3} />
                 { !ids && !err && <Loader /> }

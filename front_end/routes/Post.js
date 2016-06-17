@@ -1,6 +1,5 @@
 import React from 'react'
 import { findDOMNode } from 'react-dom'
-import Helmet from 'react-helmet'
 import update from '../utility/update';
 import showProgress from '../utility/show_progress';
 import PostCardInDetail from './components/PostCardInDetail';
@@ -21,6 +20,7 @@ class Post extends React.Component {
     componentDidMount() {
         var { params } = this.props;
         update('/api/update_post_detail?_id=' + params.id);
+        window.setTitle('详情');
     }
     scrollToViewPortBottom = (elem) => {
         var defaultRect = {top: 0, left: 0};
@@ -127,7 +127,6 @@ class Post extends React.Component {
         // TODO: 记录进入详情页的次数？
         return (
             <div className='post' onClick={this.clear_reply}>
-                <Helmet title={'详情'} />
                 { post && <PostCardInDetail post={post} user={user} /> }
                 { comments_top.length > 0 &&
                     <div className='comments'>

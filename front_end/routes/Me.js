@@ -1,5 +1,4 @@
 import React from 'react';
-import Helmet from 'react-helmet'
 import { Link, hashHistory } from 'react-router';
 import UserTopCard from './components/UserTopCard';
 import CssButton from './components/CssButton';
