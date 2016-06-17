@@ -5,8 +5,10 @@ import showProgress from '../utility/show_progress';
 import PostCardInDetail from './components/PostCardInDetail';
 import Comment from './components/Comment';
 import Loader from './components/Loader';
+import Recorder from './components/Recorder';
 import qs from 'querystring';
 import { connect } from 'react-redux';
+import * as actions from '../actions';
 import _ from 'underscore';
 
 // TODO: 详情页的404状态
