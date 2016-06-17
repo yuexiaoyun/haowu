@@ -37,20 +37,12 @@ let store = (applyMiddleware(
 s1(store);
 s2(store);
 
-var entry = window.location.pathname.substring(4);
-if (entry.substring(0, 5) == '/post') {
-    hashHistory.replace('/home');
-    setTimeout(()=>hashHistory.push(entry), 0);
-} else {
-    hashHistory.replace(entry);
-}
-
 // TODO 精简CSS
 // TODO 各种出错处理，比如语音播放
 // TODO 微信的JS打进bundle
 // TODO 图片要根据屏幕宽度，做很多套适配的样式
 // TODO 按钮的各种点击态
-// TODO CssButton组件需要全局去掉
+// TODO imacss变成less mixin
 
 render(
     <Provider store={store}>

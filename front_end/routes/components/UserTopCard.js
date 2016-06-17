@@ -1,5 +1,4 @@
 import React from 'react';
-import CssButton from './CssButton';
 import update from '../../utility/update';
 import * as actions from '../../actions';
 import { Link, hashHistory } from 'react-router';

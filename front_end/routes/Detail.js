@@ -2,7 +2,6 @@ import React from 'react';
 import { Link, hashHistory } from 'react-router';
 import FeedList from './components/FeedList';
 import UserTopCard from './components/UserTopCard';
-import CssButton from './components/CssButton';
 import { parse_online_json } from '../utility/fetch_utils';
 import update from '../utility/update';
 import Loader from './components/Loader';

@@ -1,5 +1,4 @@
 import React from 'react';
-import CssButton from './CssButton';
 import PopupHelper from '../../utility/PopupHelper';
 
 export default class Recorder extends React.Component {

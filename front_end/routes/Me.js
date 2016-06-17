@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, hashHistory } from 'react-router';
 import UserTopCard from './components/UserTopCard';
-import CssButton from './components/CssButton';
 import Loader from './components/Loader';
 import { parse_online_json } from '../utility/fetch_utils';
 import update from '../utility/update';

@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
 import Recorder from './components/Recorder';
 import BottomButton from './components/BottomButton';
-import CssButton from './components/CssButton';
 import PopupHelper from '../utility/PopupHelper';
 
 class Pub extends React.Component {

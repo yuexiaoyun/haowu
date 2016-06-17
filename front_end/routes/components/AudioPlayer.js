@@ -1,7 +1,6 @@
 import React from 'react';
 import fconf from '../../fconf';
 import * as actions from '../../actions';
-import CssButton from './CssButton'
 import { connect } from 'react-redux'
 import { createAction } from 'redux-actions'
 import { play, stop } from '../../utility/audio_manager'
