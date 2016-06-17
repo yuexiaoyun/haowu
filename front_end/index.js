@@ -4,7 +4,7 @@ window.onerror = alert;
 
 import React from 'react';
 import { render, findDOMNode } from 'react-dom';
-import { applyRouterMiddleware, Router, Route, Link, hashHistory } from 'react-router'
+import { applyRouterMiddleware, Router, Route, Link, IndexRedirect, hashHistory } from 'react-router'
 import useScroll from 'react-router-scroll';
 import { Provider } from 'react-redux'
 import { createStore, combineReducers, applyMiddleware } from 'redux'
@@ -69,6 +69,7 @@ render(
                     <Route path="posts" component={MyPosts} />
                     <Route path="notifications" component={Notifications} />
                 </Route>
+                <IndexRedirect to="home" />
             </Route>
         </Router>
     </Provider>,
