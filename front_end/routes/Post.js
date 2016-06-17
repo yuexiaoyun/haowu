@@ -110,8 +110,7 @@ class Post extends React.Component {
                 return;
             var p = this.pub({ text: input });
         }
-        showProgress('发布中', p)
-            .catch(()=>PopupHelper.toast('发布失败'));
+        showProgress('发布中', p.catch(()=>PopupHelper.toast('发布失败')));
     }
     renderComment = (comment) => {
         return <Comment
