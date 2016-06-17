@@ -3,6 +3,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var LoadingView = require('../routes/components/LoadingView');
 
+var popupComponent;
 //deprecated, use popup 2
 module.exports.popup = function (content, hide, modal) {
     return module.exports.popup2({
@@ -20,12 +21,19 @@ module.exports.popup2 = function({content, hide, modal, showCloseBtn}) {
                                   showCloseBtn={showCloseBtn}>
             {content}
         </PopupWrapper>;
-        ReactDOM.render(popup, document.getElementById('popup_container'));
+        popupComponent = ReactDOM.render(popup, document.getElementById('popup_container'));
     });
 }
 
 module.exports.dismiss = function() {
-    ReactDOM.render(<div/>, document.getElementById('popup_container'));
+    if (popupComponent) {
+        popupComponent.dismiss(() => {
+            ReactDOM.render(<div/>, document.getElementById('popup_container'));
+            popupComponent = null;
+        })
+    } else {
+        ReactDOM.render(<div/>, document.getElementById('popup_container'));
+    }
 }
 
 module.exports.confirm = function(text, btn, f) {

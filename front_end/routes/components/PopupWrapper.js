@@ -8,6 +8,7 @@ var _ = require('underscore');
 export default class PopupWrapper extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {};
     }
     shouldComponentUpdate(nextProps, nextState) {
         return this.props.children != nextProps.children;
@@ -71,12 +72,20 @@ export default class PopupWrapper extends React.Component {
         }
         return 0;
     }
+    dismiss(finish) {
+        this.setState({dismiss: true});
+        this.forceUpdate();
+        setTimeout(() => {
+            finish();
+        }, 400);
+    }
     render() {
         var content_size = this.getContentSize();
-        var hideClass = '';
-        var styles = {};
+        var containerClass = '';
+        var styles = {opacity:0};
+        var modal = this.props.bottom ? 'modal-bottom' : 'modal';
+        var screenSize = ScreenSize();
         if (!this.props.hide && content_size) {
-            var screenSize = ScreenSize();
             var visibleHeight = screenSize.height - this.keyboardHeight();
             var top = Math.floor((visibleHeight - content_size.height) / 2);
             var left = Math.floor((screenSize.width - content_size.width) / 2);
@@ -89,7 +98,7 @@ export default class PopupWrapper extends React.Component {
             if (this.props.bottom) {
                 styles = {
                     ...styles,
-                    bottom: 0
+                    top: screenSize.height - content_size.height
                 }
             } else {
                 styles = {
@@ -97,14 +106,33 @@ export default class PopupWrapper extends React.Component {
                     top: top
                 }
             }
+            styles.opacity = 1;
+            containerClass = ' popup_container_visible';
+
+            if (this.props.bottom) {
+                modal = 'modal-bottom modal-bottom-in';
+            } else {
+                modal = 'modal modal-in';
+            }
         } else {
-            hideClass = ' popup_container_hide';
+            styles = {
+                top: screenSize.height
+            }
         }
-        return <div key='popup_container' className={'popup_container' + hideClass}>
+
+        if (this.state.dismiss) {
+            containerClass = '';
+
+            if (this.props.bottom) {
+                styles.top = screenSize.height;
+            }
+        }
+
+        return <div key='popup_container' className={'popup_container ' + containerClass}>
             {this.props.showCloseBtn && <img src="/static/images/closed.png"
                                              style={{width:'20px', height:'20px', margin:'20px'}}
                                              className="cursor-pointer float-r"/>}
-            <div ref='content' style={styles}>
+            <div ref='content' style={styles}  className={modal}>
                 {this.props.children}
             </div>
         </div>
