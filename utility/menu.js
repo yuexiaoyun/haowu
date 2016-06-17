@@ -5,11 +5,11 @@ var menu = {
     button: [{
         type: "view",
         name: "进入物我",
-        url: conf.site + '/app/home'
+        url: conf.site + '/app#/home'
     }, {
         type: "view",
         name: "开发版",
-        url: 'http://haowu.tunnel.qydev.com/app/home'
+        url: 'http://haowu.tunnel.qydev.com/app#/home'
     }]
 };
 

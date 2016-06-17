@@ -21,7 +21,7 @@ export function *notifyPub(session, post) {
             console.log(yield wechat.sendTemplate(
                 openid,
                 'coonwl1GcNnQrZEyrdpa-Jls2V5rZHiUT-_RyeKndbk',
-                conf.site + '/app/post/' + post._id,
+                conf.site + '/app#/post/' + post._id,
                 '#FF0000', {
                     first: {
                         value: session.userInfo.nickname,
@@ -38,7 +38,7 @@ export function *notifySub(session, user_id) {
         return yield wechat.sendTemplate(
             openid,
             '3JFrw9e6GFGUKjAHBWZCvSYyKl9u-JGIf7Idn5VSolU',
-            conf.site + '/app/me/notifications',
+            conf.site + '/app#/me/notifications',
             '#FF0000', {
                 first: {
                     value: session.userInfo.nickname,
@@ -54,7 +54,7 @@ export function *notifyLike(session, post) {
         return yield wechat.sendTemplate(
             openid,
             'FRTOKz43duOUsJI2BQdQGSd4qpl0r7g0RvEJewx5zkA',
-            conf.site + '/app/post/' + post._id,
+            conf.site + '/app#/post/' + post._id,
             '#FF0000', {
                 first: {
                     value: session.userInfo.nickname,
@@ -70,7 +70,7 @@ export function *notifyComment(session, post, comment) {
         return yield wechat.sendTemplate(
             openid,
             'jGs_WM8l95bgGzyeBnQfphxM0rxEiEkUau3VV3r51wM',
-            conf.site + '/app/post/' + post._id + '/' + comment._id,
+            conf.site + '/app#/post/' + post._id + '/' + comment._id,
             '#FF0000', {
                 first: {
                     value: session.userInfo.nickname,
@@ -90,7 +90,7 @@ export function *notifyReply(session, comment, reply) {
         return yield wechat.sendTemplate(
             openid,
             'EmQHRZ1nyZ1bNAE3R7bflOgmE3kYXT0pn_RXLaaFHQk',
-            `${conf.site}/app/post/${comment.post_id}/${reply._id}`,
+            `${conf.site}/app#/post/${comment.post_id}/${reply._id}`,
             '#FF0000', {
                 first: {
                     value: session.userInfo.nickname,
