@@ -18,7 +18,7 @@ class Me extends React.Component {
         var { user, ids, location, children, badge_count } = this.props;
         var { err } = this.state;
         return (
-            <div className='absolute'>
+            <div>
                 { user && <UserTopCard user={user} />}
                 <div className='tab'>
                     <div className='tab-item' onClick={()=>hashHistory.replace('/me/posts')}>

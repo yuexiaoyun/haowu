@@ -29,16 +29,11 @@ class Detail extends React.Component {
         var user = users[id];
         var ids = user_post_ids[id];
         return (
-            <div className='absolute'>
+            <div>
                 <UserTopCard user={user} />
                 <div style={styles.d3} />
                 { !ids && !err && <Loader /> }
                 { ids && ids.length > 0 && <FeedList ids={ids} /> }
-                { ids && ids.length == 0 && (
-                    <div className='empty'>
-                        <div className='empty-view image-image_404'>Ta还没有发布任何一件好物</div>
-                    </div>
-                )}
             </div>
         );
     }
