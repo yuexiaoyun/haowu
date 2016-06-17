@@ -12,9 +12,11 @@ class MyPosts extends React.Component {
         var { ids } = this.props;
         if (ids) {
             return ids.length && <FeedList ids={ids} /> || (
-                <div className='empty image-image_404'>
-                    <div>我还没有发布任何一件好物</div>
-                    <div>这块空地好孤单</div>
+                <div className='empty'>
+                    <div className='empty-view image-image_404'>
+                        <div>我还没有发布任何一件好物</div>
+                        <div>这块空地好孤单</div>
+                    </div>
                 </div>
             );
         } else {

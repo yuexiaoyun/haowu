@@ -5,7 +5,7 @@ import * as actions from '../../actions';
 import { Link, hashHistory } from 'react-router';
 import PopupHelper from '../../utility/PopupHelper';
 import showProgress from '../../utility/show_progress';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
 var UserTopCard = ({user, subids, dispatch}) => {
     var sub = () => {
@@ -22,11 +22,11 @@ var UserTopCard = ({user, subids, dispatch}) => {
     }
     return (
         <div className='user-detail'>
-            { <div className='share-line'>
+            { false && <div className='share-line'>
                 可以将好物清单分享给微信好友、朋友圈
                 <span className="arrow image-icon_me_up"/>
             </div> }
-            { <div className='follow-line'>
+            { false && <div className='follow-line'>
                 <div>长按识别二维码，关注“物我”公众号</div>
                 <div>朋友互动不遗漏</div>
             </div> }

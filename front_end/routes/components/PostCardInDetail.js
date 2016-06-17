@@ -6,9 +6,12 @@ import { createAction } from 'redux-actions'
 import { fromObjectId } from '../../utility/format_time';
 import screenSize from '../../utility/screen_size'
 import PopupHelper from '../../utility/PopupHelper'
+import update from '../../utility/update';
 import Loader from './Loader'
 import { play, stop } from '../../utility/audio_manager';
 import { sub } from '../../actions';
+import qs from 'querystring';
+
 
 class PostCardInDetail extends React.Component {
     componentWillUnmount() {
