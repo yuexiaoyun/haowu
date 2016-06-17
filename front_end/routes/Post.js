@@ -7,6 +7,7 @@ import Comment from './components/Comment';
 import Loader from './components/Loader';
 import Recorder from './components/Recorder';
 import qs from 'querystring';
+import classNames from 'classnames';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 import _ from 'underscore';
@@ -33,7 +34,7 @@ class Post extends React.Component {
         window.scrollTo(0, viewTop + bottom - window.innerHeight + this.refs.comment_input.clientHeight);
     }
     clear_reply = () => {
-        if (!this.state.record && !this.refs.input.value) {
+        if (!this.state.record && !this.input.value) {
             this.setState({
                 reply_comment: null,
                 reply_user: null
@@ -41,13 +42,17 @@ class Post extends React.Component {
         }
     }
     reply = (reply_comment, reply_user, dom) => {
-        this.refs.input.focus();
+        this.input.focus();
         this.setState({
             reply_comment,
             reply_user
         });
-        //dom.scrollIntoViewIfNeeded();
-        //this.scrollToViewPortBottom(dom);
+        const userAgent = window.navigator.userAgent || window.navigator.vendor || window.opera;
+        const isIPhone = userAgent.match(/iPhone/i);
+        if (!isIPhone) {
+            dom.scrollIntoViewIfNeeded();
+            this.scrollToViewPortBottom(dom);
+        }
     }
     handleChange = (event) => {
         if (event.target.value.length <= 40) {
@@ -146,7 +151,8 @@ class Post extends React.Component {
                         { comments.map(this.renderComment) }
                     </div>
                 }
-                <div className={`${record?'comment-input-audio':'comment-input-text'}`} />
+                { this.state.inputing != 1 &&
+                    <div className={`${record?'comment-input-audio':'comment-input-text'}`} />}
                 { post && this.renderInput() }
             </div>
         )
@@ -164,7 +170,14 @@ class Post extends React.Component {
             placeholder = `语音${user ? ('回复' + user.nickname) : '评论'}`;
         var disable_send = record ? !this.state.audio_id : !input;
         return (
-            <div ref='comment_input' className={`comment-input ${record?'comment-input-audio':'comment-input-text'}`}
+            <div className={classNames({
+                    'comment-input': true,
+                    'comment-input-audio': record,
+                    'comment-input-text': !record,
+                    'comment-input-fixed': this.state.inputing != 1,
+                    'comment-input-absolute': this.state.inputing == 1
+                })}
+                ref='comment_input'
                 onClick={(e)=>e.stopPropagation()}>
                 <div className='input-line' >
                     <div className={`btn ${me_like ? 'image-btn_keyboard_praise_HL' : 'image-btn_keyboard_praise'}`}
@@ -179,6 +192,25 @@ class Post extends React.Component {
                             value={record ? '' : input}
                             disabled={record}
                             onChange={this.handleChange}
+                            ref={(i)=>{
+                                if (i) {
+                                    this.input = i;
+                                    const userAgent = window.navigator.userAgent || window.navigator.vendor || window.opera;
+                                    const isIPhone = userAgent.match(/iPhone/i);
+                                    if (isIPhone) {
+                                        i.addEventListener('blur', ()=>{
+                                            console.log('blur');
+                                            this.setState({inputing: 0});
+                                        });
+                                        i.addEventListener('focus', ()=>{
+                                            console.log('focus');
+                                            this.setState({inputing: 1});
+                                            setTimeout(()=>i.scrollIntoViewIfNeeded(), 0);
+                                        });
+                                    }
+                                } else {
+                                }
+                            }}
                             placeholder={placeholder} />
                     </div>
                 </div>
