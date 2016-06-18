@@ -19,7 +19,15 @@ class Detail extends React.Component {
         var url = (id == window.user_id) ? '/api/update_me' : '/api/update_user_detail?_id=' + id;
         update(url)
             .catch((err) => this.setState({err}));
-        window.setTitle(user.nickname + '的主页');
+        if (user)
+            window.setTitle(user.nickname + '的主页');
+    }
+    componentDidUpdate() {
+        var id = this.props.params.id;
+        var user = this.props.users[id];
+        if (user) {
+            window.setTitle(user.nickname + '的主页');
+        }
     }
     render() {
         var id = this.props.params.id;
@@ -29,7 +37,7 @@ class Detail extends React.Component {
         var ids = user_post_ids[id];
         return (
             <div>
-                <UserTopCard user={user} />
+                { user && <UserTopCard user={user} /> }
                 <div style={styles.d3} />
                 { !ids && !err && <Loader /> }
                 { ids && ids.length > 0 && <FeedList ids={ids} /> }

@@ -9,8 +9,10 @@ import Recorder from './components/Recorder';
 import qs from 'querystring';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
+import setShareInfo from '../utility/set_share_info';
 import * as actions from '../actions';
 import _ from 'underscore';
+import fconf from '../fconf';
 
 // TODO: 详情页的404状态
 // TODO: 评论被删除后的占位
@@ -24,6 +26,20 @@ class Post extends React.Component {
         var { params } = this.props;
         update('/api/update_post_detail?_id=' + params.id);
         window.setTitle('详情');
+        this.setShareInfo();
+    }
+    componentDidUpdate() {
+        this.setShareInfo();
+    }
+    setShareInfo = () => {
+        var { post, user } = this.props;
+        if (post && user) {
+            setShareInfo({
+                title: user.nickname + '分享了一件好物',
+                desc: '物我，好物有声',
+                imgUrl: fconf.qiniu.site + post.pic_id + '-c167'
+            });
+        }
     }
     scrollToViewPortBottom = (elem) => {
         var defaultRect = {top: 0, left: 0};

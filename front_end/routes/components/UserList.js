@@ -1,10 +1,12 @@
 import React from 'react';
 import CommonCard from './CommonCard';
+import setShareInfo from '../../utility/set_share_info';
 import { hashHistory } from 'react-router';
 
 export default class UserList extends React.Component {
     componentDidMount() {
         window.setTitle(this.props.title);
+        setShareInfo();
     }
     render() {
         var { ids, users } = this.props;

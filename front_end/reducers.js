@@ -56,10 +56,10 @@ export var user_post_ids = handleActions({
         }
     },
     update_user_detail: (state, action) => {
-        var { user_id, posts } = action.payload;
+        var { users, posts } = action.payload;
         return {
             ...state,
-            ..._.object([user_id], [posts.map(post=>post._id)])
+            ..._.object([users[0]._id], [posts.map(post=>post._id)])
         }
     },
     delete_my_post: (state, action) => {
@@ -123,6 +123,7 @@ export var users = handleActions({
     update_post_like_uids: update_users,
     update_audio_read_uids: update_users,
     update_feeds: update_users,
+    update_user_detail: update_users,
     pub_post: update_users,
     users: (state, action) => ({
         ...state, ...action.payload

@@ -10,6 +10,7 @@ import { createAction } from 'redux-actions';
 import Recorder from './components/Recorder';
 import BottomButton from './components/BottomButton';
 import PopupHelper from '../utility/PopupHelper';
+import setShareInfo from '../utility/set_share_info'
 
 class Pub extends React.Component {
     constructor() {
@@ -51,6 +52,7 @@ class Pub extends React.Component {
     }
     componentDidMount() {
         window.setTitle('发布好物');
+        setShareInfo();
     }
     // TODO: 发布流程的界面还需要再调一下
     render() {

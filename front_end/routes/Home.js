@@ -6,6 +6,7 @@ import screenSize from '../utility/screen_size';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
 import update from '../utility/update';
+import setShareInfo from '../utility/set_share_info';
 import InfiniteScroll from 'react-infinite-scroller';
 import qs from 'querystring';
 
@@ -28,6 +29,9 @@ class Home extends React.Component {
         this.setState({reloading: true});
         update('/api/update_feeds')
             .then(()=>this.setState({reloading: false}));
+    }
+    componentDidMount() {
+        setShareInfo();
     }
     componentDidUpdate(prevProps) {
         // 用户当前在首页，又点了一次底部TAB

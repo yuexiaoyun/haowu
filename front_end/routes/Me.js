@@ -18,7 +18,7 @@ class Me extends React.Component {
         var { err } = this.state;
         return (
             <div>
-                { user && <UserTopCard user={user} />}
+                { user && <UserTopCard user={user} pathname={location.pathname}/>}
                 <div className='tab'>
                     <div className='tab-item' onClick={()=>hashHistory.replace('/me/posts')}>
                         <div>分享动态</div>
