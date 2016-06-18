@@ -16,6 +16,7 @@ class Me extends React.Component {
     render() {
         var { user, ids, location, children, badge_count } = this.props;
         var { err } = this.state;
+        badge_count = 5;
         return (
             <div>
                 { user && <UserTopCard user={user} />}
