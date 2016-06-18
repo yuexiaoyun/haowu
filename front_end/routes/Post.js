@@ -42,16 +42,18 @@ class Post extends React.Component {
         }
     }
     reply = (reply_comment, reply_user, dom) => {
-        this.input.focus();
         this.setState({
             reply_comment,
             reply_user
         });
+        this.input.focus();
         const userAgent = window.navigator.userAgent || window.navigator.vendor || window.opera;
         const isIPhone = userAgent.match(/iPhone/i);
         if (!isIPhone) {
-            dom.scrollIntoViewIfNeeded();
-            this.scrollToViewPortBottom(dom);
+            setTimeout(()=>{
+                dom.scrollIntoViewIfNeeded();
+                this.scrollToViewPortBottom(dom);
+            }, 300);
         }
     }
     handleChange = (event) => {
