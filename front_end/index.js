@@ -37,14 +37,6 @@ let store = (applyMiddleware(
 s1(store);
 s2(store);
 
-var entry = window.location.pathname.substring(4);
-if (entry.substring(0, 5) == '/post') {
-    hashHistory.replace('/home');
-    setTimeout(()=>hashHistory.push(entry), 0);
-} else {
-    hashHistory.replace(entry);
-}
-
 // TODO 精简CSS
 // TODO 各种出错处理，比如语音播放
 // TODO 微信的JS打进bundle
