@@ -190,7 +190,7 @@ export var audios = handleActions({
     update_feeds: update_audios,
     update_user_detail: update_audios,
     read: (state, action) => {
-        var audio_id = action.payload;
+        var { audio_id } = action.payload;
         var audio = state[audio_id];
         if (!audio) {
             audio = {

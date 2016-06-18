@@ -21,10 +21,13 @@ var schema = new mongoose.Schema({
     // status=0：已被删除
     // status=1：正常状态
     // status=2：已屏蔽；其他人在主Feed流里不可见
-    status: { type: Number }
+    status: { type: Number },
+    // 基础权重评分
+    rank0: { type: Number}
 });
 
 schema.index({ user_id: 1 });
+schema.index({ rank0: 1 });
 
 var Model = mongo.conn.model('post', schema);
 module.exports.Model = Model;

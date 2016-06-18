@@ -12,7 +12,7 @@ export function setStore(s) {
     store = s;
 }
 
-export function play(id) {
+export function play(id, post_id) {
     if (timer) {
         clearInterval(timer);
         timer = null;
@@ -26,7 +26,7 @@ export function play(id) {
     store.dispatch(createAction('load')(id));
     audio.addEventListener('canplay', () => {
         console.log('canplay: ' + id);
-        store.dispatch(read(id));
+        store.dispatch(read({audio_id: id, post_id: post_id}));
         store.dispatch(createAction('canplay')(id));
         timer = setInterval(() => {
             store.dispatch(createAction('playing')(id));

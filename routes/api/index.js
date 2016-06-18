@@ -17,6 +17,7 @@ var { notifyLike, notifyComment, notifyReply, notifySub, notifyPub } = require('
 
 import _ from 'underscore'
 import {createAction} from 'redux-actions'
+import {updateScore} from '../../models/Score'
 
 // TODO: 前后端一致的：发主贴、发评论、发回复的合法性检查
 // TODO: 各种发布的hash去重
@@ -29,6 +30,8 @@ router.get('/sub', require('./sub'));
 router.get('/unsub', require('./unsub'));
 router.get('/update_feeds', require('./update_feeds'));
 router.get('/update_user_detail', require('./update_user_detail'));
+
+router.get('/read', require('./read'));
 
 router.get('/delete_post', function *() {
     this.body = {
@@ -134,6 +137,8 @@ router.get('/pub_reply', function *() {
     yield notification.save();
     console.log(yield notifyReply(this.session, comment, reply));
 
+    yield updateScore(post._id);
+
     this.body = {
         result: 'ok',
         new_id: reply._id,
@@ -187,6 +192,7 @@ router.get('/pub_comment', function *() {
         // 发送公众号通知
         console.log(yield notifyComment(this.session, post, comment));
     }
+    yield updateScore(post._id);
     this.body = {
         result: 'ok',
         new_id: comment._id,
@@ -272,20 +278,6 @@ router.get('/clear_badge', function *() {
     var clear = yield new Badge(this.session.user_id).clear();
     console.log(clear);
     this.body = { result: 'ok', clear: clear };
-});
-
-router.get('/read', function *() {
-    var q = { audio_id: this.query.audio_id };
-    var d = {
-        $addToSet: {
-            reads: this.session.user_id
-        }
-    };
-    var update = yield Audio.update(q, d, {upsert: true});
-    this.body = yield {
-        result: 'ok'
-    };
-    console.log(JSON.stringify(this.body));
 });
 
 module.exports = router.routes();

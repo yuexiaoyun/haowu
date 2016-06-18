@@ -24,7 +24,7 @@ class PostCardInDetail extends React.Component {
         if (playing || loading)
             stop(post.audio_id);
         else
-            play(post.audio_id);
+            play(post.audio_id, post._id);
     }
     preview = (e) => {
         var { post } = this.props;

@@ -37,7 +37,10 @@ class PostCard extends React.Component {
                         onClick={()=>hashHistory.push('post/' + post._id)}/>
                 </div>
                 <div className="audio-line">
-                    <AudioPlayer audio_id={post.audio_id} length={post.length}/>
+                    <AudioPlayer
+                        post_id={post._id}
+                        audio_id={post.audio_id}
+                        length={post.length} />
                     { reads > 0 &&<span
                         className={classNames({
                             'image-icon_home_listened': true,
