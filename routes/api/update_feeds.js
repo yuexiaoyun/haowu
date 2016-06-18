@@ -60,8 +60,7 @@ function *getNewPostIds(my_id, origin_post_ids, limit) {
 export default function *() {
     // 先取我曾经刷过的Feed列表，如果为空则新建一个
     var doc = yield UserFeed.findOne({
-        user_id: this.session.user_id,
-        status: { $ne: 0 }
+        user_id: this.session.user_id
     }).exec();
     if (!doc) {
         doc = new UserFeed();
@@ -93,7 +92,8 @@ export default function *() {
         yield doc.save();
     }
     var q = {
-        _id: { $in: pids }
+        _id: { $in: pids },
+        status: { $ne: 0 }
     };
 
     // 取到本次的Feed流，并按照pids里面给的原始顺序重排
