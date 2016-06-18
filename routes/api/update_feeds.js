@@ -107,7 +107,7 @@ export default function *() {
     var user_ids = _.uniq(posts.map(post => post.user_id))
     var users = yield User.find({
         _id: { $in: user_ids }
-    }).select('_id headimgurl nickname subids status').exec()
+    }).select('_id headimgurl nickname sex subids status').exec()
 
     // 获取语音是否已听
     var audio_ids = posts.map(post => post.audio_id);

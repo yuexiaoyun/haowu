@@ -61,7 +61,7 @@ export default class Feed {
         ]);
         var users = await User.find({
             _id: { $in: user_ids }
-        }).select('_id headimgurl nickname subids status').exec()
+        }).select('_id headimgurl nickname sex subids status').exec()
         user_ids = users.map(user => user._id)
 
         // TODO: 互动区所有语音的已读未读

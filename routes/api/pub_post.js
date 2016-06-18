@@ -41,7 +41,7 @@ export default function *() {
     });
     // 获取上屏所需要的user字段
     var user = yield User.findOne({_id: this.session.user_id})
-        .select('_id headimgurl nickname subids status')
+        .select('_id headimgurl nickname sex subids status')
         .exec();
 
     this.body = {

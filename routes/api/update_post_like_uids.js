@@ -8,7 +8,7 @@ export default function*() {
         this.throw(404);
     var users = yield User.find(
         {_id: { $in: post.likes}}
-    ).select('_id headimgurl nickname subids status').exec();
+    ).select('_id headimgurl nickname sex subids status').exec();
     users = users.map(user=>User.toBrowser(user, this.session.user_id));
 
     this.body = {
