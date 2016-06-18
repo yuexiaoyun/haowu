@@ -23,6 +23,7 @@ export default class Feed {
         var reply_uids = replies.map((reply)=>reply.user_id);
         var users = await User.find({_id: {
             $in: _.uniq([
+                user_id,    // 自己的user_id，评论上屏时需要用到自己的个人信息
                 post.user_id,
                 ...comment_user_ids,
                 ...reply_uids
