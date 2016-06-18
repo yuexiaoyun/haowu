@@ -188,7 +188,6 @@ class Post extends React.Component {
                     <div className={`input with${btn_cnt}`}>
                         <input
                             type="text"
-                            ref="input"
                             value={record ? '' : input}
                             disabled={record}
                             onChange={this.handleChange}
