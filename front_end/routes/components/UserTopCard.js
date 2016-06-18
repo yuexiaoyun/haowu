@@ -11,12 +11,14 @@ import fconf from '../../fconf';
 
 class UserTopCard extends React.Component {
     sub = () => {
+        var { user, dispatch } = this.props;
         dispatch(actions.sub({
             sub: !user.subbed,
             user_id: user._id
         }));
     }
     preview = (e) => {
+        var { user } = this.props;
         wx.previewImage({
             current: user.headimgurl,
             urls: [user.headimgurl]
