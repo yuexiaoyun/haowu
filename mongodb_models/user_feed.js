@@ -6,8 +6,10 @@ var mongo = require('../utility/mongo');
 var schema = new mongoose.Schema({
     // 发布者的user_id
     user_id: { type: String },
-    // 所有点了赞的用户的user_id
+    // 用户已刷出的首页Feed列表
     posts: [{ type: String }]
+}, {
+    timestamps: true
 });
 
 schema.index({ user_id: 1 });

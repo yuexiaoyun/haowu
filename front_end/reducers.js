@@ -29,21 +29,20 @@ export var local_pic_id = handleActions({
 
 // 首页feed的id列表
 export var feed_ids = handleActions({
-    pub_post: (state, action) => [],
+    pub_post: (state, action) => [action.payload.posts[0]._id, ...state],
     update_feeds: (state, action) => {
         var { posts, concat } = action.payload;
         var ids = posts.map(post=>post._id);
         if (concat)
             return [...state, ...ids];
         else
-            return ids;
+            return [...ids, ...state];
     },
     delete_my_post: (state, action) => _.filter(state, item=>(item!=action.payload))
 }, []);
 
 // 首页feed是否已完全加载
 export var feed_end = handleActions({
-    pub_post: (state, action) => 0,
     update_feeds: (state, action) => action.payload.feed_end,
     feed_end: (state, action) => action.payload
 }, 0);
@@ -97,6 +96,7 @@ function update_posts(state, action) {
 export var posts = handleActions({
     update_feeds: update_posts,
     update_user_detail: update_posts,
+    pub_post: update_posts,
     posts: (state, action) => ({
         ...state, ...action.payload
     }),
@@ -119,11 +119,11 @@ function update_users(state, action) {
         ...state, ..._.object(users.map(user=>user._id), users)
     };
 }
-
 export var users = handleActions({
     update_post_like_uids: update_users,
     update_audio_read_uids: update_users,
     update_feeds: update_users,
+    pub_post: update_users,
     users: (state, action) => ({
         ...state, ...action.payload
     }),

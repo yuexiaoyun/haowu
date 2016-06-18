@@ -19,7 +19,7 @@ class Home extends React.Component {
     loadMore = (page) => {
         var { feed_ids } = this.props;
         if (feed_ids.length == 0) {
-            update('/api/update_feeds');
+            update('/api/update_feeds?min=10');
         } else {
             update('/api/update_feeds?beforeid=' + feed_ids[feed_ids.length - 1]);
         }
@@ -38,7 +38,7 @@ class Home extends React.Component {
         var { feed_ids, feed_end } = this.props;
         var { reloading, err } = this.state;
         return (
-            <InfiniteScroll threshold={1080} hasMore={feed_end == 0} loadMore={this.loadMore}>
+            <InfiniteScroll hasMore={feed_end == 0} loadMore={this.loadMore}>
                 { reloading && feed_ids.length > 0 && <Loader /> }
                 <FeedList ids={feed_ids} showUser={true}/>
                 { feed_end == 0 && !err && <Loader /> }
