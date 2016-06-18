@@ -16,7 +16,7 @@ class Detail extends React.Component {
     componentDidMount() {
         var id = this.props.params.id;
         var user = this.props.users[id];
-        var url = (id == window.user_id) ? '/api/update_me' : '/api/update_user_detail?_id=' + id;
+        var url = '/api/update_user_detail?_id=' + id;
         update(url)
             .catch((err) => this.setState({err}));
         if (user)
