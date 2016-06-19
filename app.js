@@ -49,7 +49,8 @@ co.wrap(function *() {
     app.use(mount('/agent', function *() {
         this.body = this.query.echostr;
     }));
-    app.use(mount('/internal_login', require('./routes/internal_login')));
+    if (conf.debug)
+        app.use(mount('/internal_login', require('./routes/internal_login')));
     app.use(mount('/login', require('./routes/login')));
     app.use(mount('/static', serve('static', {maxAge: ms('10y')})));
     app.use(function *(next) {
