@@ -50,10 +50,10 @@ class UserTopCard extends React.Component {
         });
     }
     render() {
-        var {user, subids, dispatch} = this.props;
+        var {user, subids, audio_total_read_count, dispatch} = this.props;
         return (
             <div className='user-detail'>
-                { user._id == window.user_id && <div className='share-line'>
+                { false && <div className='share-line'>
                     可以将好物清单分享给微信好友、朋友圈
                     <span className="arrow image-icon_me_up"/>
                 </div> }
@@ -61,6 +61,13 @@ class UserTopCard extends React.Component {
                     <div>长按识别二维码，关注“物我”公众号</div>
                     <div>朋友互动不遗漏</div>
                 </div> }
+                { user._id != window.user_id &&
+                    <span className='btn-default' onClick={this.sub}>
+                        {user.subbed ? '已订阅' : '订阅'}
+                        </span>
+                    || <span className='btn-default' onClick={()=>(subids && subids.length>0 && hashHistory.push('sub_list'))}>
+                        {`${subids ? subids.length : 0}人订阅`}
+                </span> }
                 <div className='avatar-container'>
                     <img className='avatar' src={user.headimgurl} onClick={this.preview} />
                     { user.sex && <span className={classNames({
@@ -72,13 +79,9 @@ class UserTopCard extends React.Component {
                 <div className='nickname'>
                     {user.nickname}
                 </div>
-                { user._id != window.user_id &&
-                    <span className='btn-default' onClick={this.sub}>
-                        {user.subbed ? '已订阅' : '订阅'}
-                    </span>
-                    || <span className='btn-default' onClick={()=>(subids && subids.length>0 && hashHistory.push('sub_list'))}>
-                        {`${subids ? subids.length : 0}人订阅`}
-                    </span> }
+                <div className='reads image-icon_home_listened'>
+                    {audio_total_read_count}
+                </div>
             </div>
         );
     }
