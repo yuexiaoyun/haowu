@@ -53,7 +53,7 @@ class PostCard extends React.Component {
                 { user && <a className='user-line' onClick={()=>setTimeout(this.gotoDetail, 300)}>
                     <img className='avatar' src={user.headimgurl} />
                     <span className='nickname'>{user.nickname}</span>
-                    { user.sex && <span className={classNames({
+                    { (user.sex == 1 || user.sex == 2) && <span className={classNames({
                         gender: true,
                         'image-icon_male': user.sex == 1,
                         'image-icon_female': user.sex == 2

@@ -70,7 +70,7 @@ class UserTopCard extends React.Component {
                 </span> }
                 <div className='avatar-container'>
                     <img className='avatar' src={user.headimgurl} onClick={this.preview} />
-                    { user.sex && <span className={classNames({
+                    { (user.sex == 1 || user.sex == 2) && <span className={classNames({
                         gender: true,
                         'image-icon_male': user.sex == 1,
                         'image-icon_female': user.sex == 2
