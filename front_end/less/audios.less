@@ -1,4 +1,5 @@
 .audioplayer {
+    position: relative;
     display: inline-block;
     padding-left: 36px;
     padding-right: 10px;
@@ -6,9 +7,22 @@
     line-height: 24px;
     border-radius: 12px;
     color: #ffffff;
-    background-size: 16px 16px;
-    background-repeat: no-repeat;
-    background-position: 6px center;
+    .audio-loader {
+        position: absolute;
+        left: 6px;
+        top: 4px;
+        width: 16px;
+        height: 16px;
+        .loader-image {
+            width: 16px;
+            height: 16px;
+            background-size: 16px 16px;
+            background-repeat: no-repeat;
+        }
+        .circle {
+            animation: loader-animation 1s linear infinite;
+        }
+    }
 }
 
 .audioplayer-unread {

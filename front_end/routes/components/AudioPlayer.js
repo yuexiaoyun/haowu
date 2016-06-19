@@ -27,17 +27,20 @@ class AudioPlayer extends React.Component {
         var { read, length, audio_id, playing, loading, i } = this.props;
         length = Math.floor(length / 1000 + 0.5);
         if (playing)
-            var className = " image-btn_home_play" + i;
+            var className = "loader-image image-btn_home_play" + i;
         else if (!loading)
-            var className = " image-btn_home_play3";
+            var className = "loader-image image-btn_home_play3";
         else
-            var className = ' image-btn_home_play3';
+            var className = 'loader-image circle image-image_loading_play_home';
         return (
             <span className={classNames({
                 audioplayer: true,
                 'audioplayer-unread': !read,
                 'audioplayer-read': read
-            }) + className } onClick={this.play_audio}>
+            })} onClick={this.play_audio}>
+                <div className='audio-loader'>
+                    <div className={className} />
+                </div>
                 {`${length}"`}
             </span>
         );
