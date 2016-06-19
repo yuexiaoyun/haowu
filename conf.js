@@ -7,7 +7,7 @@ var config = {
         ak: '6DlqchP1xPFCO4tecFKSOtdtF6aXIsjeTegtZ0Uy',
         sk: 'iQ_-R6hKeNE-hzppcng7DzJtOyoi_AaJMcJnnetC',
         bucket: 'haowu',
-        site: 'http://7xudgy.com1.z0.glb.clouddn.com/',
+        site: 'http://files.wuwoweiyi.com/',
         pipeline: 'haowu'
     },
 }
