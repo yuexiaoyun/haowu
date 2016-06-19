@@ -2,7 +2,7 @@ import { handleActions } from 'redux-actions';
 import _ from 'underscore';
 import Immutable from 'immutable'
 
-// TODO: 全部用immutablejs重写？
+// TODO: 取消Immuable的依赖
 // TODO: 各种分页加载
 export var audio_player = handleActions({
     load: (state, action) => ({

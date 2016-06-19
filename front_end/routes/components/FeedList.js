@@ -3,7 +3,6 @@ import PostCard from './PostCard';
 import screenSize from '../../utility/screen_size';
 import { connect } from 'react-redux';
 
-// TODO: 高度计算布局
 var FeedList = ({ids, posts, users, showUser}) => {
     return (
         <div style={styles.d1}>

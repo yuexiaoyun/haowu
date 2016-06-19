@@ -31,18 +31,13 @@ app.use(session({
 }));
 app.use(logger());
 // TODO: 对公众号事件通知的处理
-// TODO: 在线的日志系统
-// TODO: 服务器部署的时候前面要挡一层nginx（或者另一层node）做各种处理，例如防恶意攻击等
 // TODO: 某现成的统计平台
-// TODO：计算JS和CSS的md5，并挡一层缓存；验证H5 WebApp机制是否可用
-// TODO：云主机之mongodb。openvpn？
 // TODO：云主机上不能用ROOT运行
 
 app.use(gzip());
 app.use(mount('/agent', function *() {
     this.body = this.query.echostr;
 }));
-// TODO: 调试专用，线上需要去掉
 app.use(mount('/internal_login', require('./routes/internal_login')));
 app.use(mount('/login', require('./routes/login')));
 app.use(mount('/static', serve('static')));

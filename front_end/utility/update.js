@@ -6,7 +6,6 @@ export function setStore(s) {
     store = s;
 }
 
-// TODO actions一次性更新？
 export default function update(url, inspector) {
     return fetch(url, {credentials: 'same-origin'})
         .then(parse_online_json)

@@ -14,8 +14,6 @@ import * as actions from '../actions';
 import _ from 'underscore';
 import fconf from '../fconf';
 
-// TODO: 详情页的404状态
-// TODO: 评论被删除后的占位
 class Post extends React.Component {
     constructor(props) {
         super(props);
@@ -148,7 +146,6 @@ class Post extends React.Component {
     render() {
         var { post, user, users, comments, comments_top } = this.props;
         var { record, err } = this.state;
-        // TODO: 图片的显示有问题
         // TODO: 记录进入详情页的次数？
         return (
             <div className='post' onClick={this.clear_reply}>
