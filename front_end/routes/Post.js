@@ -73,11 +73,11 @@ class Post extends React.Component {
         }
     }
     handleChange = (event) => {
-        if (event.target.value.length <= 40) {
+        if (event.target.value.length <= 140) {
             this.setState({input: event.target.value});
         } else {
             var { reply_user } = this.props;
-            var txt = `${reply_user ? '评论' : '回复'}不能超过40字`;
+            var txt = `${reply_user ? '评论' : '回复'}不能超过140字`;
             PopupHelper.toast(txt);
         }
     }
@@ -182,8 +182,9 @@ class Post extends React.Component {
         var show_record_btn = post.user_id == window.user_id;
         var me_like = post.me_like;
         var btn_cnt = show_record_btn ? 2 : 1;
-        var placeholder = (user ? ('回复' + user.nickname) : '请输入评论')
-            + '（不超过40字）';
+        var placeholder = (user
+            ? ('回复' + user.nickname)
+            : `${post.user_id==window.user_id ? '补充' : '问'}点什么吧~`);
         if (record)
             placeholder = `语音${user ? ('回复' + user.nickname) : '评论'}`;
         var disable_send = record ? !this.state.audio_id : !input;
