@@ -6,8 +6,11 @@ import PopupHelper from '../../utility/PopupHelper';
 import showProgress from '../../utility/show_progress';
 import setShareInfo from '../../utility/set_share_info';
 import { connect } from 'react-redux';
+import { createSelector, createStructuredSelector } from 'reselect'
 import classNames from 'classnames';
 import fconf from '../../fconf';
+import { get_posts, get_audios, get_subids } from '../../reselectors'
+import _ from 'underscore';
 
 class UserTopCard extends React.Component {
     sub = () => {
@@ -31,9 +34,16 @@ class UserTopCard extends React.Component {
         this.setShareInfo();
     }
     setShareInfo = () => {
-        var { user } = this.props;
+        var { user, post_count, audio_total_read_count } = this.props;
+        var title = user.nickname + '的好物记录';
+        if (post_count > 0) {
+            title = `${user.nickname}的${post_count}条好物记录`;
+            if (audio_total_read_count > 10)
+                title += `，已获${audio_total_read_count}次收听`;
+        }
+        console.log(title);
         setShareInfo({
-            title: user.nickname + '的好物记录',
+            title,
             desc: '物我，好物有声',
             link: fconf.site + '/app#/detail/' + user._id,
             imgUrl: user.headimgurl
@@ -74,4 +84,30 @@ class UserTopCard extends React.Component {
     }
 }
 
-export default connect(({subids}) => ({subids}))(UserTopCard)
+const get_post_ids = (state, props) => state.user_post_ids[props.user._id];
+const get_post_count = createSelector(
+    [get_post_ids],
+    (post_ids) => ((post_ids || []).length)
+);
+
+const get_audio_total_read_count = createSelector(
+    [get_post_ids, get_posts, get_audios],
+    (post_ids, posts, audios) => {
+        if (!post_ids)
+            return 0;
+        return _.chain(post_ids)
+            .map(id=>posts[id])
+            .map(post=>post.audio_id)
+            .map(audio_id=>audios[audio_id])
+            .compact()
+            .map(audio=>(audio.others_read_count + (audio.me_read ? 1 : 0)))
+            .reduce((memo, num)=>(memo + num), 0)
+            .value();
+    }
+)
+
+export default connect(createStructuredSelector({
+    post_count: get_post_count,
+    audio_total_read_count: get_audio_total_read_count,
+    subids: get_subids
+}))(UserTopCard);
