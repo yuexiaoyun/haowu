@@ -96,6 +96,7 @@ function update_posts(state, action) {
 export var posts = handleActions({
     update_feeds: update_posts,
     update_user_detail: update_posts,
+    update_post_detail: update_posts,
     pub_post: update_posts,
     posts: (state, action) => ({
         ...state, ...action.payload
@@ -124,6 +125,7 @@ export var users = handleActions({
     update_audio_read_uids: update_users,
     update_feeds: update_users,
     update_user_detail: update_users,
+    update_post_detail: update_users,
     pub_post: update_users,
     users: (state, action) => ({
         ...state, ...action.payload
@@ -145,11 +147,17 @@ export var users = handleActions({
         }
     }
 }, {});
+
 // 帖子详情页的ID与内容对应
 export var post_details = handleActions({
-    post_details: (state, action) => ({
-        ...state, ...action.payload
-    }),
+    update_post_detail: (state, action) => {
+        var { comments } = action.payload;
+        var post_id = action.payload.posts[0]._id;
+        return {
+            ...state,
+            ..._.object([post_id], [{comments}])
+        }
+    },
     update_comment: (state, action) => {
         var post_detail = state[action.payload.post_id];
         if (!post_detail)
@@ -190,6 +198,7 @@ function update_audios(state, action) {
 export var audios = handleActions({
     update_feeds: update_audios,
     update_user_detail: update_audios,
+    update_post_detail: update_audios,
     read: (state, action) => {
         var { audio_id } = action.payload;
         var audio = state[audio_id];

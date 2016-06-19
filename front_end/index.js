@@ -4,7 +4,7 @@ window.onerror = alert;
 
 import React from 'react';
 import { render, findDOMNode } from 'react-dom';
-import { applyRouterMiddleware, Router, Route, Link, IndexRedirect, hashHistory } from 'react-router'
+import { applyRouterMiddleware, Router, Route, Link, Redirect, IndexRedirect, hashHistory } from 'react-router'
 import useScroll from 'react-router-scroll';
 import { Provider } from 'react-redux'
 import { createStore, combineReducers, applyMiddleware } from 'redux'
@@ -47,7 +47,6 @@ s2(store);
 render(
     <Provider store={store}>
         <Router history={hashHistory} render={applyRouterMiddleware(useScroll())}>
-            <Route path="/detail/:id" component={Detail} />
             <Route path="/pub" component={Pub} />
             <Route path="/post/:id" component={Post} />
             <Route path="/post/:id/:new_id" component={Post} />
@@ -61,6 +60,8 @@ render(
                     <Route path="posts" component={MyPosts} />
                     <Route path="notifications" component={Notifications} />
                 </Route>
+                <Redirect from={"detail/" + window.user_id} to="/me/posts" />
+                <Route path="detail/:id" component={Detail} />
                 <IndexRedirect to="home" />
             </Route>
         </Router>

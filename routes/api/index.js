@@ -30,6 +30,7 @@ router.get('/sub', require('./sub'));
 router.get('/unsub', require('./unsub'));
 router.get('/update_feeds', require('./update_feeds'));
 router.get('/update_user_detail', require('./update_user_detail'));
+router.get('/update_post_detail', require('./update_post_detail'));
 
 router.get('/read', require('./read'));
 
@@ -41,13 +42,8 @@ router.get('/delete_post', function *() {
     debug(JSON.stringify(this.body.actions));
 });
 
-router.get('/update_post_detail', function *() {
-    this.body = {
-        result: 'ok',
-        actions: yield Feed.loadPostDetail(this.session.user_id, this.query._id)
-    };
-    debug(JSON.stringify(this.body.actions));
-});
+
+
 router.get('/like', function *() {
     var q = { _id: this.query._id, status: {$ne: 0} };
     var d = {
