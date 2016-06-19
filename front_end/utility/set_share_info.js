@@ -15,6 +15,11 @@ export default (share_info) => {
             wx.hideMenuItems({
                 menuList
             });
+            wx.showMenuItems({
+                menuList: [
+                    'menuItem:share:appMessage'
+                ]
+            });
         } else {
             wx.hideMenuItems({
                 menuList: [
