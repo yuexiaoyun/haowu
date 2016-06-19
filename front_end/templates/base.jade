@@ -4,7 +4,7 @@ html
     meta(charset='utf-8')
     title 物我
     meta(name='viewport', content='initial-scale=1, maximum-scale=1')
-    link(rel='stylesheet', href='/static/styles/bundle.min.css?1')
+    link(rel='stylesheet', href='/static/styles/bundle.min.css?#{css_md5}')
   body(ontouchstart='')
     #app(onclick='')
     #popup_container(onclick='')
@@ -14,4 +14,4 @@ html
   script.
     window.user_id='!{user_id}';
     wx.config(!{ js_params });
-  script(src='/static/scripts/bundle.min.js?1')
+  script(src='/static/scripts/bundle.min.js?#{js_md5}')
