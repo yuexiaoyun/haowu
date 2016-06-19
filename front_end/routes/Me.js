@@ -15,14 +15,16 @@ class Me extends React.Component {
     }
     componentDidMount() {
         window.setTitle('物我');
+        update('/api/update_user_detail?_id=' + window.user_id);
+        update('/api/update_me');
     }
     render() {
-        var { user, ids, location, children, badge_count } = this.props;
+        var { user, location, children, badge_count } = this.props;
         var { err } = this.state;
         return (
             <div>
                 { user && <UserTopCard user={user} pathname={location.pathname}/>}
-                <div className='tab'>
+                { user && <div className='tab'>
                     <div className='tab-item' onClick={()=>hashHistory.replace('/me/posts')}>
                         <div>分享动态</div>
                         { location.pathname=='/me/posts' && <div className='active' /> }
@@ -31,7 +33,7 @@ class Me extends React.Component {
                         <div>互动区{(badge_count > 0) && <span className="badge">{badge_count}</span>}</div>
                         { location.pathname=='/me/notifications' && <div className='active' /> }
                     </div>
-                </div>
+                </div> }
                 { children }
             </div>
         );
@@ -40,6 +42,5 @@ class Me extends React.Component {
 
 module.exports = connect(state=>({
     user: state.users[window.user_id],
-    ids: state.user_post_ids[window.user_id],
     badge_count: get_badge_count(state)
 }))(Me);
