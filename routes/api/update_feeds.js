@@ -101,7 +101,7 @@ export default function *() {
     var post_map = _.object(posts.map(post=>post._id), posts);
     posts = pids.map((_id) => post_map[_id]);
     posts = _.compact(posts);
-    var feed_end = posts.length > 0 ? 0 : 1;
+    var feed_end = (posts.length > 0 || !this.query.beforeid) ? 0 : 1;
 
     // 获取Post的作者信息
     var user_ids = _.uniq(posts.map(post => post.user_id))
