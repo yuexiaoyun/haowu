@@ -23,7 +23,6 @@ class App extends React.Component {
         });
     }
     componentDidMount() {
-        window.setTitle('物我');
         update('/api/update_me');
     }
     render() {

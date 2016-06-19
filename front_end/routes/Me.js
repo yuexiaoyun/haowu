@@ -13,6 +13,9 @@ class Me extends React.Component {
         super();
         this.state = {};
     }
+    componentDidMount() {
+        window.setTitle('物我');
+    }
     render() {
         var { user, ids, location, children, badge_count } = this.props;
         var { err } = this.state;
