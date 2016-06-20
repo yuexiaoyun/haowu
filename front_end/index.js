@@ -14,6 +14,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { createAction } from 'redux-actions';
 import optimist from 'redux-optimist';
 import optimistPromiseMiddleware from 'redux-optimist-promise';
+import wx from 'weixin-js-sdk';
 
 import App from './routes/App'
 import Home from './routes/Home'
@@ -67,6 +68,7 @@ render(
     document.getElementById('app')
 );
 
+wx.config(window.js_params);
 wx.error(function (res) {
     PopupHelper.toast('当前版本暂不支持发布和分享功能');
 });

@@ -11,7 +11,7 @@ import Loader from './Loader'
 import { play, stop } from '../../utility/audio_manager';
 import { sub } from '../../actions';
 import qs from 'querystring';
-
+import wx from 'weixin-js-sdk';
 
 class PostCardInDetail extends React.Component {
     componentWillUnmount() {

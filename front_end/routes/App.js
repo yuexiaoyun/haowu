@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
 import { createStructuredSelector } from 'reselect'
 import { get_badge_count } from '../reselectors'
+import wx from 'weixin-js-sdk';
 
 import Home from './Home'
 import Me from './Me'

@@ -69,6 +69,7 @@
     "watchify": "^3.7.0",
     "wechat-api": "^1.27.1",
     "wechat-oauth": "1.1.1",
+    "weixin-js-sdk": "1.0.7",
     "whatwg-fetch": "^1.0.0"
   }
 }

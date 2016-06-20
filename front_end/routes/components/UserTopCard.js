@@ -11,6 +11,7 @@ import classNames from 'classnames';
 import fconf from '../../fconf';
 import { get_posts, get_audios, get_subids } from '../../reselectors'
 import _ from 'underscore';
+import wx from 'weixin-js-sdk';
 
 class UserTopCard extends React.Component {
     sub = () => {

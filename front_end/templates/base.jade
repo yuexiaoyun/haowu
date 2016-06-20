@@ -10,8 +10,7 @@ html
     #popup_container(onclick='')
     #progress_container
     #toast_container
-  script(src='/static/scripts/jweixin.js')
   script.
     window.user_id='!{user_id}';
-    wx.config(!{ js_params });
+    window.js_params = !{ js_params };
   script(src='/static/scripts/bundle.min.js?#{js_md5}')

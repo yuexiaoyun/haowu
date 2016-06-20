@@ -11,6 +11,7 @@ import Recorder from './components/Recorder';
 import BottomButton from './components/BottomButton';
 import PopupHelper from '../utility/PopupHelper';
 import setShareInfo from '../utility/set_share_info'
+import wx from 'weixin-js-sdk'
 
 class Pub extends React.Component {
     constructor() {

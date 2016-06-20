@@ -1,5 +1,6 @@
 import React from 'react';
 import PopupHelper from '../../utility/PopupHelper';
+import wx from 'weixin-js-sdk';
 
 export default class Recorder extends React.Component {
     constructor() {

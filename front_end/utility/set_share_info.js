@@ -1,3 +1,5 @@
+import wx from 'weixin-js-sdk'
+
 export default (share_info) => {
     wx.ready(()=>{
         var menuList = [
