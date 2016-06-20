@@ -3,7 +3,9 @@ import { Model as User } from '../../mongodb_models/user';
 import { Model as Audio } from '../../mongodb_models/audio';
 import { Model as UserFeed } from '../../mongodb_models/user_feed';
 import { createAction } from 'redux-actions';
+import { updateScore } from '../../models/Score';
 import ms from 'ms';
+import co from 'co';
 
 import _ from 'underscore';
 import ObjectId from 'bson/lib/bson/objectid'
@@ -43,7 +45,7 @@ function *getNewPostIds(my_id, origin_post_ids, limit) {
     if (results.length >= limit) {
         // 结果足够则返回
         results = _.first(results, limit);
-        return results.map(result=>result._id);
+        results = results.map(result=>result._id);
     } else {
         // 结果不够，则突破去重策略返回
         var ids = results.map(result=>result._id);
@@ -53,8 +55,13 @@ function *getNewPostIds(my_id, origin_post_ids, limit) {
             .first(limit - results.length)
             .map(post => post._id)
             .value()
-        return [...ids, ...add_ids];
+        results = [...ids, ...add_ids];
     }
+    // TODO: 优化性能
+    for (var i in results) {
+        co(updateScore(results[i]));
+    }
+    return results;
 }
 
 export default function *() {
