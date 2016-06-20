@@ -6,7 +6,6 @@ import AudioPlayer from './AudioPlayer';
 import classNames from 'classnames';
 import { connect } from 'react-redux'
 import { createAction } from 'redux-actions'
-import screenSize from '../../utility/screen_size'
 import qs from 'querystring'
 
 
@@ -20,7 +19,7 @@ class PostCard extends React.Component {
     }
     picHeight = () => {
         var { post } = this.props;
-        var w = (screenSize().width - 6) / 2 - 10;
+        var w = this.props.w - 10;
         var h = Math.floor(w * post.h / post.w + 0.5);
         return h;
     }

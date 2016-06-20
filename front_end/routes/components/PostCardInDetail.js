@@ -4,7 +4,6 @@ import fconf from '../../fconf';
 import { connect } from 'react-redux'
 import { createAction } from 'redux-actions'
 import { fromObjectId } from '../../utility/format_time';
-import screenSize from '../../utility/screen_size'
 import PopupHelper from '../../utility/PopupHelper'
 import update from '../../utility/update';
 import Loader from './Loader'
@@ -75,10 +74,8 @@ class PostCardInDetail extends React.Component {
         var d = Math.floor((post.length + 500) / 1000);
         return (
             <div>
-                <div className="picture image-icon_image_loading"
-                    style={{
-                        height: screenSize().width,
-                    }}>
+                <div className="picture image-icon_image_loading">
+                    <div className='picture-dummy' />
                     <img src={fconf.qiniu.site + post.pic_id + '-c720'}
                         style={post.w > post.h ? {height: '100%'} : {width: '100%'}}
                         onClick={this.preview}/>

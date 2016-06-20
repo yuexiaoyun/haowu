@@ -2,7 +2,6 @@ import React from 'react';
 import FeedList from './components/FeedList';
 import { parse_online_json } from '../utility/fetch_utils';
 import Loader from './components/Loader';
-import screenSize from '../utility/screen_size';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
 import update from '../utility/update';

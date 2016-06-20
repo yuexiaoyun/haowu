@@ -42,7 +42,7 @@ s1(store);
 s2(store);
 
 // TODO 图片要根据屏幕宽度，做很多套适配的样式
-
+// TODO 包装setShareInfo控件，减少调用次数
 render(
     <Provider store={store}>
         <Router history={hashHistory} render={applyRouterMiddleware(useScroll())}>
