@@ -45,7 +45,6 @@ class Pub extends React.Component {
                 hashHistory.go(-1);
                 return '发布成功';
             }).catch(err => {
-                alert(err);
                 return '发布失败';
             }));
         }

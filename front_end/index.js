@@ -1,6 +1,9 @@
 require('es6-promise').polyfill();
 require('whatwg-fetch');
-window.onerror = alert;
+if (process.env.NODE_ENV != 'production') {
+    console.log('in development');
+    window.onerror = alert;
+}
 
 import React from 'react';
 import { render, findDOMNode } from 'react-dom';

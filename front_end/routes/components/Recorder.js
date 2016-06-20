@@ -29,20 +29,16 @@ export default class Recorder extends React.Component {
     }
     refresh = () => {
         var progress = 0;
-        try {
-            if (this.state.recording) {
-                var d = new Date() - this.state.recording;
-                this.setState({d: d});
-                if (d > 59500)
-                    this.stop_audio();
-                else
-                    progress = (d * 100 / 60000).toFixed(2);
-            } else if (this.state.playing) {
-                var f = new Date() - this.state.playing;
-                progress = (f * 100 / this.state.d).toFixed(2);
-            }
-        } catch(err) {
-            alert(err);
+        if (this.state.recording) {
+            var d = new Date() - this.state.recording;
+            this.setState({d: d});
+            if (d > 59500)
+                this.stop_audio();
+            else
+                progress = (d * 100 / 60000).toFixed(2);
+        } else if (this.state.playing) {
+            var f = new Date() - this.state.playing;
+            progress = (f * 100 / this.state.d).toFixed(2);
         }
         this.setState({progress: progress});
     }
@@ -60,7 +56,6 @@ export default class Recorder extends React.Component {
                 }
             },
             fail: res => {
-                alert(JSON.stringify(res));
             }
         });
         this.setState({recording: null});

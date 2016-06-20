@@ -78,14 +78,10 @@ module.exports.showProgressDialog = function(tips) {
             { tips }
         </div>
     );
-    try {
-        var popup = <PopupWrapper onClose={()=>{}}>
-            {progressView}
-        </PopupWrapper>;
-        ReactDOM.render(popup, document.getElementById('progress_container'));
-    } catch(err) {
-        alert(err);
-    }
+    var popup = <PopupWrapper onClose={()=>{}}>
+        {progressView}
+    </PopupWrapper>;
+    ReactDOM.render(popup, document.getElementById('progress_container'));
 }
 
 module.exports.hideProgressDialog = function() {

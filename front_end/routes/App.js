@@ -22,36 +22,32 @@ class App extends React.Component {
         });
     }
     render() {
-        try {
-            var { badge_count, children, location } = this.props;
-            var current_tab = 0;
-            return (
-                <div>
-                    {children}
-                    <div style={{width: '100%', height: '2.5rem', clear:'both', overflow:'hidden'}} />
-                    <nav className="bar bar-tab">
-                        <span className={"bar-tab-item"} onClick={()=>{
-                            hashHistory.replace('/home/' + Date.parse(new Date()));
-                        }}>
-                            <span className={"setting-icon image-btn_tabbar_home" +
-                                (location.pathname.substring(0, 5)=='/home' ? '_selected' : '')} />
-                        </span>
-                        <span className={"bar-tab-item"} onClick={this.take_photo}>
-                            <span className="setting-icon image-btn_tabbar_photo"></span>
-                        </span>
-                        <span className={"bar-tab-item"} onClick={()=>{
-                            hashHistory.replace('/me/posts');
-                        }}>
-                            <span className={"setting-icon image-btn_tabbar_me"
-                            + ((location.pathname=='/me/posts' || location.pathname=='/me/notifications') ? '_selected' : '')} />
-                            { badge_count>0 && <span className="badge">{badge_count}</span> }
-                        </span>
-                    </nav>
-                </div>
-            );
-        } catch(err) {
-            alert(err);
-        }
+        var { badge_count, children, location } = this.props;
+        var current_tab = 0;
+        return (
+            <div>
+                {children}
+                <div style={{width: '100%', height: '2.5rem', clear:'both', overflow:'hidden'}} />
+                <nav className="bar bar-tab">
+                    <span className={"bar-tab-item"} onClick={()=>{
+                        hashHistory.replace('/home/' + Date.parse(new Date()));
+                    }}>
+                        <span className={"setting-icon image-btn_tabbar_home" +
+                            (location.pathname.substring(0, 5)=='/home' ? '_selected' : '')} />
+                    </span>
+                    <span className={"bar-tab-item"} onClick={this.take_photo}>
+                        <span className="setting-icon image-btn_tabbar_photo"></span>
+                    </span>
+                    <span className={"bar-tab-item"} onClick={()=>{
+                        hashHistory.replace('/me/posts');
+                    }}>
+                        <span className={"setting-icon image-btn_tabbar_me"
+                        + ((location.pathname=='/me/posts' || location.pathname=='/me/notifications') ? '_selected' : '')} />
+                        { badge_count>0 && <span className="badge">{badge_count}</span> }
+                    </span>
+                </nav>
+            </div>
+        );
     }
 }
 
