@@ -27,7 +27,7 @@ export function *updateScore(_id) {
     rank0 += uid_count;
 
     // TODO: 是否真的看过
-    var feed_views = (yield UserFeed.count({post_id: _id}))+ 10;
+    var feed_views = (yield UserFeed.count({posts: _id})) + 5;
     console.log('阅读次数（分母): ' + feed_views);
     rank0 /=  feed_views;
 
