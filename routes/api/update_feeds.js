@@ -24,7 +24,7 @@ function *getNewPostIds(my_id, origin_post_ids, limit) {
     // 按实时性衰减重算rank并排序
     posts = posts.map((post) => {
         // 按（已发的时间 + 若干小时）作为分母来衰减
-        var d = (new Date() - ObjectId(post._id).getTimestamp()) / ms('12h') + 1;
+        var d = (new Date() - ObjectId(post._id).getTimestamp()) / ms('1d') + 1;
         post = post.toObject();
         post.rank = post.rank0 / d;
         return post;
