@@ -32,8 +32,11 @@ class Post extends React.Component {
     setShareInfo = () => {
         var { post, user } = this.props;
         if (post && user) {
+            var link = fconf.site + '/app/post/' + post._id;
+            console.log(link);
             setShareInfo({
                 title: user.nickname + '分享了一件好物',
+                link,
                 desc: '物我，好物有声',
                 imgUrl: fconf.qiniu.site + post.pic_id + '-c167'
             });

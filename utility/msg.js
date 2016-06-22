@@ -10,7 +10,7 @@ function *getOpenid(user_id) {
     return doc && doc.openid;
 }
 
-var target = conf.site + '/app#/me/notifications';
+var target = conf.site + '/app/me/notifications';
 
 export function *notifyPub(session, post) {
     var doc = yield User.findOne({_id: session.user_id}).select('subids').exec();
@@ -23,7 +23,7 @@ export function *notifyPub(session, post) {
             console.log(yield wechat.sendTemplate(
                 openid,
                 'coonwl1GcNnQrZEyrdpa-Jls2V5rZHiUT-_RyeKndbk',
-                conf.site + '/app#/post/' + post._id,
+                conf.site + '/app/post/' + post._id,
                 '#FF0000', {
                     first: {
                         value: session.userInfo.nickname,

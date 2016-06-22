@@ -34,6 +34,12 @@ import { setStore as s2 } from './utility/audio_manager'
 
 import './utility/set_title';
 
+var entry = window.location.pathname.substring(4);
+if (entry && entry.length > 0) {
+    window.location.replace('/app#' + entry);
+    return;
+}
+
 let store = (applyMiddleware(
     optimistPromiseMiddleware()
 )(createStore))(optimist(combineReducers(reducers)), {},

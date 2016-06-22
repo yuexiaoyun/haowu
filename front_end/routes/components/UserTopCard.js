@@ -46,7 +46,7 @@ class UserTopCard extends React.Component {
         setShareInfo({
             title,
             desc: '物我，好物有声',
-            link: fconf.site + '/app#/detail/' + user._id,
+            link: fconf.site + '/app/detail/' + user._id,
             imgUrl: user.headimgurl
         });
     }
