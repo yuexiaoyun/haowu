@@ -37,43 +37,43 @@ import './utility/set_title';
 var entry = window.location.pathname.substring(4);
 if (entry && entry.length > 0) {
     window.location.replace('/app#' + entry);
-}
+} else {
+    let store = (applyMiddleware(
+        optimistPromiseMiddleware()
+    )(createStore))(optimist(combineReducers(reducers)), {},
+        window.devToolsExtension && window.devToolsExtension());
+    s1(store);
+    s2(store);
 
-let store = (applyMiddleware(
-    optimistPromiseMiddleware()
-)(createStore))(optimist(combineReducers(reducers)), {},
-    window.devToolsExtension && window.devToolsExtension());
-s1(store);
-s2(store);
-
-// TODO 图片要根据屏幕宽度，做很多套适配的样式
-// TODO 包装setShareInfo控件，减少调用次数
-render(
-    <Provider store={store}>
-        <Router history={hashHistory} render={applyRouterMiddleware(useScroll())}>
-            <Route path="/pub" component={Pub} />
-            <Route path="/post/:id" component={Post} />
-            <Route path="/post/:id/:new_id" component={Post} />
-            <Route path="/sub_list" component={SubList} />
-            <Route path="/like_list/:id" component={LikeList} />
-            <Route path="/read_list/:id" component={ReadList} />
-            <Route path="/" component={App} >
-                <Route path="home" component={Home} />
-                <Route path="home/:time" component={Home} />
-                <Route path="me" component={Me} >
-                    <Route path="posts" component={MyPosts} />
-                    <Route path="notifications" component={Notifications} />
+    // TODO 图片要根据屏幕宽度，做很多套适配的样式
+    // TODO 包装setShareInfo控件，减少调用次数
+    render(
+        <Provider store={store}>
+            <Router history={hashHistory} render={applyRouterMiddleware(useScroll())}>
+                <Route path="/pub" component={Pub} />
+                <Route path="/post/:id" component={Post} />
+                <Route path="/post/:id/:new_id" component={Post} />
+                <Route path="/sub_list" component={SubList} />
+                <Route path="/like_list/:id" component={LikeList} />
+                <Route path="/read_list/:id" component={ReadList} />
+                <Route path="/" component={App} >
+                    <Route path="home" component={Home} />
+                    <Route path="home/:time" component={Home} />
+                    <Route path="me" component={Me} >
+                        <Route path="posts" component={MyPosts} />
+                        <Route path="notifications" component={Notifications} />
+                    </Route>
+                    <Redirect from={"detail/" + window.user_id} to="/me/posts" />
+                    <Route path="detail/:id" component={Detail} />
+                    <IndexRedirect to="home" />
                 </Route>
-                <Redirect from={"detail/" + window.user_id} to="/me/posts" />
-                <Route path="detail/:id" component={Detail} />
-                <IndexRedirect to="home" />
-            </Route>
-        </Router>
-    </Provider>,
-    document.getElementById('app')
-);
+            </Router>
+        </Provider>,
+        document.getElementById('app')
+    );
 
-wx.config(window.js_params);
-wx.error(function (res) {
-    PopupHelper.toast('当前版本暂不支持发布和分享功能');
-});
+    wx.config(window.js_params);
+    wx.error(function (res) {
+        PopupHelper.toast('当前版本暂不支持发布和分享功能');
+    });
+}
