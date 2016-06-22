@@ -38,6 +38,7 @@ class PostCard extends React.Component {
                 <div className="audio-line">
                     <AudioPlayer
                         post_id={post._id}
+                        user_id={post.user_id}
                         audio_id={post.audio_id}
                         length={post.length} />
                     { reads > 0 &&<span

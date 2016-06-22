@@ -29,6 +29,10 @@ var schema = new mongoose.Schema({
     subids: [{ type: String }],
     // 上次清除通知未读标记的时间：所有在此时间之后创建的通知（notification）视作未读
     clear_badge: { type: Date },
+    // 冗余存放的发布数
+    post_count: { type: Number },
+    // 冗余存放的被听数
+    reads_count: { type: Number },
     // 用户状态
     // status=1为正常
     // status=2为黑名单：该用户的所有发布的内容在主Feed流里对其它人不可见

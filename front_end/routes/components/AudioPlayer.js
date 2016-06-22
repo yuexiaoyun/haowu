@@ -17,7 +17,7 @@ class AudioPlayer extends React.Component {
         if (playing || loading)
             this.stop_play();
         else
-            play(audio_id, this.props.post_id);
+            play(audio_id, this.props.post_id, this.props.user_id);
     }
     stop_play = () => {
         var { audio_id } = this.props;
