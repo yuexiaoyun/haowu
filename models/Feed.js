@@ -34,20 +34,6 @@ export default class Feed {
         ]
     }
     static async deletePost(user_id, _id) {
-        var q = { _id:_id, user_id:user_id, status: {$ne: 0} };
-        var d = {
-            status: 0
-        };
-        var update = await Post.update(q, d);
-        if (update.nModified > 0) {
-            var q = { target: _id };
-            await Notification.remove(q).exec();
-            return [
-                createAction('delete_my_post')(_id),
-                createAction('posts')(_.object([_id],[null]))
-            ];
-        } else {
-            return [];
-        }
+
     }
 }

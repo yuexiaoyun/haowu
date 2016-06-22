@@ -34,7 +34,7 @@ export function *updateCount(_id) {
     }, {
         $set: {
             post_count: post_count,
-            reads_count: reads_count[0].count
+            reads_count: reads_count[0] && reads_count[0].count || 0
         }
     }));
 }

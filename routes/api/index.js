@@ -22,7 +22,6 @@ import {updateScore} from '../../models/Score'
 // TODO: 前后端一致的：发主贴、发评论、发回复的合法性检查
 // TODO: 各种发布的hash去重
 // TODO: 防CSRF攻击处理
-
 router.get('/update_post_like_uids', require('./update_post_like_uids'));
 router.get('/update_audio_read_uids', require('./update_audio_read_uids'));
 router.get('/pub_post', require('./pub_post'));
@@ -31,18 +30,8 @@ router.get('/unsub', require('./unsub'));
 router.get('/update_feeds', require('./update_feeds'));
 router.get('/update_user_detail', require('./update_user_detail'));
 router.get('/update_post_detail', require('./update_post_detail'));
-
 router.get('/read', require('./read'));
-
-router.get('/delete_post', function *() {
-    this.body = {
-        result: 'ok',
-        actions: yield Feed.deletePost(this.session.user_id, this.query._id)
-    };
-    debug(JSON.stringify(this.body.actions));
-});
-
-
+router.get('/delete_post', require('./delete_post'));
 
 router.get('/like', function *() {
     var q = { _id: this.query._id, status: {$ne: 0} };
@@ -198,7 +187,7 @@ router.get('/pub_comment', function *() {
     };
     console.log(this.body);
 });
-
+/*
 router.get('/delete_comment', function *() {
     // 获取原评论信息
     var q = {
@@ -261,7 +250,7 @@ router.get('/delete_reply', function *() {
     };
     console.log(JSON.stringify(this.body));
 });
-
+*/
 router.get('/update_me', function *() {
     this.body = {
         result: 'ok',

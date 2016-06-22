@@ -5,6 +5,9 @@ import { Model as UserFeed } from '../../mongodb_models/user_feed';
 import { createAction } from 'redux-actions';
 import { notifyPub } from '../../utility/msg';
 
+import { updateScore } from '../../models/Score'
+import { updateCount } from '../../models/Count'
+
 export default function *() {
     var post = new Post();
     // 填写基本字段
@@ -25,7 +28,7 @@ export default function *() {
     // 保存
     yield post.save();
     // 给订阅用户发消息
-    //yield notifyPub(this.session, post);
+    yield notifyPub(this.session, post);
     // 主Feed流上屏
     yield UserFeed.update({
         user_id: this.session.user_id
@@ -43,6 +46,11 @@ export default function *() {
     var user = yield User.findOne({_id: this.session.user_id})
         .select('_id headimgurl nickname sex subids status')
         .exec();
+
+    // 算分
+    yield updateScore(post._id);
+    // 重算用户的发帖数和被听数
+    yield updateCount(post.user_id);
 
     this.body = {
         result: 'ok',

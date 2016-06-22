@@ -38,7 +38,7 @@ export var feed_ids = handleActions({
         else
             return [...ids, ...state];
     },
-    delete_my_post: (state, action) => _.filter(state, item=>(item!=action.payload))
+    delete_post: (state, action) => _.filter(state, item=>(item!=action.payload))
 }, []);
 
 // 首页feed是否已完全加载
@@ -62,7 +62,7 @@ export var user_post_ids = handleActions({
             ..._.object([users[0]._id], [posts.map(post=>post._id)])
         }
     },
-    delete_my_post: (state, action) => {
+    delete_post: (state, action) => {
         var my_post_ids = state[window.user_id];
         if (my_post_ids) {
             my_post_ids = _.filter(my_post_ids, item=>(item!=action.payload))
@@ -80,7 +80,7 @@ export var user_post_ids = handleActions({
 // 自己的通知列表
 export var notifications = handleActions({
     notifications: (state, action) => action.payload,
-    delete_my_post: (state, action) => _.filter(state, item=>(item.target!=action.payload))
+    delete_post: (state, action) => _.filter(state, item=>(item.target!=action.payload))
 }, []);
 
 // 自己的被订阅列表
