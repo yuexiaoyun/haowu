@@ -80,6 +80,9 @@ class UserTopCard extends React.Component {
                 <div className='nickname'>
                     {user.nickname}
                 </div>
+                <div className='reads image-icon_me_fatieshu'>
+                    {user.post_count || 0}
+                </div>
                 <div className='reads image-icon_home_listened'>
                     {user.reads_count || 0}
                 </div>
