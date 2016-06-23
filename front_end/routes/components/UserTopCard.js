@@ -35,12 +35,12 @@ class UserTopCard extends React.Component {
         this.setShareInfo();
     }
     setShareInfo = () => {
-        var { user, post_count, audio_total_read_count } = this.props;
+        var { user } = this.props;
         var title = user.nickname + '的好物记录';
-        if (post_count > 0) {
-            title = `${user.nickname}的${post_count}条好物记录`;
-            if (audio_total_read_count > 10)
-                title += `，已获${audio_total_read_count}次收听`;
+        if (user.post_count > 0) {
+            title = `${user.nickname}的${user.post_count}条好物记录`;
+            if (user.reads_count > 10)
+                title += `，已获${user.reads_count}次收听`;
         }
         console.log(title);
         setShareInfo({
@@ -81,37 +81,13 @@ class UserTopCard extends React.Component {
                     {user.nickname}
                 </div>
                 <div className='reads image-icon_home_listened'>
-                    {audio_total_read_count}
+                    {user.reads_count || 0}
                 </div>
             </div>
         );
     }
 }
 
-const get_post_ids = (state, props) => state.user_post_ids[props.user._id];
-const get_post_count = createSelector(
-    [get_post_ids],
-    (post_ids) => ((post_ids || []).length)
-);
-
-const get_audio_total_read_count = createSelector(
-    [get_post_ids, get_posts, get_audios],
-    (post_ids, posts, audios) => {
-        if (!post_ids)
-            return 0;
-        return _.chain(post_ids)
-            .map(id=>posts[id])
-            .map(post=>post.audio_id)
-            .map(audio_id=>audios[audio_id])
-            .compact()
-            .map(audio=>(audio.others_read_count + (audio.me_read ? 1 : 0)))
-            .reduce((memo, num)=>(memo + num), 0)
-            .value();
-    }
-)
-
 export default connect(createStructuredSelector({
-    post_count: get_post_count,
-    audio_total_read_count: get_audio_total_read_count,
     subids: get_subids
 }))(UserTopCard);

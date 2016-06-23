@@ -12,6 +12,7 @@ export function setStore(s) {
     store = s;
 }
 
+// TODO: 想办法搞定小菊花
 export function play(id, post_id, user_id) {
     if (timer) {
         clearInterval(timer);
@@ -26,11 +27,14 @@ export function play(id, post_id, user_id) {
     store.dispatch(createAction('load')(id));
     audio.addEventListener('canplay', () => {
         console.log('canplay: ' + id);
-        store.dispatch(read({
-            audio_id: id,
-            post_id: post_id,
-            user_id: user_id
-        }));
+        var audio = store.getState().audios[id];
+        if (!audio || !audio.me_read) {
+            store.dispatch(read({
+                audio_id: id,
+                post_id: post_id,
+                user_id: user_id
+            }));
+        }
         store.dispatch(createAction('canplay')(id));
         timer = setInterval(() => {
             store.dispatch(createAction('playing')(id));
