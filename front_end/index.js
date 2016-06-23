@@ -38,9 +38,13 @@ var entry = window.location.pathname.substring(4);
 if (entry && entry.length > 0) {
     window.location.replace('/app#' + entry);
 } else {
+    console.log(hashHistory);
     var entry = window.location.hash.substring(1);
     if (entry.substring(0, 5) == '/post') {
         hashHistory.replace('/home');
+        var i = entry.indexOf('?');
+        if (i >= 0)
+            entry = entry.substring(0, i);
         setTimeout(()=>hashHistory.push(entry), 0);
     }
     let store = (applyMiddleware(

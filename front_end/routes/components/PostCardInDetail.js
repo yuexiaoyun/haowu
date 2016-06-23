@@ -8,7 +8,7 @@ import PopupHelper from '../../utility/PopupHelper'
 import update from '../../utility/update';
 import Loader from './Loader'
 import { play, stop } from '../../utility/audio_manager';
-import { sub } from '../../actions';
+import { sub, like } from '../../actions';
 import qs from 'querystring';
 import wx from 'weixin-js-sdk';
 
@@ -53,6 +53,12 @@ class PostCardInDetail extends React.Component {
             }]);
         }
     }
+    like = (e) => {
+        e.stopPropagation();
+        var { post, dispatch } = this.props;
+        if (!post.me_like)
+            dispatch(like(post._id));
+    }
     deletePost = () => {
         PopupHelper.confirm('您确认要删除么', '删除', ()=>{
             var { post } = this.props;
@@ -83,8 +89,8 @@ class PostCardInDetail extends React.Component {
                 <div className='audio-line'>
                     <div className='audio-line-tab'>
                         <span className='pull-right btn-default'
-                            onClick={()=>(like_count > 0 && hashHistory.push('/like_list/'+post._id))}>
-                            { like_count }人赞过
+                            onClick={()=>(read_count > 0 && hashHistory.push('/read_list/'+post.audio_id))}>
+                            { read_count }人听过
                         </span>
                     </div>
                     <div className='audio-line-tab'>
@@ -94,8 +100,8 @@ class PostCardInDetail extends React.Component {
                     </div>
                     <div className='audio-line-tab'>
                         <span className='pull-left btn-default clearfix'
-                            onClick={()=>(read_count > 0 && hashHistory.push('/read_list/'+post.audio_id))}>
-                            { read_count }人听过
+                            onClick={()=>(like_count > 0 && hashHistory.push('/like_list/'+post._id))}>
+                            { like_count }人赞过
                         </span>
                     </div>
                 </div>
@@ -104,7 +110,8 @@ class PostCardInDetail extends React.Component {
                 </div>
                 <div className="author-line" onClick={()=>hashHistory.push('/detail/' + user._id)}>
                     <img className='avatar' src={user.headimgurl} />
-                    <div className='delete image-btn_more' onClick={this.more}/>
+                    <div className='more-buttons image-btn_more' onClick={this.more}/>
+                    <div className={`more-buttons ${(post.me_like)?'image-btn_like_details_HL':'image-btn_like_details'}`} onClick={this.like}/>
                     <span className='nickname'>{user.nickname}</span>
                     <span className='text-secondary'>{ fromObjectId(post._id) }发布</span>
                 </div>

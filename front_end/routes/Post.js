@@ -87,10 +87,6 @@ class Post extends React.Component {
             record: !this.state.record
         });
     }
-    like = (e) => {
-        var { post, dispatch } = this.props;
-        dispatch(actions.like(post._id));
-    }
     pub = (c) => {
         var { record, reply_user, reply_comment } = this.state;
         if (reply_user && reply_comment) {
@@ -181,7 +177,7 @@ class Post extends React.Component {
         var user = users[reply_user];
         var show_record_btn = post.user_id == window.user_id;
         var me_like = post.me_like;
-        var btn_cnt = show_record_btn ? 2 : 1;
+        var btn_cnt = show_record_btn ? 1 : 0;
         var placeholder = (user
             ? ('回复' + user.nickname)
             : `${post.user_id==window.user_id ? '补充' : '问'}点什么吧~`);
@@ -199,8 +195,6 @@ class Post extends React.Component {
                 ref='comment_input'
                 onClick={(e)=>e.stopPropagation()}>
                 <div className='input-line' >
-                    <div className={`btn ${me_like ? 'image-btn_keyboard_praise_HL' : 'image-btn_keyboard_praise'}`}
-                        onClick={this.like}/>
                     { show_record_btn && <div className={`btn ${record ? 'image-btn_keyboard' : 'image-btn_speech'}`}
                         onClick={this.toggleRecord}/> }
                     <div className={`send ${disable_send ? 'send-disable' : ''}`} onClick={this.send}>发送</div>
