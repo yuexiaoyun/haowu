@@ -8,7 +8,6 @@ var Comment = require('../../mongodb_models/comment').Model;
 var Audio = require('../../mongodb_models/audio').Model;
 var Notification = require('../../mongodb_models/notification').Model;
 var Badge = require('../../models/Badge');
-var Feed = require('../../models/Feed');
 
 var qiniu = require('../../utility/qiniu');
 var wechat = require('../../utility/wechat').api;
@@ -32,6 +31,7 @@ router.get('/update_user_detail', require('./update_user_detail'));
 router.get('/update_post_detail', require('./update_post_detail'));
 router.get('/read', require('./read'));
 router.get('/delete_post', require('./delete_post'));
+router.get('/update_me', require('./update_me'));
 
 router.get('/like', function *() {
     var q = { _id: this.query._id, status: {$ne: 0} };
@@ -251,13 +251,6 @@ router.get('/delete_reply', function *() {
     console.log(JSON.stringify(this.body));
 });
 */
-router.get('/update_me', function *() {
-    this.body = {
-        result: 'ok',
-        actions: yield Feed.loadMe(this.session.user_id)
-    };
-    console.log(JSON.stringify(this.body.actions));
-});
 
 router.get('/clear_badge', function *() {
     var clear = yield new Badge(this.session.user_id).clear();

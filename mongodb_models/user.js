@@ -2,6 +2,7 @@ var qs = require('querystring');
 var conf = require('../conf');
 var mongoose = require('mongoose');
 var mongo = require('../utility/mongo');
+var ObjectID = require('bson/lib/bson/objectid')
 
 // 用户
 var schema = new mongoose.Schema({
@@ -33,6 +34,8 @@ var schema = new mongoose.Schema({
     post_count: { type: Number },
     // 冗余存放的被听数
     reads_count: { type: Number },
+    // 签名：用户在App中编辑
+    intro: { type: String },
     // 用户状态
     // status=1为正常
     // status=2为黑名单：该用户的所有发布的内容在主Feed流里对其它人不可见
@@ -43,11 +46,34 @@ schema.index({ unionid: 1 }, { unique: 1});
 
 var Model = mongo.conn.model('user', schema);
 module.exports.Model = Model;
-
-// TODO: subbed不要先取到应用端，而是在MongoDB处理
-Model.toBrowser = (doc, user_id) => {
-    doc = doc.toObject();
-    doc.subbed = doc.subids && doc.subids.indexOf(user_id) >= 0;
-    delete doc.subids;
-    return doc;
+module.exports.findUsersByIds = function *(user_id, ids) {
+    var q = {
+        _id: {
+            $in: ids.map(id=>new ObjectID(id))
+        }
+    }
+    console.log(q)
+    var docs = yield Model.aggregate([{
+        $match: q
+    }, {
+        $project: {
+            _id: 1,
+            nickname: 1,
+            sex: 1,
+            lauguage: 1,
+            headimgurl: 1,
+            post_count: 1,
+            reads_count: 1,
+            intro: 1,
+            subbed: {
+                $setIsSubset: [[user_id], '$subids']
+            }
+        }
+    }]).exec();
+    console.log(docs);
+    return docs;
+}
+module.exports.findUserById = function*(user_id, id) {
+    var docs = yield module.exports.findUsersByIds(user_id, [id]);
+    return docs.length > 0 ? docs[0] : null;
 }

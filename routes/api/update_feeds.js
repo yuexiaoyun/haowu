@@ -1,5 +1,5 @@
 import { Model as Post } from '../../mongodb_models/post';
-import { Model as User } from '../../mongodb_models/user';
+import { Model as User, findUsersByIds } from '../../mongodb_models/user';
 import { Model as Audio } from '../../mongodb_models/audio';
 import { Model as UserFeed } from '../../mongodb_models/user_feed';
 import { createAction } from 'redux-actions';
@@ -112,9 +112,7 @@ export default function *() {
 
     // 获取Post的作者信息
     var user_ids = _.uniq(posts.map(post => post.user_id))
-    var users = yield User.find({
-        _id: { $in: user_ids }
-    }).select('_id headimgurl nickname sex subids status').exec()
+    var users = yield findUsersByIds(this.session.user_id, user_ids);
 
     // 获取语音是否已听
     var audio_ids = posts.map(post => post.audio_id);
@@ -126,7 +124,7 @@ export default function *() {
         result: 'ok',
         actions: [
             createAction('update_feeds')({
-                users: users.map(user=>User.toBrowser(user, this.session.user_id)),
+                users,
                 posts: posts.map(post=>Post.toBrowser(post, this.session.user_id)),
                 audios: audios.map(audio=>Audio.toBrowser(audio, this.session.user_id)),
                 concat: !!this.query.beforeid,

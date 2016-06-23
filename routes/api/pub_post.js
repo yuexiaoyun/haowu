@@ -1,6 +1,6 @@
 import qiniu from '../../utility/qiniu';
 import { Model as Post } from '../../mongodb_models/post';
-import { Model as User } from '../../mongodb_models/user';
+import { Model as User, findUserById } from '../../mongodb_models/user';
 import { Model as UserFeed } from '../../mongodb_models/user_feed';
 import { createAction } from 'redux-actions';
 import { notifyPub } from '../../utility/msg';
@@ -43,9 +43,7 @@ export default function *() {
         upsert: true
     });
     // 获取上屏所需要的user字段
-    var user = yield User.findOne({_id: this.session.user_id})
-        .select('_id headimgurl nickname sex subids status')
-        .exec();
+    var user = yield findUserById(this.session.user_id, this.session.user_id);
 
     // 算分
     yield updateScore(post._id);
@@ -57,7 +55,7 @@ export default function *() {
         actions: [
             createAction('pub_post')({
                 posts: [Post.toBrowser(post, this.session.user_id)],
-                users: [User.toBrowser(user, this.session.user_id)]
+                users: [user]
             })
         ]
     };

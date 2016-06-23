@@ -4,6 +4,8 @@ import Immutable from 'immutable'
 
 // TODO: 取消Immuable的依赖
 // TODO: 各种分页加载
+// TODO: 学习meteor，虚拟字段在reducers中merge
+
 export var audio_player = handleActions({
     load: (state, action) => ({
         id: action.payload,
