@@ -38,6 +38,11 @@ var entry = window.location.pathname.substring(4);
 if (entry && entry.length > 0) {
     window.location.replace('/app#' + entry);
 } else {
+    var entry = window.location.hash.substring(1);
+    if (entry.substring(0, 5) == '/post') {
+        hashHistory.replace('/home');
+        setTimeout(()=>hashHistory.push(entry), 0);
+    }
     let store = (applyMiddleware(
         optimistPromiseMiddleware()
     )(createStore))(optimist(combineReducers(reducers)), {},
