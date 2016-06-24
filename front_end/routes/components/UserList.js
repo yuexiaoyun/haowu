@@ -1,5 +1,5 @@
 import React from 'react';
-import CommonCard from './CommonCard';
+import UserCard from './UserCard';
 import setShareInfo from '../../utility/set_share_info';
 import { hashHistory } from 'react-router';
 
@@ -15,12 +15,9 @@ export default class UserList extends React.Component {
                 { ids && ids.map(
                     (id) => {
                         var user = users[id];
-                        return <CommonCard
+                        return <UserCard
                             key={user._id}
-                            user_id={user._id}
-                            avatar={user.headimgurl}
-                            txt={user.nickname}
-                            onClick={()=>(hashHistory.push('detail/'+user._id))}
+                            user={user}
                         />;
                     }
                 )}
