@@ -20,3 +20,6 @@ export var read = createOptimistAction('read', payload=>('/api/read?' + qs.strin
     user_id: payload.user_id
 })));
 export var sub = createOptimistAction('sub', payload=>(`/api/${payload.sub ? 'sub' : 'unsub'}?_id=${payload.user_id}`));
+export var set_intro = createOptimistAction('set_intro', payload=>('/api/set_intro?' + qs.stringify({
+    intro: payload.intro
+})));

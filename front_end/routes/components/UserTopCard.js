@@ -9,11 +9,34 @@ import { connect } from 'react-redux';
 import { createSelector, createStructuredSelector } from 'reselect'
 import classNames from 'classnames';
 import fconf from '../../fconf';
+import { set_intro } from '../../actions';
 import { get_posts, get_audios, get_subids } from '../../reselectors'
 import _ from 'underscore';
 import wx from 'weixin-js-sdk';
 
+
+class IntroInput extends React.Component {
+    componentDidMount() {
+        this.refs.input.focus();
+        this.refs.input.addEventListener('blur', () => {
+            this.props.handleInput(this.refs.input.value);
+        })
+    }
+    render() {
+        var { user } = this.props;
+        return (
+            <div>
+                <input ref='input' className='intro-input' defaultValue={user.intro}/>
+            </div>
+        );
+    }
+}
+
 class UserTopCard extends React.Component {
+    constructor() {
+        super();
+        this.state = { input: false };
+    }
     sub = () => {
         var { user, dispatch } = this.props;
         dispatch(actions.sub({
@@ -50,6 +73,35 @@ class UserTopCard extends React.Component {
             imgUrl: user.headimgurl
         });
     }
+    input = () => {
+        var { user } = this.props;
+        if (user._id == window.user_id) {
+            this.setState({input: true});
+        }
+    }
+    handleInput = (value) => {
+        this.setState({input: false});
+        this.props.dispatch(set_intro({intro: value}));
+    }
+    renderIntro() {
+        var { user } = this.props;
+        var className = user.intro ? 'intro' : 'intro-null';
+        if (user._id == window.user_id) {
+            className += ' intro-edit image-btn_edit_me';
+        }
+        return (
+            <div>
+                <div className={className} onClick={this.input}>
+                    { user.intro || user._id == window.user_id && '我很懒，还没有个人介绍' || 'TA很懒，还没有个人介绍' }
+                </div>
+            </div>
+        );
+    }
+    renderInput() {
+        return <IntroInput
+            user={this.props.user}
+            handleInput={this.handleInput}/>;
+    }
     render() {
         var {user, subids, audio_total_read_count, dispatch} = this.props;
         return (
@@ -80,6 +132,7 @@ class UserTopCard extends React.Component {
                 <div className='nickname'>
                     {user.nickname}
                 </div>
+                { this.state.input ? this.renderInput() : this.renderIntro() }
                 <div className='reads image-icon_me_fatieshu'>
                     {user.post_count || 0}
                 </div>

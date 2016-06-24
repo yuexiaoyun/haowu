@@ -132,10 +132,26 @@ export var users = handleActions({
     users: (state, action) => ({
         ...state, ...action.payload
     }),
+    set_intro: (state, action) => {
+        var { intro } = action.payload;
+        var user = state[window.user_id];
+        if (user) {
+            console.log(user);
+            user = {
+                ...user,
+                intro
+            }
+            return {
+                ...state,
+                ..._.object([window.user_id], [user])
+            }
+        } else {
+            return state;
+        }
+    },
     read: (state, action) => {
         var { user_id } = action.payload;
         var user = state[user_id];
-        console.log(user);
         if (user) {
             user = {
                 ...user,
