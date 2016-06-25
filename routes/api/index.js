@@ -1,22 +1,4 @@
 var router = require('koa-router')();
-var conf = require('../../conf');
-var debug = require('debug')('app');
-
-var User = require('../../mongodb_models/user').Model;
-var Post = require('../../mongodb_models/post').Model;
-var Comment = require('../../mongodb_models/comment').Model;
-var Audio = require('../../mongodb_models/audio').Model;
-var Notification = require('../../mongodb_models/notification').Model;
-var Badge = require('../../models/Badge');
-
-var qiniu = require('../../utility/qiniu');
-var wechat = require('../../utility/wechat').api;
-var mongoose = require('mongoose');
-var { notifyLike, notifyComment, notifyReply, notifySub, notifyPub } = require('../../utility/msg');
-
-import _ from 'underscore'
-import {createAction} from 'redux-actions'
-import {updateScore} from '../../models/Score'
 
 // TODO: 前后端一致的：发主贴、发评论、发回复的合法性检查
 // TODO: 各种发布的hash去重
@@ -32,6 +14,7 @@ router.get('/update_post_detail', require('./update_post_detail'));
 router.get('/read', require('./read'));
 router.get('/delete_post', require('./delete_post'));
 router.get('/update_me', require('./update_me'));
+router.get('/update_notifications', require('./update_notifications'));
 router.get('/set_intro', require('./set_intro'));
 router.get('/like', require('./like'));
 router.get('/pub_reply', require('./pub_reply'));
@@ -100,11 +83,4 @@ router.get('/delete_reply', function *() {
     console.log(JSON.stringify(this.body));
 });
 */
-
-router.get('/clear_badge', function *() {
-    var clear = yield new Badge(this.session.user_id).clear();
-    console.log(clear);
-    this.body = { result: 'ok', clear: clear };
-});
-
 module.exports = router.routes();

@@ -30,7 +30,7 @@ class Home extends React.Component {
             .then(()=>this.setState({reloading: false}));
     }
     componentDidMount() {
-        window.setTitle('物我');
+        window.setTitle('物记');
         setShareInfo();
     }
     componentDidUpdate(prevProps) {

@@ -4,7 +4,7 @@ var conf = require('../conf');
 var menu = {
     button: [{
         type: "view",
-        name: "进入物我",
+        name: "进入物记",
         url: conf.site + '/app/home'
     }, {
         type: "view",

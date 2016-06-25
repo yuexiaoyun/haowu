@@ -14,7 +14,6 @@ import { get_posts, get_audios, get_subids } from '../../reselectors'
 import _ from 'underscore';
 import wx from 'weixin-js-sdk';
 
-
 class IntroInput extends React.Component {
     componentDidMount() {
         this.refs.input.focus();
@@ -68,7 +67,7 @@ class UserTopCard extends React.Component {
         console.log(title);
         setShareInfo({
             title,
-            desc: '物我，好物有声',
+            desc: '物记，好物有声',
             link: fconf.site + '/app/detail/' + user._id,
             imgUrl: user.headimgurl
         });
@@ -92,7 +91,7 @@ class UserTopCard extends React.Component {
         return (
             <div>
                 <div className={className} onClick={this.input}>
-                    { user.intro || user._id == window.user_id && '我很懒，还没有个人介绍' || 'Ta很懒，还没有个人介绍' }
+                    { user.intro || user._id == window.user_id && '我喜欢的好物；我的个性...或者留个微信号吧' || 'Ta很懒，还没有个人介绍' }
                 </div>
             </div>
         );
@@ -111,7 +110,7 @@ class UserTopCard extends React.Component {
                     <span className="arrow image-icon_me_up"/>
                 </div> }
                 { false && <div className='follow-line'>
-                    <div>长按识别二维码，关注“物我”公众号</div>
+                    <div>长按识别二维码，关注“物记”公众号</div>
                     <div>朋友互动不遗漏</div>
                 </div> }
                 { user._id != window.user_id &&

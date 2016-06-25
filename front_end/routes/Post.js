@@ -37,7 +37,7 @@ class Post extends React.Component {
             setShareInfo({
                 title: user.nickname + '分享了一件好物',
                 link,
-                desc: '物我，好物有声',
+                desc: '物记，好物有声',
                 imgUrl: fconf.qiniu.site + post.pic_id + '-c167'
             });
         }

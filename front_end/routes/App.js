@@ -4,7 +4,6 @@ import { Link, hashHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
 import { createStructuredSelector } from 'reselect'
-import { get_badge_count } from '../reselectors'
 import wx from 'weixin-js-sdk';
 
 import Home from './Home'
@@ -23,7 +22,7 @@ class App extends React.Component {
         });
     }
     render() {
-        var { badge_count, children, location } = this.props;
+        var { children, location } = this.props;
         var current_tab = 0;
         return (
             <div>
@@ -44,7 +43,6 @@ class App extends React.Component {
                     }}>
                         <span className={"setting-icon image-btn_tabbar_me"
                         + ((location.pathname=='/me/posts' || location.pathname=='/me/notifications') ? '_selected' : '')} />
-                        { badge_count>0 && <span className="badge">{badge_count}</span> }
                     </span>
                 </nav>
             </div>
@@ -52,6 +50,4 @@ class App extends React.Component {
     }
 }
 
-export default connect(createStructuredSelector({
-    badge_count: get_badge_count
-}))(App);
+export default connect()(App);

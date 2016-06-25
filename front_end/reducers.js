@@ -81,7 +81,7 @@ export var user_post_ids = handleActions({
 
 // 自己的通知列表
 export var notifications = handleActions({
-    notifications: (state, action) => action.payload,
+    update_notifications: (state, action) => action.payload.notifications,
     delete_post: (state, action) => _.filter(state, item=>(item.target!=action.payload))
 }, []);
 
@@ -99,6 +99,7 @@ export var posts = handleActions({
     update_feeds: update_posts,
     update_user_detail: update_posts,
     update_post_detail: update_posts,
+    update_notifications: update_posts,
     pub_post: update_posts,
     posts: (state, action) => ({
         ...state, ...action.payload
@@ -128,6 +129,7 @@ export var users = handleActions({
     update_feeds: update_users,
     update_user_detail: update_users,
     update_post_detail: update_users,
+    update_notifications: update_users,
     pub_post: update_users,
     users: (state, action) => ({
         ...state, ...action.payload
@@ -219,11 +221,6 @@ export var post_details = handleActions({
         }
     }
 }, {});
-
-// 上一次清badge的时间
-export var clear_badge_time = handleActions({
-    clear_badge_time: (state, action) => action.payload
-}, null);
 
 // 某一个具体语音的听过次数和我是否听过
 function update_audios(state, action) {

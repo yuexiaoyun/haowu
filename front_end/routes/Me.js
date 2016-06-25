@@ -6,7 +6,6 @@ import { parse_online_json } from '../utility/fetch_utils';
 import update from '../utility/update';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
-import { get_badge_count } from '../reselectors';
 
 class Me extends React.Component {
     constructor() {
@@ -14,12 +13,12 @@ class Me extends React.Component {
         this.state = {};
     }
     componentDidMount() {
-        window.setTitle('物我');
+        window.setTitle('物记');
         update('/api/update_user_detail?_id=' + window.user_id);
         update('/api/update_me');
     }
     render() {
-        var { user, location, children, badge_count } = this.props;
+        var { user, location, children } = this.props;
         var { err } = this.state;
         return (
             <div>
@@ -30,7 +29,7 @@ class Me extends React.Component {
                         { location.pathname=='/me/posts' && <div className='active' /> }
                     </div>
                     <div className='tab-item' onClick={()=>hashHistory.replace('/me/notifications')}>
-                        <div>互动区{(badge_count > 0) && <span className="badge">{badge_count}</span>}</div>
+                        <div>互动区</div>
                         { location.pathname=='/me/notifications' && <div className='active' /> }
                     </div>
                 </div> }
@@ -41,6 +40,5 @@ class Me extends React.Component {
 }
 
 module.exports = connect(state=>({
-    user: state.users[window.user_id],
-    badge_count: get_badge_count(state)
+    user: state.users[window.user_id]
 }))(Me);
