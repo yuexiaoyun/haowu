@@ -21,8 +21,11 @@ class App extends React.Component {
             }
         });
     }
+    componentDidMount() {
+        update('/api/update_badge');
+    }
     render() {
-        var { children, location } = this.props;
+        var { children, location, badge } = this.props;
         var current_tab = 0;
         return (
             <div>
@@ -43,6 +46,7 @@ class App extends React.Component {
                     }}>
                         <span className={"setting-icon image-btn_tabbar_me"
                         + ((location.pathname=='/me/posts' || location.pathname=='/me/notifications') ? '_selected' : '')} />
+                        { badge>0 && <span className="badge">{badge}</span> }
                     </span>
                 </nav>
             </div>
@@ -50,4 +54,4 @@ class App extends React.Component {
     }
 }
 
-export default connect()(App);
+export default connect(({badge})=>({badge}))(App);

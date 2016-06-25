@@ -268,3 +268,7 @@ export var audio_read_uids = handleActions({
         return state.set(audio_id, users.map(user=>user._id));
     }
 }, Immutable.Map());
+
+export var badge = handleActions({
+    update_badge: (state, action) => action.payload
+}, 0);

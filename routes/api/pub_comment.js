@@ -6,7 +6,7 @@ import notifyComment from '../../utility/msg/notify_comment';
 import { createAction } from 'redux-actions'
 
 export default function*() {
-    var post = yield Post.findOne({
+    var post = yield Post.findById({
         _id: this.query.post_id,
         status: {$ne: 0}
     }).select('user_id').exec();

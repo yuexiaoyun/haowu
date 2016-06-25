@@ -6,7 +6,7 @@ import { Model as Audio } from '../mongodb_models/audio'
 import _ from 'underscore'
 
 export function *updateScore(_id) {
-    var post = yield Post.findOne({_id: _id}).exec();
+    var post = yield Post.findById(_id).exec();
     var rank0 = 0;
 
     var length = Math.floor(post.length / 1000 + 0.5);

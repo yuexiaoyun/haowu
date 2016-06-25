@@ -5,6 +5,7 @@ var router = require('koa-router')();
 // TODO: 防CSRF攻击处理
 router.get('/update_post_like_uids', require('./update_post_like_uids'));
 router.get('/update_audio_read_uids', require('./update_audio_read_uids'));
+router.get('/update_badge', require('./update_badge'));
 router.get('/pub_post', require('./pub_post'));
 router.get('/sub', require('./sub'));
 router.get('/unsub', require('./unsub'));

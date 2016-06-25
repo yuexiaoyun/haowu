@@ -99,17 +99,21 @@ class Notifications extends React.Component {
         this.state = {}
     }
     componentDidMount() {
-        update('/api/update_notifications', ({clear_badge_time}) => {
-            this.setState({clear_badge_time});
+        update('/api/update_notifications', data => {
+            console.log(data);
+            this.setState({
+                clear_badge: data.clear_badge
+            });
         });
+        this.props.dispatch(createAction('update_badge')(0));
     }
     render() {
         var { notifications } = this.props;
-        var { clear_badge_time } = this.state;
+        var { clear_badge } = this.state;
         return (
             <div>
                 { notifications && notifications.map((n) => {
-                    var new_item = clear_badge_time && n.uptime > clear_badge_time;
+                    var new_item = clear_badge && n.uptime > clear_badge;
                     return <NotificationCard key={n._id} notification={n} new_item={new_item} />;
                 })}
             </div>

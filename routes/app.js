@@ -1,6 +1,5 @@
 var api = require('../utility/wechat').api;
 var conf = require('../conf');
-var Badge = require('../models/Badge');
 
 module.exports = function *() {
     var param = {

@@ -17,7 +17,7 @@ class Me extends React.Component {
         update('/api/update_user_detail?_id=' + window.user_id);
     }
     render() {
-        var { user, location, children } = this.props;
+        var { user, badge, location, children } = this.props;
         var { err } = this.state;
         return (
             <div>
@@ -28,6 +28,7 @@ class Me extends React.Component {
                         { location.pathname=='/me/posts' && <div className='active' /> }
                     </div>
                     <div className='tab-item' onClick={()=>hashHistory.replace('/me/notifications')}>
+                        {(badge > 0) && <span className="badge">{badge}</span>}
                         <div>互动区</div>
                         { location.pathname=='/me/notifications' && <div className='active' /> }
                     </div>
@@ -39,5 +40,6 @@ class Me extends React.Component {
 }
 
 module.exports = connect(state=>({
-    user: state.users[window.user_id]
+    user: state.users[window.user_id],
+    badge: state.badge
 }))(Me);

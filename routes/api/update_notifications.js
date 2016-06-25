@@ -34,9 +34,9 @@ export default function*() {
 
     var user = yield User.findByIdAndUpdate(this.session.user_id, {
         $set: {
-            clear_badge_time: new Date()
+            clear_badge: new Date()
         }
-    }).select('clear_badge_time subids').exec();
+    }).select('clear_badge subids').exec();
 
     // 获取用户
     var users = yield findUsersByIds(
@@ -45,10 +45,9 @@ export default function*() {
             ...user.subids
         ]
     );
-
     this.body = {
         result: 'ok',
-        clear_badge_time: user.clear_badge_time,
+        clear_badge: user.clear_badge || new Date(0),
         actions: [
             createAction('update_notifications')({
                 users,
