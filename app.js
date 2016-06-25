@@ -67,7 +67,7 @@ co.wrap(function *() {
     });
     app.use(mount('/app', require('./routes/app')));
     app.use(mount('/api', require('./routes/api')));
-    app.listen(conf.port || 80);
+    app.listen(conf.port || 8080);
 })().catch(function(err) {
     console.log(err);
 });

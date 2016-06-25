@@ -92,7 +92,7 @@ class UserTopCard extends React.Component {
         return (
             <div>
                 <div className={className} onClick={this.input}>
-                    { user.intro || user._id == window.user_id && '我很懒，还没有个人介绍' || 'TA很懒，还没有个人介绍' }
+                    { user.intro || user._id == window.user_id && '我很懒，还没有个人介绍' || 'Ta很懒，还没有个人介绍' }
                 </div>
             </div>
         );

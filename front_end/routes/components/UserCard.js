@@ -29,7 +29,7 @@ export default ({user}) => {
                     { user.nickname }
                 </div>
                 <span className='comment-text'>
-                    { user.intro || user._id == window.user_id && '我很懒，还没有个人介绍' || 'TA很懒，还没有个人介绍' }
+                    { user.intro || user._id == window.user_id && '我很懒，还没有个人介绍' || 'Ta很懒，还没有个人介绍' }
                 </span>
             </div>
         </div>

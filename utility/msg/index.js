@@ -1,9 +1,10 @@
-import { api as wechat } from './wechat'
-import { Model as User } from '../mongodb_models/user'
-import conf from '../conf'
+import { api as wechat } from '../wechat'
+import { Model as User } from '../../mongodb_models/user'
+import conf from '../../conf'
 
 // TODO 调研微信能不能删除模板消息
 // TODO 正式号的时候要调研template机制
+// TODO 正是号的时候模板消息预判
 
 function *getOpenid(user_id) {
     var doc = yield User.findOne({_id: user_id}).select('openid').exec();
@@ -50,22 +51,6 @@ export function *notifySub(session, user_id) {
     }
 }
 
-export function *notifyLike(session, post) {
-    var openid = yield getOpenid(post.user_id);
-    if (openid) {
-        return yield wechat.sendTemplate(
-            openid,
-            'FRTOKz43duOUsJI2BQdQGSd4qpl0r7g0RvEJewx5zkA',
-            target,
-            '#FF0000', {
-                first: {
-                    value: session.userInfo.nickname,
-                    color: "#173177"
-                }
-            });
-    }
-}
-
 export function *notifyComment(session, post, comment) {
     var openid = yield getOpenid(post.user_id);
     if (openid) {
@@ -80,26 +65,6 @@ export function *notifyComment(session, post, comment) {
                 },
                 second: {
                     value: comment.audio_id ? '[语音]' : comment.text,
-                    color: "#000000"
-                }
-            });
-    }
-}
-
-export function *notifyReply(session, comment, reply) {
-    var openid = yield getOpenid(reply.user_id2);
-    if (openid) {
-        return yield wechat.sendTemplate(
-            openid,
-            'EmQHRZ1nyZ1bNAE3R7bflOgmE3kYXT0pn_RXLaaFHQk',
-            target,
-            '#FF0000', {
-                first: {
-                    value: session.userInfo.nickname,
-                    color: "#173177"
-                },
-                second: {
-                    value: reply.audio_id ? '[语音]' : reply.text,
                     color: "#000000"
                 }
             });
