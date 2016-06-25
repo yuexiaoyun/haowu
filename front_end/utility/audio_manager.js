@@ -12,7 +12,6 @@ export function setStore(s) {
     store = s;
 }
 
-// TODO: 想办法搞定小菊花
 export function play(id, post_id, user_id) {
     if (timer) {
         clearInterval(timer);

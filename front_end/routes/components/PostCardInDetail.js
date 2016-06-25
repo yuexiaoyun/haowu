@@ -122,9 +122,9 @@ class PostCardInDetail extends React.Component {
 
 export default connect((state, props) => {
     var { post, user } = props;
-    var like_count = post.others_like_count + (post.me_like ? 1 : 0);
+    var like_count = post.like_count;
     var audio = state.audios[post.audio_id];
-    var read_count = audio ? (audio.others_read_count + (audio.me_read ? 1 : 0)) : 0;
+    var read_count = audio && audio.read_count || 0;
     var { id, play_state, time } = state.audio_player;
     var playing = (post && id == post.audio_id && play_state == 'playing');
     var loading = (post && id == post.audio_id && play_state == 'loading');

@@ -145,7 +145,6 @@ class Post extends React.Component {
     render() {
         var { post, user, users, comments, comments_top } = this.props;
         var { record, err } = this.state;
-        // TODO: 记录进入详情页的次数？
         return (
             <div className='post' onClick={this.clear_reply}>
                 { post && <PostCardInDetail post={post} user={user} /> }

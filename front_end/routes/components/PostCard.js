@@ -25,7 +25,7 @@ class PostCard extends React.Component {
     }
     render() {
         var { user, post, audio } = this.props;
-        var reads = audio && (audio.others_read_count + (audio.me_read ? 1 : 0)) || 0;
+        var read_count = audio && audio.read_count || 0;
         return (
             <div className="card" ref='card'>
                 <div className="picture image-icon_image_loading"
@@ -41,13 +41,13 @@ class PostCard extends React.Component {
                         user_id={post.user_id}
                         audio_id={post.audio_id}
                         length={post.length} />
-                    { reads > 0 &&<span
+                    { read_count > 0 &&<span
                         className={classNames({
                             'image-icon_home_listened': true,
                             'praise': true
                         })}
                         onClick={()=>{hashHistory.push('/read_list/' + post.audio_id)}}>
-                        { reads }
+                        { read_count }
                     </span> }
                 </div>
                 { user && <a className='user-line' onClick={()=>setTimeout(this.gotoDetail, 300)}>

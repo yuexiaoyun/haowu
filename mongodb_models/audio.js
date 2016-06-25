@@ -17,7 +17,7 @@ module.exports.Model = Model;
 Model.toBrowser = (doc, user_id) => {
     doc = doc.toObject();
     doc.me_read = doc.reads && doc.reads.indexOf(user_id) >= 0;
-    doc.others_read_count = doc.reads ? (doc.reads.length - (doc.me_read ? 1 : 0)) : 0;
+    doc.read_count = doc.reads ? doc.reads.length : 0;
     delete doc.reads;
     return doc;
 }

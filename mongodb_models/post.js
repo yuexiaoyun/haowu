@@ -32,11 +32,10 @@ schema.index({ rank0: 1 });
 var Model = mongo.conn.model('post', schema);
 module.exports.Model = Model;
 
-// TODO: likes不要先取到应用端，而是直接在mongdb里处理
 Model.toBrowser = (doc, user_id) => {
     doc = doc.toObject();
     doc.me_like = doc.likes && doc.likes.indexOf(user_id) >= 0;
-    doc.others_like_count = doc.likes ? (doc.likes.length - (doc.me_like ? 1 : 0)) : 0;
+    doc.like_count = doc.likes && doc.likes.length || 0;
     delete doc.likes;
     delete doc.reads;
     return doc;

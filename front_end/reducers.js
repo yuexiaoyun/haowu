@@ -1,10 +1,5 @@
 import { handleActions } from 'redux-actions';
 import _ from 'underscore';
-import Immutable from 'immutable'
-
-// TODO: 取消Immuable的依赖
-// TODO: 各种分页加载
-// TODO: 学习meteor，虚拟字段在reducers中merge
 
 export var audio_player = handleActions({
     load: (state, action) => ({
@@ -93,6 +88,16 @@ export var subids = handleActions({
 // 帖子的ID与内容对应
 function update_posts(state, action) {
     var { posts } = action.payload;
+    posts = posts.map(post => {
+        var p = state[post._id];
+        if (p) {
+            post = {
+                ...p,
+                ...post
+            }
+        }
+        return post;
+    });
     return { ...state, ..._.object(posts.map(post=>post._id), posts) }
 }
 export var posts = handleActions({
@@ -104,9 +109,25 @@ export var posts = handleActions({
     like: (state, action) => {
         var id = action.payload;
         var post = state[id];
-        if (post) {
-            post = {...post, me_like: true}
+        if (post && !post.me_like) {
+            post = {...post, me_like: true, like_count: post.like_count + 1}
             return {...state, ...(_.object([id], [post]))}
+        } else {
+            return state;
+        }
+    },
+    update_post_like_uids: (state, action) => {
+        var {_id, users} = action.payload;
+        var likes = users.map(user=>user._id);
+        var post = state[_id];
+        if (post)  {
+            post = {
+                ...post,
+                me_like: likes.indexOf(window.user_id) >= 0,
+                like_count: likes.length,
+                likes
+            }
+            return {...state, ...(_.object([_id], [post]))}
         } else {
             return state;
         }
@@ -229,8 +250,19 @@ export var post_details = handleActions({
 // 某一个具体语音的听过次数和我是否听过
 function update_audios(state, action) {
     var { audios } = action.payload;
+    audios = audios.map(audio => {
+        var a = state[audio._id];
+        if (a) {
+            audio = {
+                ...a,
+                ...audio
+            }
+        }
+        return audio;
+    });
     return { ...state, ..._.object(audios.map(audio=>audio.audio_id), audios) }
 }
+
 export var audios = handleActions({
     update_feeds: update_audios,
     update_user_detail: update_audios,
@@ -241,33 +273,28 @@ export var audios = handleActions({
         if (!audio) {
             audio = {
                 me_read: true,
-                others_read_count: 0
+                read_count: 1
             }
-        } else {
+        } else if (!audio.me_read){
             audio = {
                 ...audio,
-                me_read: true
+                me_read: true,
+                read_count: audio.read_count + 1
             }
+        }
+        return { ...state, ..._.object([audio_id], [audio]) }
+    },
+    update_audio_read_uids: (state, action) => {
+        var {audio_id, users} = action.payload;
+        var reads = users.map(user=>user._id);
+        var audio = {
+            me_read: reads.indexOf(window.user_id) > 0,
+            read_count: reads.length,
+            reads
         }
         return { ...state, ..._.object([audio_id], [audio]) }
     }
 }, {});
-
-// 某一个具体帖子的赞列表
-export var post_like_uids = handleActions({
-    update_post_like_uids: (state, action) => {
-        var {_id, users} = action.payload;
-        return state.set(_id, users.map(user=>user._id));
-    }
-}, Immutable.Map());
-
-// 某一个具体语音的听过列表
-export var audio_read_uids = handleActions({
-    update_audio_read_uids: (state, action) => {
-        var {audio_id, users} = action.payload;
-        return state.set(audio_id, users.map(user=>user._id));
-    }
-}, Immutable.Map());
 
 export var badge = handleActions({
     update_badge: (state, action) => action.payload

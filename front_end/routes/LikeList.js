@@ -16,8 +16,9 @@ class LikeList extends React.Component {
 }
 
 export default connect((state, props) => {
+    var post = state.posts[props.params.id];
     return {
-        ids: state.post_like_uids.get(props.params.id),
+        ids: post && post.likes || [],
         users: state.users
     }
 })(LikeList);

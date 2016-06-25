@@ -5,7 +5,6 @@ import { createAction } from 'redux-actions';
 
 import _ from 'underscore';
 
-// TODO: 订阅信息在这个接口再返回
 export default function *() {
     // 获取用户基本信息
     var user = yield findUserById(this.session.user_id, this.query._id);

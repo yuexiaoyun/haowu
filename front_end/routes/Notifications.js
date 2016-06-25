@@ -9,7 +9,7 @@ import fconf from '../fconf';
 class _NotificationCard extends React.Component {
     renderLike = ()=>{
         var { user, post } = this.props;
-        var like_count = (post.me_like ? 1: 0) + post.others_like_count;
+        var like_count = post.like_count;
         return (
             <div className="list-item-content">
                 <div className='nickname'>{user.nickname}</div>
@@ -19,7 +19,7 @@ class _NotificationCard extends React.Component {
     }
     renderRead = ()=>{
         var { user, post, audio } = this.props;
-        var read_count = audio && ((audio.me_read ? 1: 0) + audio.others_read_count) || 0;
+        var read_count = audio && audio.read_count || 0;
         return (
             <div className="list-item-content">
                 <div className='nickname'>{user.nickname}</div>

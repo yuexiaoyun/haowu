@@ -16,8 +16,9 @@ class ReadList extends React.Component {
 }
 
 export default connect((state, props) => {
+    var audio = state.audios[props.params.id];
     return {
-        ids: state.audio_read_uids.get(props.params.id),
+        ids: audio && audio.reads || [],
         users: state.users
     }
 })(ReadList);
