@@ -15,7 +15,6 @@ export default function* () {
         console.log(1);
         co(notifyLike({
             user_id: this.session.user_id,
-            nickname: this.session.userInfo.nickname,
             post_id: this.query._id
         })).catch(console.log);
     }
