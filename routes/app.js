@@ -47,6 +47,7 @@ module.exports = function *() {
     };
     console.log(`http://${this.host}${this.originalUrl}`);
     console.log(this.ip);
+    console.log(this.req);
     try {
         var params = yield *api.getJsConfig(param);
     } catch(err) {
