@@ -28,11 +28,12 @@ class _NotificationCard extends React.Component {
         );
     }
     renderSub = ()=>{
-        var { user } = this.props;
+        var { user, subids } = this.props;
+        var sub_count = subids && subids.length || 0;
         return (
             <div className="list-item-content">
                 <div className='nickname'>{user.nickname}</div>
-                <span className='comment-text'>订阅了你</span>
+                <span className='comment-text'>{sub_count > 1 && `等${sub_count}人`}订阅了你</span>
             </div>
         );
     }
@@ -88,8 +89,9 @@ var NotificationCard = connect((state, props)=>{
     var user = state.users[props.notification.user_id2];
     var post = state.posts[props.notification.target];
     var audio = post && state.audios[post.audio_id];
+    var subids = state.subids;
     return {
-        user, post, audio
+        user, post, audio, subids
     };
 })(_NotificationCard);
 

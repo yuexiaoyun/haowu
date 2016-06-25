@@ -10,7 +10,7 @@ export default function*() {
     var notifications = yield Notification.find({
         user_id: this.session.user_id
     }).sort({
-
+        uptime: -1
     }).exec();
 
     var post_ids = _.chain(notifications.map(notification=>notification.target))
