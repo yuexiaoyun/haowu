@@ -13,14 +13,6 @@ export default function *() {
     if (!comment)
         this.throw(404);
 
-    // 获取原贴信息（主要看原贴是否已删除，以及是否是贴主自己在评论）
-    var post = yield Post.findOne({
-        _id: comment.post_id,
-        status: {$ne: 0}
-    }).select('user_id').exec();
-    if (!post)
-        this.throw(404);
-
     // 检查回复的人确实在评论或者回复里
     var user_ids = [comment.user_id, ...comment.replies.map((reply)=>reply.user_id)];
     if (user_ids.indexOf(this.query.user_id) < 0)
@@ -34,10 +26,6 @@ export default function *() {
         text: this.query.text,
         audio_id: this.query.audio_id,
         d: this.query.d
-    }
-    if (this.session.user_id != post.user_id) {
-        delete reply.audio_id;
-        delete reply.d;
     }
     if (reply.audio_id) {
         yield qiniu.sync(reply.audio_id),

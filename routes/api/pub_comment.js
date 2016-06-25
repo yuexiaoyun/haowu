@@ -18,10 +18,6 @@ export default function*() {
     var comment = new Comment();
     Object.assign(comment, this.query);
     comment.user_id = this.session.user_id;
-    if (post.user_id != this.session.user_id) {
-        comment.audio_id = null;
-        comment.d = null;
-    }
     if (comment.audio_id) {
         yield qiniu.sync(comment.audio_id),
         yield qiniu.pfop(comment.audio_id);

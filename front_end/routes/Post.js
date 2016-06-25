@@ -175,9 +175,7 @@ class Post extends React.Component {
         var { post, users } = this.props;
         var { record, input, reply_user } = this.state;
         var user = users[reply_user];
-        var show_record_btn = post.user_id == window.user_id;
         var me_like = post.me_like;
-        var btn_cnt = show_record_btn ? 1 : 0;
         var placeholder = (user
             ? ('回复' + user.nickname)
             : `${post.user_id==window.user_id ? '补充' : '问'}点什么吧~`);
@@ -195,10 +193,10 @@ class Post extends React.Component {
                 ref='comment_input'
                 onClick={(e)=>e.stopPropagation()}>
                 <div className='input-line' >
-                    { show_record_btn && <div className={`btn ${record ? 'image-btn_keyboard' : 'image-btn_speech'}`}
-                        onClick={this.toggleRecord}/> }
+                    <div className={`btn ${record ? 'image-btn_keyboard' : 'image-btn_speech'}`}
+                        onClick={this.toggleRecord}/>
                     <div className={`send ${disable_send ? 'send-disable' : ''}`} onClick={this.send}>发送</div>
-                    <div className={`input with${btn_cnt}`}>
+                    <div className={`input with1`}>
                         <input
                             type="text"
                             value={record ? '' : input}
