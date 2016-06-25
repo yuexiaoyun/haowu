@@ -87,7 +87,7 @@ export var notifications = handleActions({
 
 // 自己的被订阅列表
 export var subids = handleActions({
-    subids: (state, action) => action.payload
+    update_notifications: (state, action) => action.payload.subids
 }, []);
 
 // 帖子的ID与内容对应
@@ -101,9 +101,6 @@ export var posts = handleActions({
     update_post_detail: update_posts,
     update_notifications: update_posts,
     pub_post: update_posts,
-    posts: (state, action) => ({
-        ...state, ...action.payload
-    }),
     like: (state, action) => {
         var id = action.payload;
         var post = state[id];
@@ -119,6 +116,16 @@ export var posts = handleActions({
 // 用户的ID与内容对应
 function update_users(state, action) {
     var { users } = action.payload;
+    users = users.map(user => {
+        var u = state[user._id];
+        if (u) {
+            user = {
+                ...u,
+                ...user
+            }
+        }
+        return user;
+    });
     return {
         ...state, ..._.object(users.map(user=>user._id), users)
     };
@@ -131,9 +138,6 @@ export var users = handleActions({
     update_post_detail: update_users,
     update_notifications: update_users,
     pub_post: update_users,
-    users: (state, action) => ({
-        ...state, ...action.payload
-    }),
     set_intro: (state, action) => {
         var { intro } = action.payload;
         var user = state[window.user_id];

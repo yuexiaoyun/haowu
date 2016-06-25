@@ -25,6 +25,7 @@ import Pub from './routes/Pub'
 import Detail from './routes/Detail'
 import Post from './routes/Post'
 import SubList from './routes/SubList'
+import MeSubList from './routes/MeSubList'
 import LikeList from './routes/LikeList'
 import ReadList from './routes/ReadList'
 import PopupHelper from './utility/PopupHelper'
@@ -63,6 +64,7 @@ if (entry && entry.length > 0) {
                 <Route path="/post/:id" component={Post} />
                 <Route path="/post/:id/:new_id" component={Post} />
                 <Route path="/sub_list" component={SubList} />
+                <Route path="/me_sub_list" component={MeSubList} />
                 <Route path="/like_list/:id" component={LikeList} />
                 <Route path="/read_list/:id" component={ReadList} />
                 <Route path="/" component={App} >

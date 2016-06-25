@@ -36,12 +36,15 @@ export default function*() {
         $set: {
             clear_badge_time: new Date()
         }
-    }).select('clear_badge_time').exec();
+    }).select('clear_badge_time subids').exec();
 
     // 获取用户
     var users = yield findUsersByIds(
-        this.session.user_id,
-        notifications.map(notification=>notification.user_id2));
+        this.session.user_id, [
+            ...notifications.map(notification=>notification.user_id2),
+            ...user.subids
+        ]
+    );
 
     this.body = {
         result: 'ok',
@@ -49,6 +52,7 @@ export default function*() {
         actions: [
             createAction('update_notifications')({
                 users,
+                subids: user.subids,
                 notifications,
                 posts: posts.map(post=>Post.toBrowser(post, this.session.user_id)),
                 audios: audios.map(audio=>Audio.toBrowser(audio, this.session.user_id))

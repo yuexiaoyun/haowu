@@ -15,7 +15,6 @@ class Me extends React.Component {
     componentDidMount() {
         window.setTitle('物记');
         update('/api/update_user_detail?_id=' + window.user_id);
-        update('/api/update_me');
     }
     render() {
         var { user, location, children } = this.props;

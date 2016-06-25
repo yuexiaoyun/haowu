@@ -13,7 +13,6 @@ router.get('/update_user_detail', require('./update_user_detail'));
 router.get('/update_post_detail', require('./update_post_detail'));
 router.get('/read', require('./read'));
 router.get('/delete_post', require('./delete_post'));
-router.get('/update_me', require('./update_me'));
 router.get('/update_notifications', require('./update_notifications'));
 router.get('/set_intro', require('./set_intro'));
 router.get('/like', require('./like'));

@@ -46,13 +46,8 @@ schema.index({ unionid: 1 }, { unique: 1});
 
 var Model = mongo.conn.model('user', schema);
 module.exports.Model = Model;
-module.exports.findUsersByIds = function *(user_id, ids) {
-    var q = {
-        _id: {
-            $in: ids.map(id=>new ObjectID(id))
-        }
-    }
-    console.log(q)
+
+module.exports.findUsers = function *(user_id, q) {
     var docs = yield Model.aggregate([{
         $match: q
     }, {
@@ -73,6 +68,16 @@ module.exports.findUsersByIds = function *(user_id, ids) {
     console.log(docs);
     return docs;
 }
+
+module.exports.findUsersByIds = function *(user_id, ids) {
+    var q = {
+        _id: {
+            $in: ids.map(id=>new ObjectID(id))
+        }
+    }
+    return yield module.exports.findUsers(user_id, q);
+}
+
 module.exports.findUserById = function*(user_id, id) {
     var docs = yield module.exports.findUsersByIds(user_id, [id]);
     return docs.length > 0 ? docs[0] : null;

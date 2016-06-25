@@ -1,5 +1,5 @@
 import { Model as Post } from '../../mongodb_models/post';
-import { Model as User, findUserById } from '../../mongodb_models/user';
+import { Model as User, findUsers, findUserById } from '../../mongodb_models/user';
 import { Model as Audio } from '../../mongodb_models/audio';
 import { createAction } from 'redux-actions';
 
@@ -22,11 +22,21 @@ export default function *() {
         audio_id: { $in: audio_ids },
     }).select('audio_id reads').exec();
 
+    if (this.session.user_id == this.query._id) {
+        var users = yield findUsers(this.session.user_id, {
+            subids: this.session.user_id
+        });
+        user.me_subids = users.map(user=>user._id);
+        users = [user, ...users];
+    } else {
+        var users = [user];
+    }
+
     this.body = {
         result: 'ok',
         actions: [
             createAction('update_user_detail')({
-                users: [user],
+                users,
                 posts: posts.map(post=>Post.toBrowser(post, this.session.user_id)),
                 audios: audios.map(audio=>Audio.toBrowser(audio, this.session.user_id))
             })

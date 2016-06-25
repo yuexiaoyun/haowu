@@ -116,10 +116,13 @@ class UserTopCard extends React.Component {
                 { user._id != window.user_id &&
                     <span className='btn-default' onClick={this.sub}>
                         {user.subbed ? '已订阅' : '订阅'}
-                        </span>
-                    || <span className='btn-default' onClick={()=>(subids && subids.length>0 && hashHistory.push('sub_list'))}>
-                        {`${subids ? subids.length : 0}人订阅`}
-                </span> }
+                    </span> || user.me_subids && user.me_subids.length > 0 &&
+                    <span className='btn-default' onClick={()=>{
+                        hashHistory.push('/me_sub_list');
+                    }}>
+                        订阅{user.me_subids.length}人
+                    </span>
+                }
                 <div className='avatar-container'>
                     <img className='avatar' src={user.headimgurl} onClick={this.preview} />
                     { (user.sex == 1 || user.sex == 2) && <span className={classNames({
@@ -131,13 +134,13 @@ class UserTopCard extends React.Component {
                 <div className='nickname'>
                     {user.nickname}
                 </div>
-                { this.state.input ? this.renderInput() : this.renderIntro() }
                 <div className='reads image-icon_me_fatieshu'>
                     {user.post_count || 0}
                 </div>
                 <div className='reads image-icon_home_listened'>
                     {user.reads_count || 0}
                 </div>
+                { this.state.input ? this.renderInput() : this.renderIntro() }
             </div>
         );
     }

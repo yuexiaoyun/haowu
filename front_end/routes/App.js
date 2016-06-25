@@ -27,7 +27,7 @@ class App extends React.Component {
         return (
             <div>
                 {children}
-                <div style={{width: '100%', height: '2.5rem', clear:'both', overflow:'hidden'}} />
+                <div style={{width: '100%', height: '49px', clear:'both', overflow:'hidden'}} />
                 <nav className="bar bar-tab">
                     <span className={"bar-tab-item"} onClick={()=>{
                         hashHistory.replace('/home/' + Date.parse(new Date()));
