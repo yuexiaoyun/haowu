@@ -5,7 +5,7 @@ import { read } from '../actions'
 let store;
 
 let timer;
-let audio;
+let player;
 let current_id;
 
 export function setStore(s) {
@@ -17,15 +17,16 @@ export function play(id, post_id, user_id) {
         clearInterval(timer);
         timer = null;
     }
-    if (audio)
-        audio.pause();
+    if (player)
+        player.pause();
     var url = fconf.qiniu.site + id + '_mp3';
-    audio = new Audio(url);
+    player = new Audio(url);
     current_id = id;
-    audio.play();
+    player.load();
     store.dispatch(createAction('load')(id));
-    audio.addEventListener('canplay', () => {
-        console.log('canplay: ' + id);
+    player.addEventListener('canplaythrough', () => {
+        player.play();
+        console.log('canplaythrough: ' + id);
         var audio = store.getState().audios[id];
         if (!audio || !audio.me_read) {
             store.dispatch(read({
@@ -39,7 +40,7 @@ export function play(id, post_id, user_id) {
             store.dispatch(createAction('playing')(id));
         }, 100);
     });
-    audio.addEventListener('ended', () => {
+    player.addEventListener('ended', () => {
         stop(id);
     });
 }
@@ -52,7 +53,7 @@ export function stop(id) {
         clearInterval(timer);
         timer = null;
     }
-    audio.pause();
-    audio = null;
+    player.pause();
+    player = null;
     current_id = null;
 }

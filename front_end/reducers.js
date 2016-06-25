@@ -288,7 +288,7 @@ export var audios = handleActions({
         var {audio_id, users} = action.payload;
         var reads = users.map(user=>user._id);
         var audio = {
-            me_read: reads.indexOf(window.user_id) > 0,
+            me_read: reads.indexOf(window.user_id) >= 0,
             read_count: reads.length,
             reads
         }
