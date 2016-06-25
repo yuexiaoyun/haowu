@@ -37,7 +37,7 @@ export default function *({user_id, nickname, post_id, post_user_id, comment}) {
                     color: "#173177"
                 },
                 second: {
-                    value: comment.text || [语音],
+                    value: comment.text || '[语音]',
                     color: "#000000"
                 }
             }
