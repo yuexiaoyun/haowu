@@ -25,18 +25,13 @@ gulp.task('default', ['imacss'], function(cb) {
     webpack(require('./webpack.config.js'), cb);
 });
 
-gulp.task('watch', function() {
-    return gulp.start('watchify', _.once(function() {
+gulp.task('watch', ['imacss'], function(cb) {
+    var compiler = webpack(require('./webpack.config.dev.js'));
+    return compiler.watch({}, _.once(function() {
         nodemon({
             script: 'app.js',
             ignore: ['front_end/*'],
-            execMap: {
-                js: "node"
-            },
-            ext: 'js css html zip'
-        }).on('restart', function() {
-            "use strict";
-            console.log('restarted app.js...')
+            ext: 'js'
         });
     }));
 });
