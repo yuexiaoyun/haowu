@@ -28,7 +28,7 @@ class PostCard extends React.Component {
         var read_count = audio && audio.read_count || 0;
         return (
             <div className="card" ref='card'>
-                <div className="picture image-icon_image_loading"
+                <div className="picture image-image_default_home"
                     style={{
                         height: this.picHeight()
                     }}>
