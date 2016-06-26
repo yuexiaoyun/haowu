@@ -35,8 +35,11 @@ gulp.task('watch', ['imacss'], function(cb) {
     });
     var compiler = webpack(require('./webpack.config.dev.js'));
     return compiler.watch({}, function(err, stats) {
-        if (err || stats.hasErrors()) {
-            console.log(err || stats.toJson().errors);
+        if (err) {
+            console.log(err.stack);
+        } else if (stats.hasErrors() || stats.hasWarnings()) {
+            var errors = stats.toJson().errors || stats.toJson().warnings;
+            errors.map(console.log);
         } else {
             f();
         }

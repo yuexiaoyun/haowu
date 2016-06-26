@@ -1,5 +1,6 @@
 import React from 'react';
 import AudioPlayer from './components/AudioPlayer';
+import setShareInfo from '../utility/set_share_info';
 import { hashHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
@@ -108,6 +109,8 @@ class Notifications extends React.Component {
             });
         });
         this.props.dispatch(createAction('update_badge')(0));
+        window.setTitle('消息');
+        setShareInfo();
     }
     render() {
         var { notifications } = this.props;

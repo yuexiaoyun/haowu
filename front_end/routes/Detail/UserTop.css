@@ -1,0 +1,33 @@
+.root {
+    clear: both;
+    width: 100%;
+    overflow: hidden;
+    text-align: center;
+}
+.d3 {
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px solid #dfdfdd;
+}
+.intro-base {
+    display: inline-block;
+    margin: 10px auto 24px;
+    max-width: 240px;
+    line-height: 20px;
+    height: 20px;
+    font-size: 12px;
+    vertical-align: middle;
+}
+.intro {
+    composes: intro-base;
+    color: #666666;
+}
+.intro-null {
+    composes: intro-base;
+    color: #999999;
+}
+.intro-edit {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}

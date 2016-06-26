@@ -1,0 +1,9 @@
+.intro-input {
+    display: inline-block;
+    margin: 10px auto 24px;
+    max-width: 240px;
+    height: 20px;
+    font-size: 14px;
+    border: 1px solid #dfdfdd;
+    color: #666666
+}

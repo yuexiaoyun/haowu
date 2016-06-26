@@ -12,6 +12,7 @@
     "babel-preset-stage-0": "6.5.0",
     "babel-register": "^6.9.0",
     "babelify": "6.4.0",
+    "base64-image-loader": "1.0.0",
     "bson": "0.4.23",
     "classnames": "2.2.5",
     "co": "4.6.0",

@@ -18,11 +18,9 @@ import wx from 'weixin-js-sdk';
 
 import App from './routes/App'
 import Home from './routes/Home'
-import Me from './routes/Me'
-import MyPosts from './routes/MyPosts'
 import Notifications from './routes/Notifications'
 import Pub from './routes/Pub'
-import Detail from './routes/Detail'
+import Detail from './routes/Detail/index'
 import Post from './routes/Post'
 import SubList from './routes/SubList'
 import MeSubList from './routes/MeSubList'
@@ -40,7 +38,6 @@ var entry = window.location.pathname.substring(4);
 if (entry && entry.length > 0) {
     window.location.replace('/app#' + entry);
 } else {
-    console.log(hashHistory);
     var entry = window.location.hash.substring(1);
     if (entry.substring(0, 5) == '/post') {
         hashHistory.replace('/home');
@@ -70,11 +67,7 @@ if (entry && entry.length > 0) {
                 <Route path="/" component={App} >
                     <Route path="home" component={Home} />
                     <Route path="home/:time" component={Home} />
-                    <Route path="me" component={Me} >
-                        <Route path="posts" component={MyPosts} />
-                        <Route path="notifications" component={Notifications} />
-                    </Route>
-                    <Redirect from={"detail/" + window.user_id} to="/me/posts" />
+                    <Route path="me/notifications" component={Notifications} />
                     <Route path="detail/:id" component={Detail} />
                     <IndexRedirect to="home" />
                 </Route>

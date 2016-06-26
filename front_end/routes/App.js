@@ -6,9 +6,6 @@ import { createAction } from 'redux-actions';
 import { createStructuredSelector } from 'reselect'
 import wx from 'weixin-js-sdk';
 
-import Home from './Home'
-import Me from './Me'
-
 class App extends React.Component {
     take_photo = () => {
         wx.chooseImage({
@@ -42,10 +39,10 @@ class App extends React.Component {
                         <span className="setting-icon image-btn_tabbar_photo"></span>
                     </span>
                     <span className={"bar-tab-item"} onClick={()=>{
-                        hashHistory.replace('/me/posts');
+                        hashHistory.replace('/detail/' + window.user_id);
                     }}>
                         <span className={"setting-icon image-btn_tabbar_me"
-                        + ((location.pathname=='/me/posts' || location.pathname=='/me/notifications') ? '_selected' : '')} />
+                        + (location.pathname=='/detail/' + window.user_id ? '_selected' : '')} />
                         { badge>0 && <span className="badge">{badge}</span> }
                     </span>
                 </nav>
