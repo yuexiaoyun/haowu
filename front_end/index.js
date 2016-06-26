@@ -1,10 +1,5 @@
-require('es6-promise').polyfill();
-require('whatwg-fetch');
-if (process.env.NODE_ENV != 'production') {
-    console.log('in development');
-    window.onerror = alert;
-}
-
+import "babel-polyfill";
+import 'whatwg-fetch';
 import React from 'react';
 import { render, findDOMNode } from 'react-dom';
 import { applyRouterMiddleware, Router, Route, Link, Redirect, IndexRedirect, hashHistory } from 'react-router'
@@ -33,6 +28,11 @@ import { setStore as s2 } from './utility/audio_manager'
 
 import './utility/set_title'
 import './less/sm.less'
+
+if (process.env.NODE_ENV != 'production') {
+    console.log('in development');
+    window.onerror = alert;
+}
 
 var entry = window.location.pathname.substring(4);
 if (entry && entry.length > 0) {
