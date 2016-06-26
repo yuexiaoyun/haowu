@@ -5,12 +5,12 @@ import setShareInfo from '../../utility/set_share_info';
 import fconf from '../../fconf';
 
 import UserTop from './UserTop';
-import EmptyView from './EmptyView';
+import EmptyView from '../common/EmptyView';
 import FeedList from '../components/FeedList';
 import Loader from '../components/Loader';
 
 import { connect } from 'react-redux';
-import { createSelector, createStructuredSelector } from 'reselect';
+import { createStructuredSelector } from 'reselect';
 
 class Detail extends React.Component {
     constructor() {

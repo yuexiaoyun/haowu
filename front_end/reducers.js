@@ -251,12 +251,10 @@ export var post_details = handleActions({
 function update_audios(state, action) {
     var { audios } = action.payload;
     audios = audios.map(audio => {
-        var a = state[audio._id];
-        if (a) {
-            audio = {
-                ...a,
-                ...audio
-            }
+        var a = state[audio.audio_id] || {};
+        audio = {
+            ...a,
+            ...audio
         }
         return audio;
     });
@@ -287,7 +285,10 @@ export var audios = handleActions({
     update_audio_read_uids: (state, action) => {
         var {audio_id, users} = action.payload;
         var reads = users.map(user=>user._id);
+        var audio = state[audio_id] || {};
         var audio = {
+            ...audio,
+            audio_id: audio_id,
             me_read: reads.indexOf(window.user_id) >= 0,
             read_count: reads.length,
             reads

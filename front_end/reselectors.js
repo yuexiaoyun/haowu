@@ -1,6 +1,3 @@
-import { createSelector } from 'reselect'
-import _ from 'underscore';
-
 export const get_feed_ids = (state) => state.feed_ids
 export const get_feed_end = (state) => state.feed_end
 export const get_user_post_ids = (state) => state.user_post_ids

@@ -1,0 +1,53 @@
+.root {
+    clear: both;
+    padding: 10px 5px 10px 0px;
+    min-height: 60px;
+    border-bottom: 1px solid #dfdfdd;
+    color: #666666;
+}
+.avatar-container {
+    float: left;
+    margin: 4px 16px;
+    position: relative;
+}
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    overflow: hidden;
+}
+.gender {
+    position: absolute;
+    bottom: 0;
+    right: -3px;
+    width: 17px;
+    height: 14px;
+    background-size: 14px 14px;
+    background-position: 3px 0px;
+    background-repeat: no-repeat;
+}
+.content {
+    margin-left: 62px;
+}
+.nickname {
+    font-size: 14px;
+    color: #000000;
+    font-weight: normal;
+}
+.intro {
+    margin-top: 5px;
+    line-height: 20px;
+    font-size: 14px;
+    color: #666666;
+}
+.reads {
+    float: right;
+    height: 24px;
+    background-size: 12px 12px;
+    background-position: 0px 0px;
+    background-repeat: no-repeat;
+    font-size: 12px;
+    padding-left: 18px;
+    padding-right: 6px;
+    color: #666666;
+}
