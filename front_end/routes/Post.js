@@ -231,6 +231,7 @@ class Post extends React.Component {
     }
 }
 
+// TODO: CSSModules的应用
 // TODO: 这里要用reselect机制做一些缓存
 export default connect((state, props) => {
     var users = state.users;
