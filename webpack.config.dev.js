@@ -15,5 +15,6 @@ module.exports = {
             test: /\.less$/,
             loader: "style!css!less"
         }]
-    }
+    },
+    devtool: 'cheap-module-source-map'
 };

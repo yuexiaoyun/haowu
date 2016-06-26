@@ -2,11 +2,12 @@ import React from 'react'
 import {hitContainer} from '../../utility/detect_event_target.js'
 import outer_height from '../../utility/outer_height.js'
 import ScreenSize from '../../utility/screen_size.js'
-var ReactDom = require('react-dom');
-var _ = require('underscore');
+import ReactDom from 'react-dom';
+import _ from 'underscore';
 
 export default class PopupWrapper extends React.Component {
     constructor(props) {
+        console.log('PopupWrapper');
         super(props);
         this.state = {};
     }
@@ -127,11 +128,7 @@ export default class PopupWrapper extends React.Component {
                 styles.top = screenSize.height;
             }
         }
-
         return <div key='popup_container' className={'popup_container ' + containerClass}>
-            {this.props.showCloseBtn && <img src="/static/images/closed.png"
-                                             style={{width:'20px', height:'20px', margin:'20px'}}
-                                             className="cursor-pointer float-r"/>}
             <div ref='content' style={styles}  className={modal}>
                 {this.props.children}
             </div>

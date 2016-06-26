@@ -1,4 +1,4 @@
-var qs = require('querystring');
+import qs from 'querystring';
 var err_to_msg = function(err) {
     return typeof(err) == 'string' ? err : '网络连接失败';
 };

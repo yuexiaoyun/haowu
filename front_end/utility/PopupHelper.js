@@ -1,7 +1,7 @@
-var PopupWrapper = require('../routes/components/PopupWrapper');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var LoadingView = require('../routes/components/LoadingView');
+import PopupWrapper from '../routes/components/PopupWrapper';
+import LoadingView from '../routes/components/LoadingView';
+import React from 'react';
+import ReactDom from 'react-dom';
 
 var popupComponent;
 //deprecated, use popup 2
@@ -9,16 +9,14 @@ module.exports.popup = function (content, hide, modal) {
     return module.exports.popup2({
         content,
         hide,
-        modal,
-        showCloseBtn: false
+        modal
     })
 }
 
-module.exports.popup2 = function({content, hide, modal, showCloseBtn}) {
+module.exports.popup2 = function({content, hide, modal}) {
     return new Promise(function(resolve, reject) {
         var popup = <PopupWrapper onClose={modal ? ()=>{} : () => {reject(); module.exports.dismiss()}}
-                                  hide={hide}
-                                  showCloseBtn={showCloseBtn}>
+                                  hide={hide}>
             {content}
         </PopupWrapper>;
         popupComponent = ReactDOM.render(popup, document.getElementById('popup_container'));
@@ -51,13 +49,17 @@ module.exports.confirm = function(text, btn, f) {
 
 module.exports.menu = function(items) {
     var d = module.exports.dismiss;
-    ReactDOM.render(
-        <PopupWrapper onClose={d} bottom={true}>
+    console.log(PopupWrapper);
+    var elm = (
+        <PopupWrapper onClose={d} bottom={true} children={
             <div className='menu'>
                 { items && items.map(item=><div className='ok' onClick={()=>{d();item.f();}}>{item.text}</div>) }
                 <div className='cancel' onClick={d}>取消</div>
             </div>
-        </PopupWrapper>, document.getElementById('popup_container'));
+        }/>
+    );
+    console.log(elm);
+    ReactDOM.render(<div>{elm}</div>, document.getElementById('popup_container'));
 }
 
 module.exports.toast = function(text, timeout) {

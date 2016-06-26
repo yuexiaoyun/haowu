@@ -36,6 +36,7 @@ native_lib/build
 localconf.js
 pid
 static/scripts/bundle.min.js
+static/scripts/bundle.min.js.map
 static/styles/bundle.min.css
 assets/
 front_end/dist/
