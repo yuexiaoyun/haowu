@@ -19,14 +19,12 @@ require('babel-register')();
 
 co.wrap(function *() {
     var js_md5 = yield filemd5(path.join(__dirname, 'static/scripts/bundle.min.js'));
-    var css_md5 = yield filemd5(path.join(__dirname, 'static/styles/bundle.min.css'));
     var app = koa();
     require('koa-qs')(app);
     var jade = new Jade({
         viewPath: './front_end/templates',
         locals: {
-            js_md5: js_md5,
-            css_md5: css_md5
+            js_md5: js_md5
         },
         debug: false,
         pretty: false,
