@@ -26,12 +26,19 @@ gulp.task('default', ['imacss'], function(cb) {
 });
 
 gulp.task('watch', ['imacss'], function(cb) {
-    var compiler = webpack(require('./webpack.config.dev.js'));
-    return compiler.watch({}, _.once(function() {
+    var f = _.once(function() {
         nodemon({
             script: 'app.js',
             ignore: ['front_end/*'],
             ext: 'js'
         });
-    }));
+    });
+    var compiler = webpack(require('./webpack.config.dev.js'));
+    return compiler.watch({}, function(err, stats) {
+        if (err || stats.hasErrors()) {
+            console.log(err || stats.toJson().errors);
+        } else {
+            f();
+        }
+    });
 });

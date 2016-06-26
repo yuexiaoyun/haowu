@@ -8,14 +8,18 @@ import Loader from './components/Loader';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
 
+import { createSelector, createStructuredSelector } from 'reselect';
+import styles from './Detail.css'
+import CSSModules from 'react-css-modules';
+
 class Detail extends React.Component {
     constructor() {
         super();
-        this.state = {ids: []};
+        this.state = {};
     }
     componentDidMount() {
         var id = this.props.params.id;
-        var user = this.props.users[id];
+        var { user } = this.props;
         var url = '/api/update_user_detail?_id=' + id;
         update(url)
             .catch((err) => this.setState({err}));
@@ -23,35 +27,33 @@ class Detail extends React.Component {
             window.setTitle(user.nickname + '的主页');
     }
     componentDidUpdate() {
-        var id = this.props.params.id;
-        var user = this.props.users[id];
+        var { user } = this.props;
         if (user) {
             window.setTitle(user.nickname + '的主页');
         }
     }
     render() {
-        var id = this.props.params.id;
-        var { posts, users, user_post_ids } = this.props;
+        var { user, post_ids } = this.props;
         var { err } = this.state;
-        var user = users[id];
-        var ids = user_post_ids[id];
         return (
             <div>
                 { user && <UserTopCard user={user} /> }
-                <div style={styles.d3} />
-                { !ids && !err && <Loader /> }
-                { ids && ids.length > 0 && <FeedList ids={ids} /> }
+                <div styleName='d3' />
+                { !post_ids && !err && <Loader /> }
+                { post_ids && post_ids.length > 0 && <FeedList ids={post_ids} /> }
             </div>
         );
     }
 }
 
-module.exports = connect(({posts, users, user_post_ids}) => ({posts, users, user_post_ids}))(Detail);
+var get_user = (state, props) => state.users[props.params.id];
+var get_post_ids = (state, props) => state.user_post_ids[props.params.id];
 
-var styles = {
-    d3: {
-        width: '100%',
-        height: 1,
-        borderBottom: '1px solid #dfdfdd'
-    }
-};
+var mapStateToProps = createStructuredSelector({
+    user: get_user,
+    post_ids: get_post_ids
+});
+
+export default connect(mapStateToProps)(
+    CSSModules(Detail, styles)
+);
