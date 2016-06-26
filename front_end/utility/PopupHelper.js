@@ -1,7 +1,7 @@
 import PopupWrapper from '../routes/components/PopupWrapper';
 import LoadingView from '../routes/components/LoadingView';
 import React from 'react';
-import ReactDom from 'react-dom';
+import ReactDOM from 'react-dom';
 
 var popupComponent;
 //deprecated, use popup 2
