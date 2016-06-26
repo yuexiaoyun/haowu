@@ -18,15 +18,18 @@ class Detail extends React.Component {
         this.state = {};
     }
     componentDidMount() {
-        var id = this.props.params.id;
         var { user } = this.props;
-        var url = '/api/update_user_detail?_id=' + id;
-        update(url)
-            .catch((err) => this.setState({err}));
         if (user) {
             window.setTitle(user.nickname + '的主页');
             this.setShareInfo();
         }
+        this.load();
+    }
+    load = () => {
+        var id = this.props.params.id;
+        var url = '/api/update_user_detail?_id=' + id;
+        this.setState({err: null});
+        update(url).catch((err) => this.setState({err}));
     }
     componentDidUpdate() {
         var { user } = this.props;
@@ -59,15 +62,23 @@ class Detail extends React.Component {
         var { user, post_ids } = this.props;
         var { err } = this.state;
         var ta = user && user._id == window.user_id && '我' || 'Ta';
-        return (
-            <div>
-                { user && <UserTop user={user} handleHeight={this.handleHeight}/> }
-                { !post_ids && !err && <Loader /> }
-                { post_ids && post_ids.length > 0 && <FeedList ids={post_ids} /> }
-                { post_ids && post_ids.length == 0 && this.state.topHeight &&
-                    <EmptyView topHeight={this.state.topHeight} emptyText={`${ta}还没有发布过好物`}/>}
-            </div>
-        )
+        if (user) {
+            return (
+                <div>
+                    <UserTop user={user} handleHeight={this.handleHeight}/>
+                    { !post_ids && !err && <Loader /> }
+                    { !post_ids && err && this.state.topHeight &&
+                        <EmptyView topHeight={this.state.topHeight} emptyText='加载失败，点击重试' onClick={this.load}/>}
+                    { post_ids && post_ids.length > 0 && <FeedList ids={post_ids} /> }
+                    { post_ids && post_ids.length == 0 && this.state.topHeight &&
+                        <EmptyView topHeight={this.state.topHeight} emptyText={`${ta}还没有发布过好物`}/>}
+                </div>
+            );
+        } else if (!err) {
+            return <Loader />;
+        } else {
+            return <EmptyView emptyText={'加载失败，点击重试'} onClick={this.load}/>;
+        }
     }
 }
 

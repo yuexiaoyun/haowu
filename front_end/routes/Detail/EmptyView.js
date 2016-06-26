@@ -10,7 +10,7 @@ class EmptyView extends React.Component {
         return (
             <div style={{top: this.props.topHeight || 0}} styleName='container'>
                 <div styleName='dummy' />
-                <div styleName='image-container'>
+                <div styleName='image-container' onClick={this.props.onClick || (()=>{}) } >
                     <img styleName='empty-image' src={image404} />
                     { this.props.emptyText && <div styleName='text'>
                         {this.props.emptyText}
