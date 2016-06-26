@@ -5,7 +5,7 @@ import { createAction } from 'redux-actions';
 
 import _ from 'underscore';
 
-export default function *() {
+module.exports = function*() {
     // 获取用户基本信息
     var user = yield findUserById(this.session.user_id, this.query._id);
     if (!user)

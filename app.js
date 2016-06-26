@@ -14,9 +14,8 @@ var gzip = require('koa-gzip');
 var Jade = require('koa-jade')
 var filemd5 = require('md5-file-promise')().computeFromFile;
 
-require('babel/register')({
-    stage: 0
-});
+require('babel-polyfill');
+require('babel-register')();
 
 co.wrap(function *() {
     var js_md5 = yield filemd5(path.join(__dirname, 'static/scripts/bundle.min.js'));
@@ -69,5 +68,5 @@ co.wrap(function *() {
     app.use(mount('/api', require('./routes/api')));
     app.listen(conf.port || 8080);
 })().catch(function(err) {
-    console.log(err);
+    console.log(err.stack);
 });

@@ -5,7 +5,7 @@ import { updateScore } from '../../models/Score'
 import conf from '../../conf'
 import co from 'co'
 
-export default function *({user_id, nickname, post_id, post_user_id, comment}) {
+module.exports = function*({user_id, nickname, post_id, post_user_id, comment}) {
     var notification = new Notification();
     notification.user_id = post_user_id;
     notification.user_id2 = user_id;

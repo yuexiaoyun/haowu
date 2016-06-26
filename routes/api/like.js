@@ -2,7 +2,7 @@ import { Model as Post } from '../../mongodb_models/post'
 import notifyLike from '../../utility/msg/notify_like';
 import co from 'co';
 
-export default function* () {
+module.exports = function* () {
     var q = { _id: this.query._id, status: {$ne: 0} };
     var d = {
         $addToSet: {

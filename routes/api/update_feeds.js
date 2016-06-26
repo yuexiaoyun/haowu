@@ -64,7 +64,7 @@ function *getNewPostIds(my_id, origin_post_ids, limit) {
     return results;
 }
 
-export default function *() {
+module.exports = function*() {
     // 先取我曾经刷过的Feed列表，如果为空则新建一个
     var doc = yield UserFeed.findOne({
         user_id: this.session.user_id

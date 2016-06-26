@@ -5,7 +5,7 @@ import { updateScore } from '../../models/Score'
 import conf from '../../conf'
 import co from 'co'
 
-export default function *({user_id, nickname, post_id, comment_id, reply}) {
+module.exports = function*({user_id, nickname, post_id, comment_id, reply}) {
     // 站内互动区通知
     var notification = new Notification();
     notification.user_id = reply.user_id2;

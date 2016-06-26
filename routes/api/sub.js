@@ -1,7 +1,7 @@
 import { Model as User } from '../../mongodb_models/user';
 import { Model as Notification } from '../../mongodb_models/notification';
 
-export default function*() {
+module.exports = function*() {
     var q = { _id: this.query._id };
     var d = {
         $addToSet: {

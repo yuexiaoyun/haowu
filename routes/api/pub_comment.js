@@ -5,7 +5,7 @@ import co from 'co';
 import notifyComment from '../../utility/msg/notify_comment';
 import { createAction } from 'redux-actions'
 
-export default function*() {
+module.exports = function*() {
     var post = yield Post.findById({
         _id: this.query.post_id,
         status: {$ne: 0}

@@ -5,7 +5,7 @@ import { Model as Notification } from '../../mongodb_models/notification';
 import { createAction } from 'redux-actions';
 import _ from 'underscore';
 
-export default function*() {
+module.exports = function*() {
     // 获取通知
     var notifications = yield Notification.find({
         user_id: this.session.user_id

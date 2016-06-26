@@ -3,7 +3,7 @@ import { Model as Notification } from '../../mongodb_models/notification';
 import { createAction } from 'redux-actions';
 import { updateCount } from '../../models/Count'
 
-export default function *() {
+module.exports = function*() {
     var q = {
         _id: this.query._id,
         user_id: this.session.user_id

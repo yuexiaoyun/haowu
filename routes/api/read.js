@@ -2,7 +2,7 @@ import { Model as Audio } from '../../mongodb_models/audio';
 import notifyRead from '../../utility/msg/notify_read';
 import co from 'co';
 
-export default function *() {
+module.exports = function*() {
     var q = { audio_id: this.query.audio_id };
     var d = {
         $addToSet: {

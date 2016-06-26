@@ -2,7 +2,7 @@ import { Model as Notification } from '../../mongodb_models/notification'
 import { updateScore } from '../../models/Score'
 import { updateCount } from '../../models/Count'
 
-export default function *({user_id, post_user_id, post_id}) {
+module.exports = function*({user_id, post_user_id, post_id}) {
     try {
         yield updateScore(post_id);
         yield updateCount(post_user_id);

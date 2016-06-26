@@ -33,7 +33,8 @@ import * as reducers from './reducers'
 import { setStore as s1 } from './utility/update'
 import { setStore as s2 } from './utility/audio_manager'
 
-import './utility/set_title';
+import './utility/set_title'
+import './less/sm.less'
 
 var entry = window.location.pathname.substring(4);
 if (entry && entry.length > 0) {
@@ -84,6 +85,6 @@ if (entry && entry.length > 0) {
 
     wx.config(window.js_params);
     wx.error(function (res) {
-        PopupHelper.toast('当前版本暂不支持发布和分享功能');
+        PopupHelper.toast('当前版本暂不支持发布和分享功能！');
     });
 }

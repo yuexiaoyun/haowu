@@ -5,7 +5,7 @@ import { Model as Comment } from '../../mongodb_models/comment';
 import { createAction } from 'redux-actions';
 import _ from 'underscore';
 
-export default function*() {
+module.exports = function*() {
     // 获取原始Post
     var post = yield Post.findOne({_id: this.query._id, status: {$ne: 0}}).exec();
     if (!post)

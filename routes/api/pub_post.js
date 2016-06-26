@@ -8,7 +8,7 @@ import { notifyPub } from '../../utility/msg';
 import { updateScore } from '../../models/Score'
 import { updateCount } from '../../models/Count'
 
-export default function *() {
+module.exports = function*() {
     var post = new Post();
     // 填写基本字段
     Object.assign(post, this.query);

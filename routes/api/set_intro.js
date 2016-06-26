@@ -1,6 +1,6 @@
 import { Model as User } from '../../mongodb_models/user';
 
-export default function*() {
+module.exports = function*() {
     yield User.update({
         _id: this.session.user_id
     }, {

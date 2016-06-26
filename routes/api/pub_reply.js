@@ -5,7 +5,7 @@ import qiniu from '../../utility/qiniu';
 import co from 'co';
 import { createAction } from 'redux-actions'
 
-export default function *() {
+module.exports = function*() {
     // 获取原评论信息，注意在被删除的评论下面仍然能接着回复，所以没有status=1的限制
     var comment = yield Comment.findOne({
         _id: this.query.comment_id

@@ -2,7 +2,7 @@ import { Model as User, findUsersByIds } from '../../mongodb_models/user';
 import { Model as Post } from '../../mongodb_models/post';
 import { createAction } from 'redux-actions';
 
-export default function*() {
+module.exports = function*() {
     var post = yield Post.findOne({_id: this.query._id}).exec();
     if (!post)
         this.throw(404);
@@ -17,4 +17,4 @@ export default function*() {
             })
         ]
     }
-}
+};
