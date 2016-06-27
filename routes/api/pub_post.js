@@ -3,7 +3,6 @@ import { Model as Post } from '../../mongodb_models/post';
 import { Model as User, findUserById } from '../../mongodb_models/user';
 import { Model as UserFeed } from '../../mongodb_models/user_feed';
 import { createAction } from 'redux-actions';
-import { notifyPub } from '../../utility/msg';
 
 import { updateScore } from '../../models/Score'
 import { updateCount } from '../../models/Count'
@@ -27,8 +26,6 @@ module.exports = function*() {
     post.status = 1;
     // 保存
     yield post.save();
-    // 给订阅用户发消息
-    yield notifyPub(this.session, post);
     // 主Feed流上屏
     yield UserFeed.update({
         user_id: this.session.user_id
@@ -44,7 +41,6 @@ module.exports = function*() {
     });
     // 获取上屏所需要的user字段
     var user = yield findUserById(this.session.user_id, this.session.user_id);
-
     // 算分
     yield updateScore(post._id);
     // 重算用户的发帖数和被听数
