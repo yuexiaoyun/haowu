@@ -6,16 +6,18 @@ import conf from '../../conf'
 
 module.exports = function*({user_id, post_id}) {
     try {
-        var uids = (yield User.findById(user_id).select('subids')) || [];
-        for (var i in uids) {
-            var sub_user_id = uids[i];
-            var notification = new Notification();
-            notification.user_id = sub_user_id;
-            notification.user_id2 = user_id;
-            notification.type = 'pub';
-            notification.target = post_id;
-            notification.uptime = new Date();
-            yield notification.save();
+        var doc = yield User.findById(user_id).select('subids').exec();
+        if (doc) {
+            for (var i in (doc.subids || [])) {
+                var sub_user_id = doc.subids[i];
+                var notification = new Notification();
+                notification.user_id = sub_user_id;
+                notification.user_id2 = user_id;
+                notification.type = 'pub';
+                notification.target = post_id;
+                notification.uptime = new Date();
+                yield notification.save();
+            }
         }
         // 重算Feed分数
         yield updateScore(post_id);
