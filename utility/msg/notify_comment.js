@@ -5,6 +5,8 @@ import { updateScore } from '../../models/Score'
 import conf from '../../conf'
 import co from 'co'
 
+import moment from 'moment'
+
 module.exports = function*({user_id, nickname, post_id, post_user_id, comment}) {
     var notification = new Notification();
     notification.user_id = post_user_id;
@@ -24,21 +26,33 @@ module.exports = function*({user_id, nickname, post_id, post_user_id, comment}) 
     // 公众号通知
     var doc = yield User.findOne({
         _id: post_user_id
-    }).select('openid').exec();
+    }).select('openid sub_status').exec();
 
-    if (doc && doc.openid) {
+    if (doc && doc.openid && doc.sub_status == 1) {
         console.log(yield wechat.sendTemplate(
             doc.openid,
-            'EmQHRZ1nyZ1bNAE3R7bflOgmE3kYXT0pn_RXLaaFHQk',
+            'cxJCSZV2RJnSc2h9dZRZ7dYfXxSiT4mGtiZSN2GEChU',
             conf.site + '/app/me/notifications',
             '#FF0000', {
                 first: {
+                    value: '你收到一条评论回复通知。',
+                    color: '#000000'
+                },
+                keyword1: {
                     value: nickname,
                     color: "#173177"
                 },
-                second: {
+                keyword2: {
+                    value: moment().format('YYYY-MM-DD HH:mm:ss'),
+                    color: "#173177"
+                },
+                keyword3: {
                     value: comment.text || '[语音]',
-                    color: "#000000"
+                    color: "#173177"
+                },
+                remark: {
+                    value: '进入物记与Ta互动哦~',
+                    color: '#000000'
                 }
             }
         ));
