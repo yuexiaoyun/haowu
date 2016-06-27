@@ -1,6 +1,7 @@
 var config = {
-    appid: 'wxa14c3c5992691f51',
-    secret: 'eddc796da91aa9a695a36a7b9b9e23be',
+    appid: 'wx108d3ed3c670e850',
+    secret: 'b03ea31002400ba73d272dd8a6d764ad',
+    wechat_token: 'ie5xI5ZAvwhnC9XahpZGK1FknQX56zx',
     site: 'http://wuwoweiyi.com',
     mongodb: 'mongodb://127.0.0.1:27017/haowu',
     qiniu: {

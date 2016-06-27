@@ -11,6 +11,7 @@ var qs = require('querystring');
 var co = require('co');
 var ms = require('ms');
 var gzip = require('koa-gzip');
+var wechat = require('co-wechat');
 var Jade = require('koa-jade')
 var filemd5 = require('md5-file-promise')().computeFromFile;
 
@@ -43,9 +44,7 @@ co.wrap(function *() {
     // TODO：云主机上不能用ROOT运行
 
     app.use(gzip());
-    app.use(mount('/agent', function *() {
-        this.body = this.query.echostr;
-    }));
+    app.use(mount('/agent', wechat(conf.wechat_token).middleware(require('./routes/agent'))));
     if (conf.debug)
         app.use(mount('/internal_login', require('./routes/internal_login')));
     app.use(mount('/login', require('./routes/login')));

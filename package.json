@@ -17,6 +17,7 @@
     "classnames": "2.2.5",
     "co": "4.6.0",
     "co-request": "1.0.0",
+    "co-wechat": "0.0.4",
     "co-wechat-api": "2.4.0",
     "css-loader": "0.23.1",
     "debug": "2.2.0",

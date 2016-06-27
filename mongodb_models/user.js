@@ -39,7 +39,9 @@ var schema = new mongoose.Schema({
     // 用户状态
     // status=1为正常
     // status=2为黑名单：该用户的所有发布的内容在主Feed流里对其它人不可见
-    status: { type: Number }
+    status: { type: Number },
+    // 用户有没有关注公众号
+    sub_status: { type: Number }
 });
 
 schema.index({ unionid: 1 }, { unique: 1});
