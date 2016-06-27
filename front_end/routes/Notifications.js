@@ -38,6 +38,15 @@ class _NotificationCard extends React.Component {
             </div>
         );
     }
+    renderPub = ()=>{
+        var { user } = this.props;
+        return (
+            <div className="list-item-content">
+                <div className='nickname'>{user.nickname}</div>
+                <span className='comment-text'>更新了好物</span>
+            </div>
+        );
+    }
     renderCommentReply = ()=>{
         var { user, notification } = this.props;
         var action = {
@@ -58,7 +67,8 @@ class _NotificationCard extends React.Component {
         return ({
             like: this.renderLike,
             sub: this.renderSub,
-            read: this.renderRead
+            read: this.renderRead,
+            pub: this.renderPub
         }[this.props.notification.type] || this.renderCommentReply)();
     }
     render() {
