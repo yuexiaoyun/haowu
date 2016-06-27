@@ -24,8 +24,8 @@ class FollowLine extends React.Component {
         return (
             <div styleName='root' onClick={this.popup}>
                 <img styleName='qrcode' src={qrcode}/>
-                <div>点击识别二维码，关注“物记”公众号</div>
-                <div>朋友互动不遗漏</div>
+                <div>点击识别二维码 关注“物记”</div>
+                <div>才能收到互动回复通知</div>
             </div>
         );
     }

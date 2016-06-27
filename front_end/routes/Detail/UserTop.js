@@ -42,7 +42,7 @@ class UserTop extends React.Component {
             <div>
                 { user._id == window.user_id && <img styleName='intro-edit' src={btnEditMe} /> }
                 <div styleName={className} onClick={this.input}>
-                    { user.intro || user._id == window.user_id && '我的爱好；我的个性...或者我的微信' || 'Ta很懒，还没有个人介绍' }
+                    { user.intro || user._id == window.user_id && '我的爱好；我的个性...或者我希望聊的' || 'Ta很懒，还没有个人介绍' }
                 </div>
             </div>
         );
@@ -51,7 +51,7 @@ class UserTop extends React.Component {
         var { user } = this.props;
         return (
             <div ref='root' styleName='root'>
-                { user._id != window.user_id && <FollowLine /> }
+                { window.sub_status != 1 && <FollowLine /> }
                 { user._id == window.user_id && <NotificationIcon /> }
                 <SubButton user={user} />
                 <UserInfo user={user} />

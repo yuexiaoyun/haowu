@@ -11,5 +11,6 @@ html
     #toast_container
   script.
     window.user_id='!{user_id}';
+    window.sub_status= !{sub_status};
     window.js_params = !{ js_params };
   script(src='/static/scripts/bundle.min.js?#{js_md5}')
