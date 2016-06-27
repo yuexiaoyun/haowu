@@ -79,12 +79,14 @@
 
 .modal {
     transform: translate3d(0, 0, 0) scale(1.185);
+    -webkit-transform: translate3d(0, 0, 0) scale(1.185);
     transition-property: transform, opacity;
 }
 .modal.modal-in {
     opacity: 1;
     transition-duration: 200ms;
     transform: translate3d(0, 0, 0) scale(1);
+    -webkit-transform: translate3d(0, 0, 0) scale(1);
 }
 .modal-bottom {
     transition-property: top;
