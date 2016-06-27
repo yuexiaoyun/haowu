@@ -41,7 +41,9 @@ var schema = new mongoose.Schema({
     // status=2为黑名单：该用户的所有发布的内容在主Feed流里对其它人不可见
     status: { type: Number },
     // 用户有没有关注公众号
-    sub_status: { type: Number }
+    sub_status: { type: Number },
+    // 是否封禁了评论和回复的权限
+    block_comment_reply: { type: Number }
 });
 
 schema.index({ unionid: 1 }, { unique: 1});

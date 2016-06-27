@@ -1,6 +1,7 @@
 import React from 'react'
 import { findDOMNode } from 'react-dom'
 import update from '../utility/update';
+import PopupHelper from '../utility/PopupHelper';
 import showProgress from '../utility/show_progress';
 import PostCardInDetail from './components/PostCardInDetail';
 import Comment from './components/Comment';

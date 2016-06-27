@@ -1,11 +1,19 @@
 import { Model as Comment } from '../../mongodb_models/comment'
 import { Model as Post } from '../../mongodb_models/post'
+import { Model as User } from '../../mongodb_models/user'
 import notifyReply from '../../utility/msg/notify_reply';
 import qiniu from '../../utility/qiniu';
 import co from 'co';
 import { createAction } from 'redux-actions'
 
 module.exports = function*() {
+    // 获取用户是否存在，以及是否被封禁了评论和回复权限
+    var user = yield User.findById(this.session.user_id)
+        .select('block_comment_reply')
+        .exec();
+    if (!user || user.block_comment_reply == 1)
+        this.throw(403);
+        
     // 获取原评论信息，注意在被删除的评论下面仍然能接着回复，所以没有status=1的限制
     var comment = yield Comment.findOne({
         _id: this.query.comment_id
