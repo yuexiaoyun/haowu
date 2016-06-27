@@ -5,7 +5,6 @@ export default (share_info) => {
         var menuList = [
             'menuItem:share:qq',
             'menuItem:share:weiboApp',
-            'menuItem:share:timeline',
             'menuItem:share:facebook',
             'menuItem:share:QZone',
             'menuItem:copyUrl',
@@ -13,18 +12,21 @@ export default (share_info) => {
         ];
         if (share_info) {
             wx.onMenuShareAppMessage(share_info);
-            //wx.onMenuShareTimeline(share_info);
+            share_info.title = share_info.title + ' | ' + share_info.desc;
+            wx.onMenuShareTimeline(share_info);
             wx.hideMenuItems({
                 menuList
             });
             wx.showMenuItems({
                 menuList: [
+                    'menuItem:share:timeline',
                     'menuItem:share:appMessage'
                 ]
             });
         } else {
             wx.hideMenuItems({
                 menuList: [
+                    'menuItem:share:timeline',
                     'menuItem:share:appMessage',
                     ...menuList
                 ]
