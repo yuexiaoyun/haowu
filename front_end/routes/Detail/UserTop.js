@@ -51,10 +51,6 @@ class UserTop extends React.Component {
         var { user } = this.props;
         return (
             <div ref='root' styleName='root'>
-                { user._id == window.user_id && user.post_count > 0 && <div styleName='share-line'>
-                    可以将好物记录分享给微信好友、朋友圈
-                    <span styleName='arrow' className="image-icon_me_up"/>
-                </div> }
                 { user._id != window.user_id && <FollowLine /> }
                 { user._id == window.user_id && <NotificationIcon /> }
                 <SubButton user={user} />
