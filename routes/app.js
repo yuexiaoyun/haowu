@@ -53,7 +53,12 @@ module.exports = function *() {
         var params = {};
     }
 
-    var user = yield User.findById(this.session.user_id).select('sub_status').exec();
+    var user = yield User.findById(this.session.user_id).select('openid sub_status').exec();
+    var userInfo = yield api.getUser(user.openid);
+    if (userInfo) {
+        user.sub_status = userInfo.subscribe;
+        yield user.save();
+    }
 
     this.render('base', {
         js_params: JSON.stringify(params),
