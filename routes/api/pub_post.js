@@ -4,10 +4,14 @@ import { Model as User, findUserById } from '../../mongodb_models/user';
 import { Model as UserFeed } from '../../mongodb_models/user_feed';
 import { createAction } from 'redux-actions';
 
-import { updateScore } from '../../models/Score'
-import { updateCount } from '../../models/Count'
+import notifyPub from '../../utility/msg/notify_pub';
+import co from 'co';
 
 module.exports = function*() {
+    var user = yield findUserById(this.session.user_id, this.session.user_id);
+    if (!user)
+        return 403;
+
     var post = new Post();
     // 填写基本字段
     Object.assign(post, this.query);
@@ -23,7 +27,10 @@ module.exports = function*() {
     var info = JSON.parse(yield qiniu.stat(post.pic_id));
     post.w = info.width;
     post.h = info.height;
-    post.status = 1;
+    if (user.status != 1)
+        post.status = 2;
+    else
+        post.status = 1;
     // 保存
     yield post.save();
     // 主Feed流上屏
@@ -39,12 +46,11 @@ module.exports = function*() {
     }, {
         upsert: true
     });
-    // 获取上屏所需要的user字段
-    var user = yield findUserById(this.session.user_id, this.session.user_id);
-    // 算分
-    yield updateScore(post._id);
-    // 重算用户的发帖数和被听数
-    yield updateCount(post.user_id);
+
+    co(notifyPub({
+        post_id: post._id,
+        user_id: this.session.user_id,
+    }));
 
     this.body = {
         result: 'ok',
