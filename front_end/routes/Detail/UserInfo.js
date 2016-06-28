@@ -27,11 +27,6 @@ class UserInfo extends React.Component {
             <div>
                 <div styleName='avatar-container'>
                     <img styleName='avatar' src={user.headimgurl} onClick={this.preview} />
-                    { (user.sex == 1 || user.sex == 2) &&
-                        <span
-                            styleName='gender'
-                            className={user.sex==1 ? 'image-icon_male': 'image-icon_female'}/>
-                    }
                 </div>
                 <div styleName='nickname'>
                     {user.nickname}

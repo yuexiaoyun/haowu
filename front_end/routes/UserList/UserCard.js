@@ -15,10 +15,6 @@ var UserCard = ({user}) => {
         }} >
             <div styleName='avatar-container'>
                 <img styleName='avatar' src={user.headimgurl} />
-                { (user.sex == 1 || user.sex == 2) && <span styleName='gender' className={classNames({
-                    'image-icon_male': user.sex == 1,
-                    'image-icon_female': user.sex == 2
-                })} />}
             </div>
             { user.reads_count > 0 && <div styleName='reads' className='reads image-icon_home_listened'>
                 {user.reads_count || 0}

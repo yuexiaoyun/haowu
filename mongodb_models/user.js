@@ -58,7 +58,6 @@ module.exports.findUsers = function *(user_id, q) {
         $project: {
             _id: 1,
             nickname: 1,
-            sex: 1,
             headimgurl: 1,
             post_count: 1,
             reads_count: 1,
