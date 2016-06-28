@@ -16,17 +16,24 @@ class Home extends React.Component {
             reloading: false
         };
     }
+    widthNDpr = () => {
+        return qs.stringify({
+            dpr: window.devicePixelRatio,
+            width: window.innerWidth
+        })
+    }
     loadMore = (page) => {
         var { feed_ids } = this.props;
         if (feed_ids.length == 0) {
-            update('/api/update_feeds?min=10');
+            update('/api/update_feeds?min=10&' + this.widthNDpr());
         } else {
-            update('/api/update_feeds?beforeid=' + feed_ids[feed_ids.length - 1]);
+            update('/api/update_feeds?beforeid=' + feed_ids[feed_ids.length - 1] + '&' + this.widthNDpr());
         }
     }
     reload = () => {
+        console.log(this.widthNDpr());
         this.setState({reloading: true});
-        update('/api/update_feeds')
+        update('/api/update_feeds?' + this.widthNDpr())
             .then(()=>this.setState({reloading: false}));
     }
     componentDidMount() {

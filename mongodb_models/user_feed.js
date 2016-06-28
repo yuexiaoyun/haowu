@@ -7,7 +7,11 @@ var schema = new mongoose.Schema({
     // 发布者的user_id
     user_id: { type: String },
     // 用户已刷出的首页Feed列表
-    posts: [{ type: String }]
+    posts: [{ type: String }],
+    // 用户最后一次刷feed时上传的屏幕宽度
+    width: { type: Number },
+    // 用户最后一次刷feed时上传的dpr
+    dpr: { type: Number }
 }, {
     timestamps: true
 });

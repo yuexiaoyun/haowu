@@ -23,6 +23,13 @@ class PostCard extends React.Component {
         var h = Math.floor(w * post.h / post.w + 0.5);
         return h;
     }
+    postfix = () => {
+        var width = window.innerWidth;
+        if (width == 320)
+            return '-c294';
+        else
+            return '-c334';
+    }
     render() {
         var { user, post, audio } = this.props;
         var read_count = audio && audio.read_count || 0;
@@ -32,7 +39,7 @@ class PostCard extends React.Component {
                     style={{
                         height: this.picHeight()
                     }}>
-                    <img src={fconf.qiniu.site + post.pic_id + '-c167'}
+                    <img src={fconf.qiniu.site + post.pic_id + this.postfix()}
                         onClick={()=>hashHistory.push('post/' + post._id)}/>
                 </div>
                 <div className="audio-line">

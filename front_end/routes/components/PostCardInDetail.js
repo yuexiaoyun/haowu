@@ -75,6 +75,13 @@ class PostCardInDetail extends React.Component {
                 });
         });
     }
+    postfix = () => {
+        var width = window.innerWidth;
+        if (width == 320)
+            return '-d640';
+        else
+            return '-d720';
+    }
     render() {
         var { user, post, like_count, read_count, playing, loading, time } = this.props;
         var d = Math.floor((post.length + 500) / 1000);
@@ -82,7 +89,7 @@ class PostCardInDetail extends React.Component {
             <div>
                 <div className="picture image-image_default_home">
                     <div className='picture-dummy' />
-                    <img src={fconf.qiniu.site + post.pic_id + '-c720'}
+                    <img src={fconf.qiniu.site + post.pic_id + this.postfix()}
                         style={post.w > post.h ? {height: '100%'} : {width: '100%'}}
                         onClick={this.preview}/>
                 </div>

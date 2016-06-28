@@ -74,6 +74,8 @@ module.exports = function*() {
         doc.user_id = this.session.user_id;
         doc.posts = [];
     }
+    doc.width = this.query.width;
+    doc.dpr = this.query.dpr;
 
     // 刷出本次的Feed id列表，并更新数据库里的posts字段
     // TODO: doc.save应该在最后进行，防止渲染层出bug
