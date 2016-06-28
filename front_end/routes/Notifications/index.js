@@ -5,8 +5,9 @@ import { createAction } from 'redux-actions';
 import update from '../../utility/update';
 import fconf from '../../fconf';
 
+import Loader from '../components/Loader';
 import NotificationCard from './NotificationCard'
-
+import InfiniteScroll from 'react-infinite-scroller';
 
 class Notifications extends React.Component {
     constructor(props) {
@@ -14,26 +15,33 @@ class Notifications extends React.Component {
         this.state = {}
     }
     componentDidMount() {
-        update('/api/update_notifications', data => {
-            console.log(data);
-            this.setState({
-                clear_badge: data.clear_badge
-            });
-        });
         this.props.dispatch(createAction('update_badge')(0));
         window.setTitle('消息');
         setShareInfo();
     }
-    render() {
+    loadMore = (page) => {
         var { notifications } = this.props;
-        var { clear_badge } = this.state;
+        if (notifications.length == 0) {
+            update('/api/update_notifications', data => {
+                this.setState({
+                    clear_badge: data.clear_badge
+                });
+            });
+        } else {
+            update('/api/update_notifications?before_uptime=' + notifications[notifications.length - 1].uptime);
+        }
+    }
+    render() {
+        var { notifications, notification_end } = this.props;
+        var { err, clear_badge } = this.state;
         return (
-            <div>
+            <InfiniteScroll hasMore={notification_end == 0} loadMore={this.loadMore}>
                 { notifications && notifications.map((n) => {
                     var new_item = clear_badge && n.uptime > clear_badge;
                     return <NotificationCard key={n._id} notification={n} new_item={new_item} />;
                 })}
-            </div>
+                { notification_end == 0 && !err && <Loader /> }
+            </InfiniteScroll>
         );
     }
 }

@@ -92,7 +92,7 @@ export var notification_end = handleActions({
 
 // 自己的被订阅列表
 export var subids = handleActions({
-    update_notifications: (state, action) => action.payload.subids
+    update_notifications: (state, action) => action.payload.subids || state
 }, []);
 
 // 帖子的ID与内容对应
