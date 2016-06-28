@@ -1,6 +1,5 @@
-require('babel/register')({
-    stage: 0
-});
+require('babel-polyfill');
+require('babel-register')();
 
 var co = require('co');
 var User = require('../mongodb_models/user').Model;
