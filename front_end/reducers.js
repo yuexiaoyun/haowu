@@ -83,11 +83,13 @@ export var notifications = handleActions({
         else
             return notifications
     },
+    update_badge: (state, action) => action.payload > 0 ? [] : state,
     delete_post: (state, action) => _.filter(state, item=>(item.target!=action.payload))
 }, []);
 
 export var notification_end = handleActions({
-    update_notifications: (state, action) => action.payload.notification_end || 0
+    update_notifications: (state, action) => action.payload.notification_end || 0,
+    update_badge: (state, action) => action.payload > 0 ? 0 : state
 }, 0);
 
 // 自己的被订阅列表
