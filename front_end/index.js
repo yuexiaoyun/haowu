@@ -13,7 +13,7 @@ import wx from 'weixin-js-sdk';
 
 import App from './routes/App'
 import Home from './routes/Home'
-import Notifications from './routes/Notifications'
+import Notifications from './routes/Notifications/index'
 import Pub from './routes/Pub'
 import Detail from './routes/Detail/index'
 import Post from './routes/Post'

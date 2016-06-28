@@ -1,0 +1,42 @@
+.list-item {
+    border-bottom: 1px solid #dfdfdd;
+    min-height: 60px;
+    color: #666666;
+}
+.avatar-container {
+    float: left;
+    margin: 14px 16px;
+    position: relative;
+}
+.avatar {
+    border-radius: 50%;
+    overflow: hidden;
+    width: 30px;
+    height: 30px;
+}
+.nickname {
+    font-size: 14px;
+    color: #000000;
+    font-weight: normal;
+}
+.list-item-content {
+    margin: 10px 0 10px;
+    margin-left: 62px;
+}
+.picture {
+    float: right;
+    margin: 10px 16px;
+    width: 40px;
+    height: 40px;
+}
+.audioplayer {
+    margin-top: 5px;
+}
+.comment-text {
+    display: block;
+    margin-top: 5px;
+    line-height: 20px;
+}
+.new_item {
+    background-color: #f1e8e8;
+}

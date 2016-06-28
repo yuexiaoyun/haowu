@@ -76,9 +76,19 @@ export var user_post_ids = handleActions({
 
 // 自己的通知列表
 export var notifications = handleActions({
-    update_notifications: (state, action) => action.payload.notifications,
+    update_notifications: (state, action) => {
+        var { notifications, concat } = action.payload;
+        if (concat)
+            return [...state, ...notifications];
+        else
+            return notifications
+    },
     delete_post: (state, action) => _.filter(state, item=>(item.target!=action.payload))
 }, []);
+
+export var notification_end = handleActions({
+    update_notifications: (state, action) => action.payload.notification_end || 0
+}, 0);
 
 // 自己的被订阅列表
 export var subids = handleActions({
@@ -265,6 +275,7 @@ export var audios = handleActions({
     update_feeds: update_audios,
     update_user_detail: update_audios,
     update_post_detail: update_audios,
+    update_notifications: update_audios,
     read: (state, action) => {
         var { audio_id } = action.payload;
         var audio = state[audio_id];
