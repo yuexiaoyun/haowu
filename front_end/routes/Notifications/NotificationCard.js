@@ -3,6 +3,7 @@ import AudioPlayer from '../components/AudioPlayer';
 import { hashHistory } from 'react-router';
 import { createAction } from 'redux-actions';
 import fconf from '../../fconf';
+import qs from 'querystring';
 
 import { get_subids, get_audios } from '../../reselectors';
 import styles from './NotificationCard.css';
@@ -77,10 +78,13 @@ class NotificationCard extends React.Component {
     render() {
         var { user, notification, post, new_item } = this.props;
         var url = post ? ('/post/' + post._id) : null;
-        if (notification.type == 'reply')
-            url += `/${notification.reply_id}`;
-        else if(notification.type == 'comment')
-            url += `/${notification.comment_id}`;
+        if (notification.type == 'reply' || notification.type == 'comment') {
+            url += '?' + qs.stringify({
+                comment_id: notification.comment_id,
+                reply_id: notification.reply_id,
+                user_id: notification.user_id2
+            });
+        }
         else if(notification.type == 'sub')
             url = '/sub_list';
 

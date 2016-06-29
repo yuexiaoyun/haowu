@@ -12,14 +12,24 @@ import classNames from 'classnames';
 import { connect } from 'react-redux';
 import setShareInfo from '../utility/set_share_info';
 import * as actions from '../actions';
+import { get_users } from '../reselectors';
+import { createSelector, createStructuredSelector } from 'reselect';
 import _ from 'underscore';
 import fconf from '../fconf';
 
 class Post extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { record: false };
-        this.new_id = props.params.new_id;
+        var { query } = props.location;
+        if (query) {
+            this.new_id = query.reply_id || query.comment_id;
+            this.state = {
+                reply_comment: query.comment_id,
+                reply_user: query.user_id
+            }
+        } else {
+            this.state = { record: false };
+        }
     }
     componentDidMount() {
         var { params } = this.props;
@@ -144,25 +154,25 @@ class Post extends React.Component {
             reply={this.reply} />;
     }
     render() {
-        var { post, user, users, comments, comments_top } = this.props;
+        var { post, user, users, comments } = this.props;
         var { record, err } = this.state;
         return (
             <div className='post' onClick={this.clear_reply}>
                 { post && <PostCardInDetail post={post} user={user} /> }
-                { comments_top.length > 0 &&
+                { comments.top.length > 0 &&
                     <div className='comments'>
                         <div className='comments-header'>
                             <span className='ym'/>物主参与的互动
                         </div>
-                        { comments_top.map(this.renderComment) }
+                        { comments.top.map(this.renderComment) }
                     </div>
                 }
-                { comments.length > 0 &&
+                { comments.others.length > 0 &&
                     <div className='comments'>
                         <div className='comments-header'>
-                            <span className='ym'/>{comments_top.length > 0 ? '其它评论' : '评论'}
+                            <span className='ym'/>{comments.top.length > 0 ? '其它评论' : '评论'}
                         </div>
-                        { comments.map(this.renderComment) }
+                        { comments.others.map(this.renderComment) }
                     </div>
                 }
                 { this.state.inputing != 1 &&
@@ -232,25 +242,38 @@ class Post extends React.Component {
     }
 }
 
-// TODO: CSSModules的应用
-// TODO: 这里要用reselect机制做一些缓存
-export default connect((state, props) => {
-    var users = state.users;
-    var post = state.posts[props.params.id];
-    var user = post && users[post.user_id];
-    var post_detail = state.post_details[props.params.id];
-    var comments_top = [];
-    var comments = [];
-    post && post_detail && post_detail.comments && post_detail.comments.map(comment => {
-        if (comment.status == 1 || comment.replies.length > 0) {
-            var user_ids = [comment.user_id, ...comment.replies.map(reply=>reply.user_id)];
-            if (user_ids.indexOf(post.user_id) >= 0)
-                comments_top.push(comment);
-            else
-                comments.push(comment);
-        }
-    });
-    return {
-        post, user, users, comments_top, comments
-    };
-})(Post);
+var get_post = (state, props) => state.posts[props.params.id];
+var get_post_detail = (state, props) => state.post_details[props.params.id];
+var get_user = createSelector(
+    [get_post, get_users],
+    (post, users) => post && users[post.user_id]
+);
+var get_comments = createSelector(
+    [get_post, get_post_detail],
+    (post, post_detail) => {
+        var top = [];
+        var others = [];
+        post && post_detail && post_detail.comments && post_detail.comments.map(comment => {
+            if (comment.status == 1 || comment.replies.length > 0) {
+                var user_ids = [comment.user_id, ...comment.replies.map(reply=>reply.user_id)];
+                if (user_ids.indexOf(post.user_id) >= 0)
+                    top.push(comment);
+                else
+                    others.push(comment);
+            }
+        });
+        return { top, others }
+    }
+)
+
+var mapStateToProps = createStructuredSelector({
+    post: get_post,
+    post_detail: get_post_detail,
+    user: get_user,
+    users: get_users,
+    comments: get_comments
+});
+
+export default connect(mapStateToProps)(
+    Post
+);

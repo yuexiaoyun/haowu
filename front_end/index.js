@@ -61,7 +61,6 @@ if (entry && entry.length > 0) {
             <Router history={hashHistory} render={applyRouterMiddleware(useScroll())}>
                 <Route path="/pub" component={Pub} />
                 <Route path="/post/:id" component={Post} />
-                <Route path="/post/:id/:new_id" component={Post} />
                 <Route path="/sub_list" component={SubList} />
                 <Route path="/me_sub_list" component={MeSubList} />
                 <Route path="/like_list/:id" component={LikeList} />
