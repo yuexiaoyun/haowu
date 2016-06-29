@@ -25,6 +25,8 @@ class PostCard extends React.Component {
     }
     postfix = () => {
         var width = window.innerWidth;
+        if (width > window.innerHeight)
+            width = window.innerHeight;
         if (width == 320)
             return '-c294';
         else
