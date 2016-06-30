@@ -122,7 +122,7 @@ class PostCardInDetail extends React.Component {
                     <div className='more-buttons image-btn_more' onClick={this.more}/>
                     <div className={`more-buttons ${(post.me_like)?'image-btn_like_details_HL':'image-btn_like_details'}`} onClick={this.like}/>
                     <span className='nickname'>{user.nickname}</span>
-                    <span className='text-secondary'>{ fromObjectId(post._id) }发布</span>
+                    <span className='text-secondary'>{ fromObjectId(post._id) }</span>
                 </div>
             </div>
         )
