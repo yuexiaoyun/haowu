@@ -33,6 +33,7 @@ co.wrap(function *() {
         app: app // equals to jade.use(app) and app.use(jade.middleware)
     })
     app.keys = [conf.secret];
+    app.use(mount('/internal', require('./routes/internal')));
     app.use(session({
         store: new MongoStore({
             url: conf.mongodb
