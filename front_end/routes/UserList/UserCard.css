@@ -16,15 +16,14 @@
     border-radius: 15px;
     overflow: hidden;
 }
-.content {
-    margin-left: 62px;
-}
 .nickname {
+    margin-left: 62px;
     font-size: 14px;
     color: #000000;
     font-weight: normal;
 }
 .intro {
+    margin-left: 62px;
     margin-top: 5px;
     line-height: 20px;
     font-size: 14px;
