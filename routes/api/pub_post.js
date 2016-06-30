@@ -25,8 +25,13 @@ module.exports = function*() {
     yield qiniu.pfop(post.audio_id);
     // 从七牛获取图片宽高并写入
     var info = JSON.parse(yield qiniu.stat(post.pic_id));
-    post.w = info.width;
-    post.h = info.height;
+    if (info.orientation && info.orientation == 'Right-top') {
+        post.h = info.width;
+        post.w = info.height;
+    } else {
+        post.w = info.width;
+        post.h = info.height;
+    }
     if (user.status != 1)
         post.status = 2;
     else

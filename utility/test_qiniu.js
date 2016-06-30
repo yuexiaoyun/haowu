@@ -8,12 +8,14 @@ co.wrap(function *() {
     for (var i in docs) {
         var d = docs[i];
         try {
-            if (!d.w || !d.h) {
+            if (true) {
                 var info = JSON.parse(yield qiniu.stat(d.pic_id));
-                console.log(info);
-                d.w = info.width;
-                d.h = info.height;
-                yield d.save();
+                if (info.orientation && info.orientation == 'Right-top') {
+                    d.w = info.height;
+                    d.h = info.width;
+                    yield d.save();
+                    console.log(info.orientation);
+                }
             }
         } catch(err) {
             console.log(err);
