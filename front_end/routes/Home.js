@@ -2,12 +2,14 @@ import React from 'react';
 import FeedList from './components/FeedList';
 import { parse_online_json } from '../utility/fetch_utils';
 import Loader from './components/Loader';
-import { connect } from 'react-redux';
-import { createAction } from 'redux-actions';
 import update from '../utility/update';
 import setShareInfo from '../utility/set_share_info';
 import InfiniteScroll from 'react-infinite-scroller';
 import qs from 'querystring';
+
+import { connect } from 'react-redux';
+import { createAction } from 'redux-actions';
+import { createSelector, createStructuredSelector } from 'reselect';
 
 class Home extends React.Component {
     constructor() {
@@ -23,11 +25,11 @@ class Home extends React.Component {
         })
     }
     loadMore = (page) => {
-        var { feed_ids } = this.props;
-        if (feed_ids.length == 0) {
+        var { post_list } = this.props;
+        if (post_list.length == 0) {
             update('/api/update_feeds?min=10&' + this.widthNDpr());
         } else {
-            update('/api/update_feeds?beforeid=' + feed_ids[feed_ids.length - 1] + '&' + this.widthNDpr());
+            update('/api/update_feeds?beforeid=' + post_list[post_list.length - 1]._id + '&' + this.widthNDpr());
         }
     }
     reload = () => {
@@ -46,19 +48,32 @@ class Home extends React.Component {
             this.reload();
     }
     render() {
-        var { feed_ids, feed_end } = this.props;
+        var { post_list, feed_end } = this.props;
         var { reloading, err } = this.state;
         return (
             <InfiniteScroll hasMore={feed_end == 0} loadMore={this.loadMore}>
-                { reloading && feed_ids.length > 0 && <Loader /> }
-                <FeedList ids={feed_ids} showUser={true}/>
+                { reloading && post_list.length > 0 && <Loader /> }
+                <FeedList post_list={post_list} showUser={true}/>
                 { feed_end == 0 && !err && <Loader /> }
             </InfiniteScroll>
         );
     }
 }
 
-module.exports = connect(({feed_ids,feed_end,home_scroll})=>({
-    feed_ids,
-    feed_end,
-}), null, null, {withRef: true})(Home);
+var get_feed_ids = state => state.feed_ids;
+var get_feed_end = state => state.feed_end;
+var get_posts = state => state.posts;
+
+var get_post_list = createSelector(
+    [get_feed_ids, get_posts],
+    (feed_ids, posts) => feed_ids.map(id=>posts[id])
+);
+
+var mapStateToProps = createStructuredSelector({
+    post_list: get_post_list,
+    feed_end: get_feed_end
+})
+
+module.exports = connect(mapStateToProps, null, null, {withRef: true})(
+    Home
+);
