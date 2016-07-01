@@ -1,18 +1,25 @@
 import React from 'react';
 import { hashHistory } from 'react-router';
 import fconf from '../../fconf';
-import { connect } from 'react-redux'
-import { createAction } from 'redux-actions'
 import { fromObjectId } from '../../utility/format_time';
 import PopupHelper from '../../utility/PopupHelper'
 import update from '../../utility/update';
-import Loader from './Loader'
+import Loader from '../components/Loader'
 import { play, stop } from '../../utility/audio_manager';
 import { sub, like } from '../../actions';
 import qs from 'querystring';
 import wx from 'weixin-js-sdk';
 
-class PostCardInDetail extends React.Component {
+import { connect } from 'react-redux'
+import { createAction } from 'redux-actions'
+import styles from './TopCard.css'
+import CSSModules from 'react-css-modules'
+
+class TopCard extends React.Component {
+    constructor() {
+        super();
+        this.state = {}
+    }
     componentWillUnmount() {
         var { post, playing, loading } = this.props;
         if (playing || loading)
@@ -56,8 +63,10 @@ class PostCardInDetail extends React.Component {
     like = (e) => {
         e.stopPropagation();
         var { post, dispatch } = this.props;
-        if (!post.me_like)
+        if (!post.me_like) {
+            this.setState({like: true});
             dispatch(like(post._id));
+        }
     }
     deletePost = () => {
         PopupHelper.confirm('您确认要删除么', '删除', ()=>{
@@ -85,43 +94,50 @@ class PostCardInDetail extends React.Component {
             return '-d720';
     }
     render() {
-        var { user, post, like_count, read_count, playing, loading, time } = this.props;
+        var { user, post, audio, playing, loading, time } = this.props;
         var d = Math.floor((post.length + 500) / 1000);
+        var like_count = post.like_count;
+        var read_count = audio && audio.read_count || 0;
         return (
             <div>
-                <div className="picture image-image_default_home">
-                    <div className='picture-dummy' />
+                <div className="image-image_default_home" styleName='picture'>
+                    <div styleName='picture-dummy' />
                     <img src={fconf.qiniu.site + post.pic_id + this.postfix()}
+                        styleName='picture-img'
                         style={post.w > post.h ? {height: '100%'} : {width: '100%'}}
                         onClick={this.preview}/>
                 </div>
-                <div className='audio-line'>
-                    <div className='audio-line-tab'>
+                <div styleName='audio-line'>
+                    <div styleName='audio-line-tab'>
                         <span className='pull-right btn-default'
                             onClick={()=>(read_count > 0 && hashHistory.push('/read_list/'+post.audio_id))}>
                             { read_count }人听过
                         </span>
                     </div>
-                    <div className='audio-line-tab'>
+                    <div styleName='audio-line-tab'>
                         <div
                             onClick={this.play}
-                            className={`lzw ${(playing || loading) ? 'image-btn_play_stop' : 'image-btn_play_start'}`} />
+                            styleName='lzw'
+                            className={`${(playing || loading) ? 'image-btn_play_stop' : 'image-btn_play_start'}`} />
                     </div>
-                    <div className='audio-line-tab'>
+                    <div styleName='audio-line-tab'>
                         <span className='pull-left btn-default clearfix'
                             onClick={()=>(like_count > 0 && hashHistory.push('/like_list/'+post._id))}>
                             { like_count }人赞过
                         </span>
                     </div>
                 </div>
-                <div className='audio-length'>
+                <div styleName='audio-length'>
                     {loading ? <Loader no_text={true} />: `${playing ? time : d}"`}
                 </div>
-                <div className="author-line" onClick={()=>hashHistory.push('/detail/' + user._id)}>
-                    <img className='avatar' src={user.headimgurl} />
-                    <div className='more-buttons image-btn_more' onClick={this.more}/>
-                    <div className={`more-buttons ${(post.me_like)?'image-btn_like_details_HL':'image-btn_like_details'}`} onClick={this.like}/>
-                    <span className='nickname'>{user.nickname}</span>
+                <div styleName="author-line" onClick={()=>hashHistory.push('/detail/' + user._id)}>
+                    <img styleName='avatar' src={user.headimgurl} />
+                    <div styleName='more-buttons' className='image-btn_more' onClick={this.more}/>
+                    <div
+                        styleName={post.me_like && this.state.like ? 'amazing-animate' : 'more-buttons'}
+                        className={post.me_like ? 'image-btn_like_details_HL' : 'image-btn_like_details'}
+                        onClick={this.like}/>
+                    <span styleName='nickname'>{user.nickname}</span>
                     <span className='text-secondary'>{ fromObjectId(post._id) }</span>
                 </div>
             </div>
@@ -129,16 +145,19 @@ class PostCardInDetail extends React.Component {
     }
 }
 
-export default connect((state, props) => {
+var mapStateToProps = (state, props) => {
     var { post, user } = props;
-    var like_count = post.like_count;
     var audio = state.audios[post.audio_id];
-    var read_count = audio && audio.read_count || 0;
     var { id, play_state, time } = state.audio_player;
     var playing = (post && id == post.audio_id && play_state == 'playing');
     var loading = (post && id == post.audio_id && play_state == 'loading');
     time = Math.floor(time / 1000 + 0.5);
     return {
-        like_count, read_count, playing, loading, time
+        audio, playing, loading, time
     };
-})(PostCardInDetail);
+};
+
+
+export default connect(mapStateToProps)(
+    CSSModules(TopCard, styles)
+);

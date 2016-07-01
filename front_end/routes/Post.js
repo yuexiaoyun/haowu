@@ -3,7 +3,7 @@ import { findDOMNode } from 'react-dom'
 import update from '../utility/update';
 import PopupHelper from '../utility/PopupHelper';
 import showProgress from '../utility/show_progress';
-import PostCardInDetail from './components/PostCardInDetail';
+import TopCard from './Post/TopCard';
 import Comment from './components/Comment';
 import Loader from './components/Loader';
 import Recorder from './components/Recorder';
@@ -158,7 +158,7 @@ class Post extends React.Component {
         var { record, err } = this.state;
         return (
             <div className='post' onClick={this.clear_reply}>
-                { post && <PostCardInDetail post={post} user={user} /> }
+                { post && <TopCard post={post} user={user} /> }
                 { comments.top.length > 0 &&
                     <div className='comments'>
                         <div className='comments-header'>
