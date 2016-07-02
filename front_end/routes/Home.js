@@ -4,7 +4,7 @@ import update from '../utility/update';
 import setShareInfo from '../utility/set_share_info';
 import qs from 'querystring';
 
-import InfiniteScroll from 'react-infinite-scroller';
+import ListContainer from './components/ListContainer';
 import Loader from './components/Loader';
 import FeedList from './components/FeedList';
 import NotificationEntry from './Home/NotificationEntry'
@@ -28,17 +28,12 @@ class Home extends React.Component {
             width: window.innerWidth
         })
     }
-    loadMore = (page) => {
+    loadMore = () => {
         var { post_list } = this.props;
-        if (!this.state.loading) {
-            this.setState({loading: true});
-            if (post_list.length == 0) {
-                update('/api/update_feeds?min=10&' + this.widthNDpr())
-                    .then(()=>this.setState({loading: false}));
-            } else {
-                update('/api/update_feeds?beforeid=' + post_list[post_list.length - 1]._id + '&' + this.widthNDpr())
-                    .then(()=>this.setState({loading: false}));
-            }
+        if (post_list.length == 0) {
+            return update('/api/update_feeds?min=10&' + this.widthNDpr());
+        } else {
+            return update('/api/update_feeds?beforeid=' + post_list[post_list.length - 1]._id + '&' + this.widthNDpr());
         }
     }
     reload = () => {
@@ -62,12 +57,11 @@ class Home extends React.Component {
         var { post_list, badge, feed_end } = this.props;
         var { reloading, err } = this.state;
         return (
-            <InfiniteScroll hasMore={feed_end == 0} loadMore={this.loadMore}>
+            <ListContainer hasMore={feed_end == 0} loadMore={this.loadMore}>
                 { badge.count > 0 && <NotificationEntry /> }
                 { reloading && post_list.length > 0 && <Loader /> }
                 <FeedList post_list={post_list} showUser={true}/>
-                { feed_end == 0 && !err && <Loader /> }
-            </InfiniteScroll>
+            </ListContainer>
         );
     }
 }

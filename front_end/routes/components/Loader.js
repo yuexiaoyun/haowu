@@ -1,5 +1,4 @@
 import React from 'react';
-import LoadingView from './LoadingView';
 
 export default ({no_text}) => {
     return (

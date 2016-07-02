@@ -11,8 +11,7 @@ class LikeList extends React.Component {
     }
     render() {
         var {ids, users} = this.props;
-        return this.props.ids ?
-            <UserList title='赞过的人' ids={ids} users={users} /> : <Loader />;
+        return <UserList title='赞过的人' ids={ids} users={users} />;
     }
 }
 

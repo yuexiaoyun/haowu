@@ -5,10 +5,9 @@ import { createAction } from 'redux-actions';
 import update from '../../utility/update';
 import fconf from '../../fconf';
 
-import Loader from '../components/Loader';
+import ListContainer from '../components/ListContainer';
 import EmptyView from '../common/EmptyView';
 import NotificationCard from './NotificationCard'
-import InfiniteScroll from 'react-infinite-scroller';
 
 class Notifications extends React.Component {
     constructor(props) {
@@ -26,7 +25,7 @@ class Notifications extends React.Component {
     loadMore = (page) => {
         var { notifications } = this.props;
         if (notifications.length == 0) {
-            update('/api/update_notifications', data => {
+            return update('/api/update_notifications', data => {
                 setTimeout(()=>{
                     this.setState({
                         clear_badge: data.clear_badge
@@ -34,7 +33,7 @@ class Notifications extends React.Component {
                 }, 0);
             });
         } else {
-            update('/api/update_notifications?before_uptime=' + notifications[notifications.length - 1].uptime);
+            return update('/api/update_notifications?before_uptime=' + notifications[notifications.length - 1].uptime);
         }
     }
     render() {
@@ -44,13 +43,12 @@ class Notifications extends React.Component {
             return <EmptyView emptyText='还没有任何互动消息哦~' />
         } else {
             return (
-                <InfiniteScroll hasMore={notification_end == 0} loadMore={this.loadMore}>
+                <ListContainer hasMore={notification_end == 0} loadMore={this.loadMore}>
                     { notifications && notifications.map((n) => {
                         var new_item = clear_badge && n.uptime > clear_badge;
                         return <NotificationCard key={n._id} notification={n} new_item={new_item} />;
                     })}
-                    { notification_end == 0 && !err && <Loader /> }
-                </InfiniteScroll>
+                </ListContainer>
             );
         }
     }

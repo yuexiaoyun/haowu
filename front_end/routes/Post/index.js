@@ -15,7 +15,6 @@ import fconf from '../../fconf';
 
 import TopCard from './TopCard';
 import Comment from './Comment';
-import Loader from '../components/Loader';
 import Recorder from '../common/Recorder';
 
 import btnKeyboard from '../../files/btn_keyboard.png'
