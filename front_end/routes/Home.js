@@ -30,17 +30,24 @@ class Home extends React.Component {
     }
     loadMore = (page) => {
         var { post_list } = this.props;
-        if (post_list.length == 0) {
-            update('/api/update_feeds?min=10&' + this.widthNDpr());
-        } else {
-            update('/api/update_feeds?beforeid=' + post_list[post_list.length - 1]._id + '&' + this.widthNDpr());
+        if (!this.state.loading) {
+            this.setState({loading: true});
+            if (post_list.length == 0) {
+                update('/api/update_feeds?min=10&' + this.widthNDpr())
+                    .then(()=>this.setState({loading: false}));
+            } else {
+                update('/api/update_feeds?beforeid=' + post_list[post_list.length - 1]._id + '&' + this.widthNDpr())
+                    .then(()=>this.setState({loading: false}));
+            }
         }
     }
     reload = () => {
         console.log(this.widthNDpr());
-        this.setState({reloading: true});
-        update('/api/update_feeds?' + this.widthNDpr())
-            .then(()=>this.setState({reloading: false}));
+        if (!this.state.reloading) {
+            this.setState({reloading: true});
+            update('/api/update_feeds?' + this.widthNDpr())
+                .then(()=>this.setState({reloading: false}));
+        }
     }
     componentDidMount() {
         window.setTitle('物记');

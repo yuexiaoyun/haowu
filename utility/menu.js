@@ -7,7 +7,7 @@ var menu = {
         name: "进入物记",
         url: conf.site + '/app/home'
     }, {
-        name: '我是新人',
+        name: '关于',
         sub_button: [{
             type: 'media_id',
             name: '意见反馈',
