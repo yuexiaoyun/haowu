@@ -57,7 +57,7 @@ class Home extends React.Component {
         var { post_list, badge, feed_end } = this.props;
         var { reloading, err } = this.state;
         return (
-            <ListContainer hasMore={feed_end == 0} loadMore={this.loadMore}>
+            <ListContainer id='feed' hasMore={feed_end == 0} loadMore={this.loadMore}>
                 { badge.count > 0 && <NotificationEntry /> }
                 { reloading && post_list.length > 0 && <Loader /> }
                 <FeedList post_list={post_list} showUser={true}/>

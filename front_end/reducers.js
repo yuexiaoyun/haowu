@@ -49,25 +49,24 @@ export var user_post_ids = handleActions({
     pub_post: (state, action) => {
         return {
             ...state,
-            ..._.object([window.openid], [[]])
+            [window.user_id]: []
         }
     },
     update_user_detail: (state, action) => {
         var { users, posts } = action.payload;
         return {
             ...state,
-            ..._.object([users[0]._id], [posts.map(post=>post._id)])
+            [users[0]._id]: posts.map(post=>post._id)
         }
     },
     delete_post: (state, action) => {
         var my_post_ids = state[window.user_id];
         if (my_post_ids) {
             my_post_ids = _.filter(my_post_ids, item=>(item!=action.payload))
-            var r = {
+            return {
                 ...state,
-                ..._.object([window.user_id], [my_post_ids])
+                [window.user_id]: my_post_ids
             };
-            return r;
         } else {
             return state;
         }
@@ -108,7 +107,9 @@ function update_posts(state, action) {
         }
         return post;
     });
-    return { ...state, ..._.object(posts.map(post=>post._id), posts) }
+    return {
+        ...state, ..._.object(posts.map(post=>post._id), posts)
+    }
 }
 export var posts = handleActions({
     update_feeds: update_posts,
@@ -121,7 +122,10 @@ export var posts = handleActions({
         var post = state[id];
         if (post && !post.me_like) {
             post = {...post, me_like: true, like_count: post.like_count + 1}
-            return {...state, ...(_.object([id], [post]))}
+            return {
+                ...state,
+                [id]: post
+            }
         } else {
             return state;
         }
@@ -136,7 +140,10 @@ export var posts = handleActions({
                 like_count: likes.length,
                 likes
             }
-            return {...state, ...(_.object([_id], [post]))}
+            return {
+                ...state,
+                [id]: post
+            }
         } else {
             return state;
         }
@@ -173,14 +180,13 @@ export var users = handleActions({
         var { intro } = action.payload;
         var user = state[window.user_id];
         if (user) {
-            console.log(user);
             user = {
                 ...user,
                 intro
             }
             return {
                 ...state,
-                ..._.object([window.user_id], [user])
+                [window.user_id]: user
             }
         } else {
             return state;
@@ -196,7 +202,7 @@ export var users = handleActions({
             }
             return {
                 ...state,
-                ..._.object([user_id], [user])
+                [user_id]: user
             }
         } else {
             return state;
@@ -212,7 +218,7 @@ export var users = handleActions({
             };
             return {
                 ...state,
-                ..._.object([user_id], [user])
+                [user_id]: user
             }
         } else {
             return state;
@@ -227,7 +233,7 @@ export var post_details = handleActions({
         var post_id = action.payload.posts[0]._id;
         return {
             ...state,
-            ..._.object([post_id], [{comments}])
+            [post_id]: {comments}
         }
     },
     update_comment: (state, action) => {
@@ -252,7 +258,7 @@ export var post_details = handleActions({
         }
         return {
             ...state,
-            ..._.object([action.payload.post_id], [post_detail])
+            [action.payload.post_id]: post_detail
         }
     }
 }, {});
@@ -291,7 +297,10 @@ export var audios = handleActions({
                 read_count: audio.read_count + 1
             }
         }
-        return { ...state, ..._.object([audio_id], [audio]) }
+        return {
+            ...state,
+            [audio_id]: audio_id
+        };
     },
     update_audio_read_uids: (state, action) => {
         var {audio_id, users, reads} = action.payload;
@@ -303,7 +312,10 @@ export var audios = handleActions({
             read_count: reads.length,
             reads
         }
-        return { ...state, ..._.object([audio_id], [audio]) }
+        return {
+            ...state,
+            [audio_id]: audio_id
+        };
     }
 }, {});
 
@@ -313,3 +325,18 @@ export var badge = handleActions({
         uid: action.payload.users.length > 0 ? action.payload.users[0]._id : null
     })
 }, 0);
+
+export var pendings = handleActions({
+    LOADING_START: (state, action) => ({
+        ...state,
+        [action.payload.id]: { err: null }
+    }),
+    LOADING_SUCCESS: (state, action) => ({
+        ...state,
+        [action.payload.id]: null
+    }),
+    LOADING_FAILED: (state, action) => ({
+        ...state,
+        [action.payload.id]: { err: 1 }
+    })
+}, {})

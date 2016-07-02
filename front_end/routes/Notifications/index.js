@@ -43,7 +43,7 @@ class Notifications extends React.Component {
             return <EmptyView emptyText='还没有任何互动消息哦~' />
         } else {
             return (
-                <ListContainer hasMore={notification_end == 0} loadMore={this.loadMore}>
+                <ListContainer id='notifications' hasMore={notification_end == 0} loadMore={this.loadMore}>
                     { notifications && notifications.map((n) => {
                         var new_item = clear_badge && n.uptime > clear_badge;
                         return <NotificationCard key={n._id} notification={n} new_item={new_item} />;

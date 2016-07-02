@@ -3,6 +3,9 @@ import { findDOMNode }from 'react-dom';
 
 import Loader from './Loader';
 
+import { createAction } from 'redux-actions';
+import { connect } from 'react-redux';
+
 function topPosition(domElt) {
     if (!domElt) {
         return 0;
@@ -10,31 +13,29 @@ function topPosition(domElt) {
     return domElt.offsetTop + topPosition(domElt.offsetParent);
 }
 
-export default class ListContainer extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { loading: false, err: null };
-    }
+class ListContainer extends React.Component {
     render() {
         return (
             <div>
                 { this.props.children }
-                { this.state.loading && <Loader /> }
+                { this.props.pending && <Loader err={this.props.pending.err} onClick={this.loadMore}/> }
             </div>
         );
     }
     loadMore = () => {
-        this.setState({loading: true, err: null});
+        var { id, dispatch } = this.props;
+        dispatch(createAction('LOADING_START')({id}));
         this.props.loadMore()
             .then(()=>{
-                this.setState({loading: false, err: null});
+                dispatch(createAction('LOADING_SUCCESS')({id}));
             })
             .catch((err)=>{
-                this.setState({loading: false, err});
+                console.log(err);
+                dispatch(createAction('LOADING_FAILED')({id}));
             });
     }
     scrollListener = () => {
-        if (!this.state.loading && !this.state.err && this.props.hasMore) {
+        if (!this.props.pending && this.props.hasMore) {
             var el = findDOMNode(this);
             var scrollEl = window;
             var scrollTop = (scrollEl.pageYOffset !== undefined)
@@ -56,3 +57,8 @@ export default class ListContainer extends React.Component {
         window.removeEventListener('resize', this.scrollListener);
     }
 }
+
+var mapStateToProps = (state, props) => ({ pending: state.pendings[props.id] })
+export default connect(mapStateToProps)(
+    ListContainer
+);
