@@ -55,6 +55,24 @@ wx.config(window.js_params);
 wx.error(function (res) {
     PopupHelper.toast('当前版本暂不支持发布和分享功能！');
 });
+wx.ready(()=>{
+    wx.hideMenuItems({
+        menuList: [
+            'menuItem:share:qq',
+            'menuItem:share:weiboApp',
+            'menuItem:share:facebook',
+            'menuItem:share:QZone',
+            'menuItem:copyUrl',
+            'menuItem:openWithSafari'
+        ]
+    });
+    wx.showMenuItems({
+        menuList: [
+            'menuItem:share:timeline',
+            'menuItem:share:appMessage'
+        ]
+    });
+});
 render(
     <Provider store={store}>
         <Router history={hashHistory} render={applyRouterMiddleware(useScroll())}>
