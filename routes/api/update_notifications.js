@@ -50,7 +50,7 @@ module.exports = function*() {
     var user = null;
     var user_ids = [
         ...notifications.map(notification=>notification.user_id2),
-        this.session.user_id
+        ...posts.map(post=>post.user_id)
     ];
     if (!this.query.before_uptime) {
         user = yield User.findByIdAndUpdate(this.session.user_id, {
