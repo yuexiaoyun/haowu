@@ -55,7 +55,6 @@ wx.config(window.js_params);
 wx.error(function (res) {
     PopupHelper.toast('当前版本暂不支持发布和分享功能！');
 });
-// TODO 图片要根据屏幕宽度，做很多套适配的样式
 render(
     <Provider store={store}>
         <Router history={hashHistory} render={applyRouterMiddleware(useScroll())}>

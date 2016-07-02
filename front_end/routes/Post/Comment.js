@@ -12,10 +12,6 @@ import { connect } from 'react-redux'
 import styles from './Comment.css'
 import CSSModules from 'react-css-modules';
 
-
-// TODO: 对评论和回复内容的Server端验证
-// TODO: 相对时间的重刷
-// TODO: 微信昵称重名问题
 class Comment extends React.Component {
     componentDidMount() {
         if (this.props.new_id == this.props.comment._id) {

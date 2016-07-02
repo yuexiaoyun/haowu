@@ -40,8 +40,6 @@ co.wrap(function *() {
         })
     }));
     app.use(logger());
-    // TODO: 对公众号事件通知的处理
-    // TODO: 某现成的统计平台
     // TODO：云主机上不能用ROOT运行
 
     app.use(gzip());

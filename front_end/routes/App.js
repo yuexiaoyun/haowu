@@ -11,7 +11,6 @@ class App extends React.Component {
         wx.chooseImage({
             count: 1,
             success: res => {
-                // TODO: 将path base64，去掉一个action
                 var path = res.localIds[0];
                 this.props.dispatch(createAction('take_pic')(path));
                 hashHistory.push('pub');

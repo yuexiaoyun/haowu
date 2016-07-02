@@ -54,7 +54,6 @@ class Pub extends React.Component {
         window.setTitle('发布好物');
         setShareInfo();
     }
-    // TODO: 发布流程的界面还需要再调一下
     render() {
         var pic_id = this.props.local_pic_id;
         return (

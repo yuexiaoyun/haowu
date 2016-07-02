@@ -13,7 +13,6 @@ import { connect } from 'react-redux';
 import styles from './UserTop.css'
 import CSSModules from 'react-css-modules';
 
-// TODO: 关注公众号的弹窗
 class UserTop extends React.Component {
     constructor() {
         super();

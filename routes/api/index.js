@@ -2,7 +2,6 @@ var router = require('koa-router')();
 
 // TODO: 前后端一致的：发主贴、发评论、发回复的合法性检查
 // TODO: 各种发布的hash去重
-// TODO: 防CSRF攻击处理
 router.get('/update_post_like_uids', require('./update_post_like_uids'));
 router.get('/update_audio_read_uids', require('./update_audio_read_uids'));
 router.get('/update_badge', require('./update_badge'));
