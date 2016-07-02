@@ -13,9 +13,21 @@ class PostCard extends React.Component {
     constructor() {
         super();
     }
-    gotoDetail = () => {
-        var { user } = this.props;
+    gotoUserDetail = () => {
+        var { user, post } = this.props;
+        fetch('/ping/feed?' + qs.stringify({
+            post_id: post._id,
+            type: 'enter_user_detail'
+        }), {credentials: 'same-origin'});
         hashHistory.push('detail/' + user._id);
+    }
+    gotoDetail = () => {
+        var { user, post } = this.props;
+        fetch('/ping/feed?' + qs.stringify({
+            post_id: post._id,
+            type: 'enter_post_detail'
+        }), {credentials: 'same-origin'});
+        hashHistory.push('post/' + post._id);
     }
     picHeight = () => {
         var { post } = this.props;
@@ -44,7 +56,7 @@ class PostCard extends React.Component {
                         height: this.picHeight()
                     }}>
                     <img src={fconf.qiniu.site + post.pic_id + this.postfix()}
-                        onClick={()=>hashHistory.push('post/' + post._id)}/>
+                        onClick={this.gotoDetail}/>
                 </div>
                 <div className="audio-line">
                     <AudioPlayer
@@ -61,7 +73,7 @@ class PostCard extends React.Component {
                         { read_count }
                     </span> }
                 </div>
-                { user && <a className='user-line' onClick={()=>setTimeout(this.gotoDetail, 300)}>
+                { user && <a className='user-line' onClick={()=>setTimeout(this.gotoUserDetail, 300)}>
                     <img className='avatar' src={user.headimgurl} />
                     <span className='nickname'>{user.nickname}</span>
                 </a> }

@@ -64,6 +64,7 @@ co.wrap(function *() {
     });
     app.use(mount('/app', require('./routes/app')));
     app.use(mount('/api', require('./routes/api')));
+    app.use(mount('/ping', require('./routes/ping')));
     app.listen(conf.port || 8080);
 })().catch(function(err) {
     console.log(err.stack);

@@ -34,6 +34,10 @@ class TopCard extends React.Component {
     }
     preview = (e) => {
         var { post } = this.props;
+        fetch('/ping/feed?' + qs.stringify({
+            post_id: post._id,
+            type: 'enter_image_detail'
+        }), {credentials: 'same-origin'});
         wx.previewImage({
             current: fconf.qiniu.site + post.pic_id,
             urls: [fconf.qiniu.site + post.pic_id]
