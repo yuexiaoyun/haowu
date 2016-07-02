@@ -142,7 +142,7 @@ export var posts = handleActions({
             }
             return {
                 ...state,
-                [id]: post
+                [_id]: post
             }
         } else {
             return state;
