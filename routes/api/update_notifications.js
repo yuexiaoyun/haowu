@@ -69,7 +69,7 @@ module.exports = function*() {
             actions: [
                 createAction('update_notifications')({
                     users,
-                    subids: user.subids,
+                    subids: user.subids.reverse(),
                     notifications,
                     notification_end,
                     posts: posts.map(post=>Post.toBrowser(post, this.session.user_id)),

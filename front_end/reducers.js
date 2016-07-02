@@ -127,8 +127,7 @@ export var posts = handleActions({
         }
     },
     update_post_like_uids: (state, action) => {
-        var {_id, users} = action.payload;
-        var likes = users.map(user=>user._id);
+        var {_id, users, likes} = action.payload;
         var post = state[_id];
         if (post)  {
             post = {
@@ -294,8 +293,7 @@ export var audios = handleActions({
         return { ...state, ..._.object([audio_id], [audio]) }
     },
     update_audio_read_uids: (state, action) => {
-        var {audio_id, users} = action.payload;
-        var reads = users.map(user=>user._id);
+        var {audio_id, users, reads} = action.payload;
         var audio = state[audio_id] || {};
         var audio = {
             ...audio,

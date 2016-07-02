@@ -6,14 +6,16 @@ module.exports = function*() {
     var audio = yield Audio.findOne({audio_id: this.query.audio_id}).exec();
     if (!audio)
         this.throw(404);
-    var users = yield findUsersByIds(this.session.user_id, audio.reads);
+    var reads = audio.reads.reverse();
+    var users = yield findUsersByIds(this.session.user_id, reads);
 
     this.body = {
         result: 'ok',
         actions: [
             createAction('update_audio_read_uids')({
                 audio_id: this.query.audio_id,
-                users
+                users,
+                reads
             })
         ]
     }

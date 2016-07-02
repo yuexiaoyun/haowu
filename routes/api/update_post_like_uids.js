@@ -6,14 +6,16 @@ module.exports = function*() {
     var post = yield Post.findOne({_id: this.query._id}).exec();
     if (!post)
         this.throw(404);
-    var users = yield findUsersByIds(this.session.user_id, post.likes);
+    var likes = post.likes.reverse();
+    var users = yield findUsersByIds(this.session.user_id, likes);
 
     this.body = {
         result: 'ok',
         actions: [
             createAction('update_post_like_uids')({
                 _id: this.query._id,
-                users
+                users,
+                likes
             })
         ]
     }
