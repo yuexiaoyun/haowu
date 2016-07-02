@@ -4,36 +4,33 @@
     background-color: @color-bg;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
-    .input-line {
-        padding-left: 16px;
-        .send {
-            float: right;
-            width: 58px;
+    .send {
+        float: right;
+        width: 58px;
+        height: 32px;
+        line-height: 32px;
+        text-align: center;
+    }
+    .input {
+        margin-right: 58px;
+        margin-left: 82px;
+        input {
+            width: 100%;
+            padding-left: 8px;
             height: 32px;
-            line-height: 32px;
-            text-align: center;
         }
-        .input {
-            margin-right: 58px;
-            margin-left: 82px;
-            input {
-                width: 100%;
-                padding-left: 8px;
-                height: 32px;
-            }
-            input:enabled {
-                border: @border-default;
-                border-radius: 5px;
-                background-color: #ffffff;
-            }
-            input:disabled {
-                background-color: @color-bg;
-                border: none;
-            }
+        input:enabled {
+            border: @border-default;
+            border-radius: 5px;
+            background-color: #ffffff;
         }
-        .send-disable {
-            color: @color-text-gray
+        input:disabled {
+            background-color: @color-bg;
+            border: none;
         }
+    }
+    .send-disable {
+        color: @color-text-gray
     }
 }
 .comment-input-fixed {

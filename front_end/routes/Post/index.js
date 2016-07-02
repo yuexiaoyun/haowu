@@ -190,7 +190,7 @@ class Post extends React.Component {
         )
     }
     renderInput() {
-        var { post, users } = this.props;
+        var { post, users, feed_empty } = this.props;
         var { record, input, reply_user } = this.state;
         var user = users[reply_user];
         var me_like = post.me_like;
@@ -210,9 +210,10 @@ class Post extends React.Component {
                 })}
                 ref='comment_input'
                 onClick={(e)=>e.stopPropagation()}>
-                <div className='input-line' >
+                <div styleName='input-line' >
                     <img styleName='btn' src={btnKeyboardHome} onClick={()=>hashHistory.push('/home')}/>
                     <img styleName='btn' src={record ? btnKeyboard : btnSpeech} onClick={this.toggleRecord}/>
+                    { feed_empty && <div styleName='new' /> }
                     <div className={`send ${disable_send ? 'send-disable' : ''}`} onClick={this.send}>发送</div>
                     <div className={`input`}>
                         <input
@@ -273,13 +274,15 @@ var get_comments = createSelector(
         return { top, others }
     }
 )
+var get_new = state => state.feed_ids.length == 0;
 
 var mapStateToProps = createStructuredSelector({
     post: get_post,
     post_detail: get_post_detail,
     user: get_user,
     users: get_users,
-    comments: get_comments
+    comments: get_comments,
+    feed_empty: get_new
 });
 
 export default connect(mapStateToProps)(
