@@ -166,26 +166,24 @@ class Post extends React.Component {
         return (
             <div styleName='root' onClick={this.clear_reply}>
                 { post && <TopCard post={post} user={user} /> }
-                <ListContainer >
-                    { comments.top.length > 0 &&
-                        <div styleName='comments'>
-                            <div styleName='comments-header'>
-                                <span styleName='ym'/>物主参与的互动
-                            </div>
-                            { comments.top.map(this.renderComment) }
+                { comments.top.length > 0 &&
+                    <div styleName='comments'>
+                        <div styleName='comments-header'>
+                            <span styleName='ym'/>物主参与的互动
                         </div>
-                    }
-                    { comments.others.length > 0 &&
-                        <div styleName='comments'>
-                            <div styleName='comments-header'>
-                                <span styleName='ym'/>{comments.top.length > 0 ? '其它评论' : '评论'}
-                            </div>
-                            { comments.others.map(this.renderComment) }
+                        { comments.top.map(this.renderComment) }
+                    </div>
+                }
+                { comments.others.length > 0 &&
+                    <div styleName='comments'>
+                        <div styleName='comments-header'>
+                            <span styleName='ym'/>{comments.top.length > 0 ? '其它评论' : '评论'}
                         </div>
-                    }
-                    { this.state.inputing != 1 &&
-                        <div className={`${record?'comment-input-audio':'comment-input-text'}`} />}
-                </ListContainer>
+                        { comments.others.map(this.renderComment) }
+                    </div>
+                }
+                { this.state.inputing != 1 &&
+                    <div className={`${record?'comment-input-audio':'comment-input-text'}`} />}
                 { post && this.renderInput() }
             </div>
         )
