@@ -48,9 +48,8 @@ class Post extends React.Component {
             var link = fconf.site + '/app/post/' + post._id;
             console.log(link);
             setShareInfo({
-                title: user.nickname + '分享了一件好物',
+                title: user.nickname + '分享了一件好物 | 物记，好物有声',
                 link,
-                desc: '物记，好物有声',
                 imgUrl: fconf.qiniu.site + post.pic_id + '-c167'
             });
         }

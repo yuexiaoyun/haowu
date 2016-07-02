@@ -49,8 +49,7 @@ class Detail extends React.Component {
         }
         console.log(title);
         setShareInfo({
-            title,
-            desc: '物记，好物有声',
+            title: `${title} | 物记，好物有声`,
             link: fconf.site + '/app/detail/' + user._id,
             imgUrl: user.headimgurl
         });
