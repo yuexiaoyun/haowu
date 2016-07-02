@@ -48,7 +48,10 @@ module.exports = function*() {
     // 获取互动区和我订阅的用户列表
     // TODO: 我订阅的用户列表应该先出数，后续再一个单独的请求来取列表？
     var user = null;
-    var user_ids = notifications.map(notification=>notification.user_id2);
+    var user_ids = [
+        ...notifications.map(notification=>notification.user_id2),
+        this.session.user_id
+    ];
     if (!this.query.before_uptime) {
         user = yield User.findByIdAndUpdate(this.session.user_id, {
             $set: {
@@ -57,7 +60,7 @@ module.exports = function*() {
         }).select('clear_badge subids').exec();
         user_ids = [...user_ids, ...user.subids];
     }
-    var users = yield findUsersByIds(this.session.user_id, user_ids);
+    var users = yield findUsersByIds(this.session.user_id, _.uniq(user_ids));
 
     if (user) {
         this.body = {
