@@ -4,6 +4,10 @@ var conf = require('../conf');
 import {Model as User} from '../mongodb_models/user'
 
 module.exports = function *() {
+    if (this.path && this.path != '/') {
+        this.render('redirect', {});
+        return;
+    }
     var param = {
         debug: false,
         jsApiList: [
