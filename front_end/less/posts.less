@@ -1,82 +1,53 @@
-.post {
-    background-color: #ffffff;
-    width: 100%;
-    .comments {
-        .comments-header {
-            height: 50px;
-            border-top: 10px solid @color-bg;
-            line-height: 40px;
-            .ym {
-                float:left;
-                width: 6px;
-                height: 20px;
-                margin: 10px 10px 0 15px;
-                background-color: @color-primary;
+.comment-input {
+    padding-top: 8px;
+    border-top: @border-default;
+    background-color: @color-bg;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    .input-line {
+        padding-left: 16px;
+        .send {
+            float: right;
+            width: 58px;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+        }
+        .input {
+            margin-right: 58px;
+            margin-left: 82px;
+            input {
+                width: 100%;
+                padding-left: 8px;
+                height: 32px;
+            }
+            input:enabled {
+                border: @border-default;
+                border-radius: 5px;
+                background-color: #ffffff;
+            }
+            input:disabled {
+                background-color: @color-bg;
+                border: none;
             }
         }
-    }
-    .comment-input {
-        padding-top: 8px;
-        border-top: @border-default;
-        background-color: @color-bg;
-        backface-visibility: hidden;
-        -webkit-backface-visibility: hidden;
-        .input-line {
-            padding-left: 16px;
-            .btn {
-                float: left;
-                width: 42px;
-                height: 32px;
-                padding: 0 16px;
-                background-position: 0 1px;
-                background-size: 30px 30px;
-                background-repeat: no-repeat;
-            }
-            .send {
-                float: right;
-                width: 58px;
-                height: 32px;
-                line-height: 32px;
-                text-align: center;
-            }
-            .input {
-                margin-right: 58px;
-                input {
-                    width: 100%;
-                    padding-left: 8px;
-                    height: 32px;
-                }
-                input:enabled {
-                    border: @border-default;
-                    border-radius: 5px;
-                    background-color: #ffffff;
-                }
-                input:disabled {
-                    background-color: @color-bg;
-                    border: none;
-                }
-            }
-            .with1 {
-                margin-left: 42px;
-            }
-            .send-disable {
-                color: @color-text-gray
-            }
+        .send-disable {
+            color: @color-text-gray
         }
     }
-    .comment-input-fixed {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 10;
-    }
-    .comment-input-absolute {
-    }
-    .comment-input-text {
-        height: 48px;
-    }
-    .comment-input-audio {
-        height: 180px;
-    }
+}
+.comment-input-fixed {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+}
+.comment-input-absolute {
+}
+.comment-input-text {
+    height: 48px;
+}
+.comment-input-audio {
+    height: 180px;
 }

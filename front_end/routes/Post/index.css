@@ -1,0 +1,25 @@
+.root {
+    background-color: #ffffff;
+    width: 100%;
+}
+.ym {
+    float:left;
+    width: 6px;
+    height: 20px;
+    margin: 10px 10px 0 15px;
+    background-color: #ff6b6b;
+}
+.comments {
+
+}
+.comments-header {
+    height: 50px;
+    border-top: 10px solid #f1f1f1;
+    line-height: 40px;
+}
+.btn {
+    float: left;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}

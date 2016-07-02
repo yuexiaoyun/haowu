@@ -16,7 +16,7 @@ import Home from './routes/Home'
 import Notifications from './routes/Notifications/index'
 import Pub from './routes/Pub'
 import Detail from './routes/Detail/index'
-import Post from './routes/Post'
+import Post from './routes/Post/index'
 
 import SubList from './routes/UserList/SubList'
 import MeSubList from './routes/UserList/MeSubList'

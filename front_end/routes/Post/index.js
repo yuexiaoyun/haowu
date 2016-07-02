@@ -1,23 +1,31 @@
 import React from 'react'
 import { findDOMNode } from 'react-dom'
-import update from '../utility/update';
-import PopupHelper from '../utility/PopupHelper';
-import showProgress from '../utility/show_progress';
-
-import TopCard from './Post/TopCard';
-import Comment from './Post/Comment';
-import Loader from './components/Loader';
-import Recorder from './components/Recorder';
+import { hashHistory } from 'react-router'
+import update from '../../utility/update';
+import PopupHelper from '../../utility/PopupHelper';
+import showProgress from '../../utility/show_progress';
 
 import qs from 'querystring';
 import classNames from 'classnames';
-import { connect } from 'react-redux';
-import setShareInfo from '../utility/set_share_info';
-import * as actions from '../actions';
-import { get_users } from '../reselectors';
-import { createSelector, createStructuredSelector } from 'reselect';
+import setShareInfo from '../../utility/set_share_info';
+import * as actions from '../../actions';
+import { get_users } from '../../reselectors';
 import _ from 'underscore';
-import fconf from '../fconf';
+import fconf from '../../fconf';
+
+import TopCard from './TopCard';
+import Comment from './Comment';
+import Loader from '../components/Loader';
+import Recorder from '../components/Recorder';
+
+import btnKeyboard from '../../files/btn_keyboard.png'
+import btnSpeech from '../../files/btn_speech.png'
+import btnKeyboardHome from '../../files/btn_keyboard_home.png'
+
+import styles from './index.css'
+import CSSModules from 'react-css-modules';
+import { createSelector, createStructuredSelector } from 'reselect';
+import { connect } from 'react-redux';
 
 class Post extends React.Component {
     constructor(props) {
@@ -46,7 +54,6 @@ class Post extends React.Component {
         var { post, user } = this.props;
         if (post && user) {
             var link = fconf.site + '/app/post/' + post._id;
-            console.log(link);
             setShareInfo({
                 title: user.nickname + '分享了一件好物 | 物记，好物有声',
                 link,
@@ -158,20 +165,20 @@ class Post extends React.Component {
         var { post, user, users, comments } = this.props;
         var { record, err } = this.state;
         return (
-            <div className='post' onClick={this.clear_reply}>
+            <div styleName='root' onClick={this.clear_reply}>
                 { post && <TopCard post={post} user={user} /> }
                 { comments.top.length > 0 &&
-                    <div className='comments'>
-                        <div className='comments-header'>
-                            <span className='ym'/>物主参与的互动
+                    <div styleName='comments'>
+                        <div styleName='comments-header'>
+                            <span styleName='ym'/>物主参与的互动
                         </div>
                         { comments.top.map(this.renderComment) }
                     </div>
                 }
                 { comments.others.length > 0 &&
-                    <div className='comments'>
-                        <div className='comments-header'>
-                            <span className='ym'/>{comments.top.length > 0 ? '其它评论' : '评论'}
+                    <div styleName='comments'>
+                        <div styleName='comments-header'>
+                            <span styleName='ym'/>{comments.top.length > 0 ? '其它评论' : '评论'}
                         </div>
                         { comments.others.map(this.renderComment) }
                     </div>
@@ -204,10 +211,10 @@ class Post extends React.Component {
                 ref='comment_input'
                 onClick={(e)=>e.stopPropagation()}>
                 <div className='input-line' >
-                    <div className={`btn ${record ? 'image-btn_keyboard' : 'image-btn_speech'}`}
-                        onClick={this.toggleRecord}/>
+                    <img styleName='btn' src={btnKeyboardHome} onClick={()=>hashHistory.push('/home')}/>
+                    <img styleName='btn' src={record ? btnKeyboard : btnSpeech} onClick={this.toggleRecord}/>
                     <div className={`send ${disable_send ? 'send-disable' : ''}`} onClick={this.send}>发送</div>
-                    <div className={`input with1`}>
+                    <div className={`input`}>
                         <input
                             type="text"
                             value={record ? '' : input}
@@ -276,5 +283,5 @@ var mapStateToProps = createStructuredSelector({
 });
 
 export default connect(mapStateToProps)(
-    Post
+    CSSModules(Post, styles)
 );
