@@ -41,10 +41,12 @@ class PostCard extends React.Component {
             width = window.innerHeight;
         if (width == 320)
             return '-c294';
-        else if (width == 360)
-            return '-c334';
-        else
+        else if (width == 375)
             return '-c349';
+        else if (width == 414)
+            return '-c582';
+        else
+            return '-c334';
     }
     render() {
         var { user, post, audio } = this.props;

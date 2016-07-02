@@ -94,10 +94,12 @@ class TopCard extends React.Component {
             width = window.innerHeight;
         if (width == 320)
             return '-d640';
-        else if (width == 360)
-            return '-d720';
-        else
+        else if (width == 375)
             return '-d750';
+        else if (width == 414)
+            return '-d1242';
+        else
+            return '-d720';
     }
     render() {
         var { user, post, audio, playing, loading, time } = this.props;

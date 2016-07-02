@@ -96,7 +96,7 @@ class NotificationCard extends React.Component {
                         hashHistory.push('detail/' + notification.user_id2);
                     }} />
                 </div>
-                { post && post.pic_id && <img styleName='picture' src={fconf.qiniu.site + post.pic_id + '-c167'} />}
+                { post && post.pic_id && <img styleName='picture' src={fconf.qiniu.site + post.pic_id + '-b80'} />}
                 { this.renderContent() }
             </div>
         );
