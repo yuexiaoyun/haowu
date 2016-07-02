@@ -5,16 +5,6 @@ import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 import { get_users } from '../../reselectors'
 
-class LikeList extends React.Component {
-    componentDidMount() {
-        update('/api/update_post_like_uids?_id=' + this.props.params.id);
-    }
-    render() {
-        var {ids, users} = this.props;
-        return <UserList title='赞过的人' ids={ids} users={users} />;
-    }
-}
-
 var get_post = (state, props) => state.posts[props.params.id];
 var get_url = (state, props) => ('/api/update_post_like_uids?_id=' + props.params.id);
 

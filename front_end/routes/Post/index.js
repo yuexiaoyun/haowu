@@ -166,24 +166,26 @@ class Post extends React.Component {
         return (
             <div styleName='root' onClick={this.clear_reply}>
                 { post && <TopCard post={post} user={user} /> }
-                { comments.top.length > 0 &&
-                    <div styleName='comments'>
-                        <div styleName='comments-header'>
-                            <span styleName='ym'/>物主参与的互动
+                <ListContainer >
+                    { comments.top.length > 0 &&
+                        <div styleName='comments'>
+                            <div styleName='comments-header'>
+                                <span styleName='ym'/>物主参与的互动
+                            </div>
+                            { comments.top.map(this.renderComment) }
                         </div>
-                        { comments.top.map(this.renderComment) }
-                    </div>
-                }
-                { comments.others.length > 0 &&
-                    <div styleName='comments'>
-                        <div styleName='comments-header'>
-                            <span styleName='ym'/>{comments.top.length > 0 ? '其它评论' : '评论'}
+                    }
+                    { comments.others.length > 0 &&
+                        <div styleName='comments'>
+                            <div styleName='comments-header'>
+                                <span styleName='ym'/>{comments.top.length > 0 ? '其它评论' : '评论'}
+                            </div>
+                            { comments.others.map(this.renderComment) }
                         </div>
-                        { comments.others.map(this.renderComment) }
-                    </div>
-                }
-                { this.state.inputing != 1 &&
-                    <div className={`${record?'comment-input-audio':'comment-input-text'}`} />}
+                    }
+                    { this.state.inputing != 1 &&
+                        <div className={`${record?'comment-input-audio':'comment-input-text'}`} />}
+                </ListContainer>
                 { post && this.renderInput() }
             </div>
         )
@@ -261,20 +263,21 @@ var get_comments = createSelector(
     (post, post_detail) => {
         var top = [];
         var others = [];
-        post && post_detail && post_detail.comments && post_detail.comments.map(comment => {
-            if (comment.status == 1 || comment.replies.length > 0) {
-                var user_ids = [comment.user_id, ...comment.replies.map(reply=>reply.user_id)];
-                if (user_ids.indexOf(post.user_id) >= 0)
-                    top.push(comment);
-                else
-                    others.push(comment);
-            }
-        });
+        if (post && post_detail && post_detail.comments) {
+            post_detail.comments.map(comment => {
+                if (comment.status == 1 || comment.replies.length > 0) {
+                    var user_ids = [comment.user_id, ...comment.replies.map(reply=>reply.user_id)];
+                    if (user_ids.indexOf(post.user_id) >= 0)
+                        top.push(comment);
+                    else
+                        others.push(comment);
+                }
+            });
+        }
         return { top, others }
     }
 )
 var get_new = state => state.feed_ids.length == 0;
-
 var mapStateToProps = createStructuredSelector({
     post: get_post,
     post_detail: get_post_detail,
@@ -283,7 +286,6 @@ var mapStateToProps = createStructuredSelector({
     comments: get_comments,
     feed_empty: get_new
 });
-
 export default connect(mapStateToProps)(
     CSSModules(Post, styles)
 );

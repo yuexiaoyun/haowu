@@ -299,7 +299,7 @@ export var audios = handleActions({
         }
         return {
             ...state,
-            [audio_id]: audio_id
+            [audio_id]: audio
         };
     },
     update_audio_read_uids: (state, action) => {
@@ -314,7 +314,7 @@ export var audios = handleActions({
         }
         return {
             ...state,
-            [audio_id]: audio_id
+            [audio_id]: audio
         };
     }
 }, {});
