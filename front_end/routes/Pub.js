@@ -7,7 +7,7 @@ import screenSize from '../utility/screen_size';
 import { hashHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
-import Recorder from './components/Recorder';
+import Recorder from './common/Recorder';
 import BottomButton from './components/BottomButton';
 import PopupHelper from '../utility/PopupHelper';
 import setShareInfo from '../utility/set_share_info'

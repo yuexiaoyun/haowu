@@ -2,7 +2,10 @@ import React from 'react';
 import PopupHelper from '../../utility/PopupHelper';
 import wx from 'weixin-js-sdk';
 
-export default class Recorder extends React.Component {
+import styles from './Recorder.css'
+import CSSModules from 'react-css-modules';
+
+class Recorder extends React.Component {
     constructor() {
         super();
         this.state = {progress: 0};
@@ -15,12 +18,14 @@ export default class Recorder extends React.Component {
     }
     get_audio = () => {
         wx.startRecord({
+            success: () => {
+                this.setState({recording: new Date(), audio_id: null, d: 0});
+                this.props.onData({audio_id: null, d: 0});
+            },
             cancel: () => {
                 this.setState({recording: null});
             }
         });
-        this.setState({recording: new Date(), audio_id: null, d: 0});
-        this.props.onData({audio_id: null, d: 0});
     }
     clear = () => {
         if (this.state.audio_id && !this.state.playing) {
@@ -97,29 +102,36 @@ export default class Recorder extends React.Component {
         if (recording) {
             var onClick = this.stop_audio;
             var className = 'image-btn_tape_stop';
+            var hint = '点击结束录音';
         } else if (playing) {
             var onClick = this.stop_play;
             var className = 'image-btn_play_stop';
+            var hint = '点击停止播放';
         } else if (audio_id) {
             var onClick = this.play_audio;
             var className = 'image-btn_play_start';
+            var hint = '点击开始播放';
         } else {
             var onClick = this.get_audio;
             var className = 'image-btn_tape_start';
+            var hint = '点击开始录音';
         }
         return (
-            <div className='recorder'>
-                <div className='progress' style={{width:''+ progress + '%'}}></div>
-                <div className='record-line'>
-                    <div className='length'>
+            <div styleName='root'>
+                <div styleName='progress' style={{width:''+ progress + '%'}}></div>
+                <div styleName='record-line'>
+                    <div styleName='length'>
                         { d > 0 && d + '"' }
                     </div>
-                    <div className={'recorder-btn ' + className} onClick={onClick} />
-                    <div className={'delete-btn image-btn_play_again' + ((!audio_id || !!playing) ? '_disabled' : '')}
+                    <div styleName='recorder-btn' className={className} onClick={onClick} />
+                    <div styleName='delete-btn' className={'image-btn_play_again' + ((!audio_id || !!playing) ? '_disabled' : '')}
                         onClick={this.clear}
                         disabled={!audio_id || !!playing}/>
                 </div>
+                <div styleName='hint'>{hint}</div>
             </div>
         );
     }
 }
+
+export default CSSModules(Recorder, styles);
