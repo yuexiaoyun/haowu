@@ -8,7 +8,7 @@ import CSSModules from 'react-css-modules';
 
 class NotificationEntry extends React.Component {
     onClick = ()=>{
-        hashHistory.push('/me/notifications');
+        hashHistory.push('/notifications');
     }
     render() {
         var { badge, user } = this.props;

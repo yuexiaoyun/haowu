@@ -9,7 +9,7 @@ import CSSModules from 'react-css-modules';
 
 class NotificationIcon extends React.Component {
     go = () => {
-        hashHistory.push('/me/notifications');
+        hashHistory.push('/notifications');
     }
     render() {
         var { badge } = this.props;

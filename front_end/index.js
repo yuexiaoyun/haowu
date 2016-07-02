@@ -64,10 +64,10 @@ render(
             <Route path="/me_sub_list" component={MeSubList} />
             <Route path="/like_list/:id" component={LikeList} />
             <Route path="/read_list/:id" component={ReadList} />
+            <Route path="/notifications" component={Notifications} />
             <Route path="/" component={App} >
                 <Route path="home" component={Home} />
                 <Route path="home/:time" component={Home} />
-                <Route path="me/notifications" component={Notifications} />
                 <Route path="detail/:id" component={Detail} />
                 <IndexRedirect to="home" />
             </Route>

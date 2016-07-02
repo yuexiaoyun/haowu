@@ -34,7 +34,7 @@ module.exports = function*({user_id, nickname, post_id, comment_id, reply}) {
         console.log(yield wechat.sendTemplate(
             doc.openid,
             'cxJCSZV2RJnSc2h9dZRZ7dYfXxSiT4mGtiZSN2GEChU',
-            conf.site + '/app/me/notifications',
+            conf.site + '/app/home',
             '#FF0000', {
                 first: {
                     value: '你收到一条评论回复通知。',
