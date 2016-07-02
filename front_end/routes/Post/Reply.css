@@ -1,0 +1,16 @@
+.root {
+    margin: 5px 0;
+}
+@keyframes new_item {
+    0% {background-color: #f1dfdd;}
+    100% {}
+}
+@-webkit-keyframes new_item {
+    0% {background-color: #f1dfdd;}
+    100% {}
+}
+.root-new-item {
+    margin: 5px 0;
+    animation: new_item 0.7s linear;
+    -webkit-animation: new_item 0.7s linear;
+}

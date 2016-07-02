@@ -1,0 +1,74 @@
+.root {
+    border-top: 1px solid #dfdfdd;
+    padding-right: 8px;
+    padding-bottom: 8px;
+}
+@keyframes new_item {
+    0% {
+        background-color: #f1dfdd;
+    }
+    100% {
+    }
+}
+@-webkit-keyframes new_item {
+    0% {
+        background-color: #f1dfdd;
+    }
+    100% {
+    }
+}
+.root-new-item {
+    border-top: 1px solid #dfdfdd;
+    padding-right: 8px;
+    padding-bottom: 8px;
+    animation: new_item 0.7s linear;
+    -webkit-animation: new_item 0.7s linear;
+}
+.user-line {
+    padding: 16px 0 16px 15px;
+}
+.avatar {
+    float: left;
+    margin-right: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.nickname {
+    font-weight: bold;
+    height: 18px;
+    line-height: 18px;
+    margin-top: -3px;
+    margin-left: 5px;
+    color: #000000;
+}
+.time {
+    margin-top: 2px;
+    font-size: 11px;
+    color: #666666;
+}
+.louzhu {
+    display: inline-block;
+    margin-left: 5px;
+    width: 36px;
+    height: 18px;
+    text-align: center;
+    border: 1px solid #ff6b6b;
+    font-size: 9px;
+    color: #ff6b6b;
+}
+.comment-text {
+    margin-left: 55px;
+    margin-top: -5px;
+    margin-bottom: 11px;
+    font-size: 15px;
+    line-height: 25px;
+}
+.replies {
+    padding: 6px 8px;
+    margin-left: 55px;
+    font-size: 14px;
+    line-height: 24px;
+    background-color: #f1f1f1;
+}
