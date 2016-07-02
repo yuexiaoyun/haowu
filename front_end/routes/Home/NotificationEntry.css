@@ -1,0 +1,20 @@
+.root {
+    margin: 10px auto 10px;
+    background-color: #666666;
+    border-radius: 5px;
+    width: 140px;
+    height: 36px;
+    padding-top: 3px;
+    text-align: center;
+    color: #ffffff;
+}
+.avatar {
+    float: left;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-left: 5px;
+}
+.text {
+    line-height: 30px;
+}

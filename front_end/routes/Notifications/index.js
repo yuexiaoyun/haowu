@@ -16,7 +16,10 @@ class Notifications extends React.Component {
         this.state = {}
     }
     componentDidMount() {
-        this.props.dispatch(createAction('update_badge')(0));
+        this.props.dispatch(createAction('update_badge')({
+            count: 0,
+            users: []
+        }));
         window.setTitle('消息');
         setShareInfo();
     }

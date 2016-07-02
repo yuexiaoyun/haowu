@@ -24,7 +24,7 @@ class NotificationIcon extends React.Component {
 
 var mapStateToProps = state=>{
     return {
-        badge: state.badge
+        badge: state.badge.count
     }
 }
 

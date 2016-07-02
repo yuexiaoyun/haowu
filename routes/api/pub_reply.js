@@ -13,21 +13,8 @@ module.exports = function*() {
         .exec();
     if (!user || user.block_comment_reply == 1)
         this.throw(403);
-        
-    // 获取原评论信息，注意在被删除的评论下面仍然能接着回复，所以没有status=1的限制
-    var comment = yield Comment.findOne({
-        _id: this.query.comment_id
-    }).exec();
-    if (!comment)
-        this.throw(404);
 
-    // 检查回复的人确实在评论或者回复里
-    var user_ids = [comment.user_id, ...comment.replies.map((reply)=>reply.user_id)];
-    if (user_ids.indexOf(this.query.user_id) < 0)
-        this.throw(403);
-
-    // 保存回复
-    // TODO: 竞态条件下comment.save()会失败
+    // 做好回复的七牛相关处理
     var reply = {
         user_id: this.session.user_id,
         user_id2: this.query.user_id,
@@ -39,11 +26,31 @@ module.exports = function*() {
         yield qiniu.sync(reply.audio_id),
         yield qiniu.pfop(reply.audio_id);
     }
-    comment.uptime = new Date();
-    comment.replies.push(reply);
-    yield comment.save();
+
+    // 插入回复，并检查被回复的人确实在评论或者回复里出现
+    var comment = yield Comment.findOneAndUpdate({
+        _id: this.query.comment_id,
+        $or: [{
+            user_id: this.query.user_id
+        }, {
+            'replies.user_id': this.query.user_id
+        }]
+    }, {
+        $push: {
+            replies: reply
+        },
+        $set: {
+            uptime: new Date()
+        }
+    }, {
+        new: true
+    }).exec();
+
+    if (!comment)
+        this.throw(404);
     reply = comment.replies[comment.replies.length - 1];
 
+    // 发送通知
     co(notifyReply({
         user_id: this.session.user_id,
         nickname: this.session.userInfo.nickname,
@@ -51,7 +58,7 @@ module.exports = function*() {
         comment_id: this.query.comment_id,
         reply
     })).catch(err=>console.log(err.stack));
-    // 发送站内通知
+
     this.body = {
         result: 'ok',
         new_id: reply._id,

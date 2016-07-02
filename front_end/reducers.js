@@ -167,6 +167,7 @@ export var users = handleActions({
     update_user_detail: update_users,
     update_post_detail: update_users,
     update_notifications: update_users,
+    update_badge: update_users,
     pub_post: update_users,
     set_intro: (state, action) => {
         var { intro } = action.payload;
@@ -307,5 +308,8 @@ export var audios = handleActions({
 }, {});
 
 export var badge = handleActions({
-    update_badge: (state, action) => action.payload
+    update_badge: (state, action) => ({
+        count: action.payload.count,
+        uid: action.payload.users.length > 0 ? action.payload.users[0]._id : null
+    })
 }, 0);

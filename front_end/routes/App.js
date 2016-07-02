@@ -33,6 +33,7 @@ class App extends React.Component {
                     }}>
                         <span className={"setting-icon image-btn_tabbar_home" +
                             (location.pathname.substring(0, 5)=='/home' ? '_selected' : '')} />
+                        { badge>0 && <span className="badge">{badge}</span> }
                     </span>
                     <span className={"bar-tab-item"} onClick={this.take_photo}>
                         <span className="setting-icon image-btn_tabbar_photo"></span>
@@ -42,7 +43,6 @@ class App extends React.Component {
                     }}>
                         <span className={"setting-icon image-btn_tabbar_me"
                         + (location.pathname=='/detail/' + window.user_id ? '_selected' : '')} />
-                        { badge>0 && <span className="badge">{badge}</span> }
                     </span>
                 </nav>
             </div>
@@ -50,4 +50,6 @@ class App extends React.Component {
     }
 }
 
-export default connect(({badge})=>({badge}))(App);
+export default connect(({badge})=>({
+    badge: badge.count
+}))(App);

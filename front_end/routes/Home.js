@@ -1,11 +1,15 @@
 import React from 'react';
-import FeedList from './components/FeedList';
 import { parse_online_json } from '../utility/fetch_utils';
-import Loader from './components/Loader';
 import update from '../utility/update';
 import setShareInfo from '../utility/set_share_info';
-import InfiniteScroll from 'react-infinite-scroller';
 import qs from 'querystring';
+
+import InfiniteScroll from 'react-infinite-scroller';
+import Loader from './components/Loader';
+import FeedList from './components/FeedList';
+import NotificationEntry from './Home/NotificationEntry'
+
+import { hashHistory } from 'react-router';
 
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
@@ -48,10 +52,11 @@ class Home extends React.Component {
             this.reload();
     }
     render() {
-        var { post_list, feed_end } = this.props;
+        var { post_list, badge, feed_end } = this.props;
         var { reloading, err } = this.state;
         return (
             <InfiniteScroll hasMore={feed_end == 0} loadMore={this.loadMore}>
+                { badge.count > 0 && <NotificationEntry /> }
                 { reloading && post_list.length > 0 && <Loader /> }
                 <FeedList post_list={post_list} showUser={true}/>
                 { feed_end == 0 && !err && <Loader /> }
@@ -63,6 +68,7 @@ class Home extends React.Component {
 var get_feed_ids = state => state.feed_ids;
 var get_feed_end = state => state.feed_end;
 var get_posts = state => state.posts;
+var get_badge = state => state.badge;
 
 var get_post_list = createSelector(
     [get_feed_ids, get_posts],
@@ -71,7 +77,8 @@ var get_post_list = createSelector(
 
 var mapStateToProps = createStructuredSelector({
     post_list: get_post_list,
-    feed_end: get_feed_end
+    feed_end: get_feed_end,
+    badge: get_badge
 })
 
 module.exports = connect(mapStateToProps, null, null, {withRef: true})(
