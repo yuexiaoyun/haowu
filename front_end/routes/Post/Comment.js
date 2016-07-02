@@ -2,21 +2,16 @@ import React from 'react';
 import { findDOMNode } from 'react-dom';
 import { hashHistory } from 'react-router';
 import fconf from '../../fconf';
+
+import AudioPlayer from '../components/AudioPlayer';
+import NameSpan from './NameSpan'
+
 import { connect } from 'react-redux'
 import { fromObjectId } from '../../utility/format_time';
-import AudioPlayer from './AudioPlayer';
-
 // TODO: 对评论和回复内容的Server端验证
 // TODO: 相对时间的重刷
 // TODO: 微信昵称重名问题
 
-var NameSpan = ({user}) => {
-    var avatarClick = (e)=>{
-        e.stopPropagation();
-        hashHistory.push('detail/' + user._id);
-    }
-    return <span className={'nickname'} onClick={avatarClick}><strong>{user.nickname}</strong></span>;
-};
 
 class _Reply extends React.Component {
     componentDidMount() {

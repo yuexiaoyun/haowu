@@ -3,10 +3,12 @@ import { findDOMNode } from 'react-dom'
 import update from '../utility/update';
 import PopupHelper from '../utility/PopupHelper';
 import showProgress from '../utility/show_progress';
+
 import TopCard from './Post/TopCard';
-import Comment from './components/Comment';
+import Comment from './Post/Comment';
 import Loader from './components/Loader';
 import Recorder from './components/Recorder';
+
 import qs from 'querystring';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
