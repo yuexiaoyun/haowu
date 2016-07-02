@@ -69,6 +69,7 @@ render(
                 <Route path="home" component={Home} />
                 <Route path="home/:time" component={Home} />
                 <Route path="detail/:id" component={Detail} />
+                <Redirect from="/me/notifications" to="home" />
                 <IndexRedirect to="home" />
             </Route>
         </Router>
