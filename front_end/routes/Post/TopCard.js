@@ -39,7 +39,7 @@ class TopCard extends React.Component {
     preview = (e) => {
         var { post } = this.props;
         console.log(this.state.input);
-        if (this.state.input != 1) {
+        if (this.props.edit_title != 1) {
             fetch('/ping/feed?' + qs.stringify({
                 post_id: post._id,
                 type: 'enter_image_detail'
