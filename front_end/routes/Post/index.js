@@ -153,6 +153,20 @@ class Post extends React.Component {
         }
         showProgress('发布中', p.catch(()=>PopupHelper.toast('发布失败')));
     }
+    startEditTitle = () => {
+        if (this.props.post.user_id == window.user_id)
+            this.setState({edit_title: 1})
+    }
+    handleEditTitle = (title) => {
+        var { post, dispatch } = this.props;
+        setTimeout(()=>{
+            dispatch(actions.set_title({
+                _id: post._id,
+                title
+            }));
+            this.setState({edit_title: 0})
+        }, 0);
+    }
     renderComment = (comment) => {
         return <Comment
             key={comment._id}
@@ -163,10 +177,15 @@ class Post extends React.Component {
     }
     render() {
         var { post, user, users, comments } = this.props;
-        var { record, err } = this.state;
+        var { record, err, edit_title } = this.state;
         return (
             <div styleName='root' onClick={this.clear_reply}>
-                { post && <TopCard post={post} user={user} /> }
+                { post && <TopCard
+                    post={post}
+                    user={user}
+                    edit_title={edit_title}
+                    startEditTitle={this.startEditTitle}
+                    handleEditTitle={this.handleEditTitle}/> }
                 { comments.top.length > 0 &&
                     <div styleName='comments'>
                         <div styleName='comments-header'>
@@ -185,7 +204,7 @@ class Post extends React.Component {
                 }
                 { this.state.inputing != 1 &&
                     <div className={`${record?'comment-input-audio':'comment-input-text'}`} />}
-                { post && this.renderInput() }
+                { post && this.state.edit_title != 1 && this.renderInput() }
             </div>
         )
     }

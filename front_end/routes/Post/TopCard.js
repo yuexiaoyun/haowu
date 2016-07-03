@@ -4,7 +4,7 @@ import fconf from '../../fconf';
 import { fromObjectId } from '../../utility/format_time';
 import update from '../../utility/update';
 import { play, stop } from '../../utility/audio_manager';
-import { sub, like, set_title } from '../../actions';
+import { sub, like } from '../../actions';
 import qs from 'querystring';
 import wx from 'weixin-js-sdk';
 
@@ -108,21 +108,6 @@ class TopCard extends React.Component {
         else
             return '-d720';
     }
-    input = (e) => {
-        e.stopPropagation();
-        if (this.props.post.user_id == window.user_id)
-            this.setState({input: 1});
-    }
-    handleInput = (title) => {
-        var { post, dispatch } = this.props;
-        setTimeout(()=>{
-            dispatch(set_title({
-                _id: post._id,
-                title
-            }));
-            this.setState({input: 0})
-        }, 0);
-    }
     render() {
         var { user, post, audio, playing, loading, time } = this.props;
         var d = Math.floor((post.length + 500) / 1000);
@@ -136,9 +121,9 @@ class TopCard extends React.Component {
                         styleName='picture-img'
                         style={post.w > post.h ? {height: '100%'} : {width: '100%'}}
                         onClick={this.preview}/>
-                    {(post.title || post.user_id == window.user_id) && <div styleName='title' onClick={this.input}>
-                        { this.state.input == 1 && <TitleInput post={post} handleInput={this.handleInput}/>}
-                        { this.state.input != 1 && <div>
+                    {(post.title || post.user_id == window.user_id) && <div styleName='title' onClick={this.props.startEditTitle}>
+                        { this.props.edit_title == 1 && <TitleInput post={post} handleInput={this.props.handleEditTitle}/>}
+                        { this.props.edit_title != 1 && <div>
                             <img src={btnTitleDetails} styleName='edit'/>
                             {post.title || '好标题让人更愿意听你的分享'}
                         </div>}
