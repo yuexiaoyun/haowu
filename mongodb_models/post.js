@@ -48,6 +48,7 @@ module.exports.findPosts = function *(user_id, q, as) {
             w: 1,
             h: 1,
             title: 1,
+            status: 1,
             me_like: {
                 $setIsSubset: [[user_id], '$likes']
             },
@@ -73,13 +74,4 @@ module.exports.findPostsByIds = function *(user_id, ids) {
 module.exports.findPostById = function*(user_id, id) {
     var docs = yield module.exports.findPostsByIds(user_id, [id]);
     return docs.length > 0 ? docs[0] : null;
-}
-
-Model.toBrowser = (doc, user_id) => {
-    doc = doc.toObject();
-    doc.me_like = doc.likes && doc.likes.indexOf(user_id) >= 0;
-    doc.like_count = doc.likes && doc.likes.length || 0;
-    delete doc.likes;
-    delete doc.reads;
-    return doc;
 }
