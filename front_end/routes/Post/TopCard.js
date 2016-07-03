@@ -38,14 +38,17 @@ class TopCard extends React.Component {
     }
     preview = (e) => {
         var { post } = this.props;
-        fetch('/ping/feed?' + qs.stringify({
-            post_id: post._id,
-            type: 'enter_image_detail'
-        }), {credentials: 'same-origin'});
-        wx.previewImage({
-            current: fconf.qiniu.site + post.pic_id,
-            urls: [fconf.qiniu.site + post.pic_id]
-        });
+        console.log(this.state.input);
+        if (this.state.input != 1) {
+            fetch('/ping/feed?' + qs.stringify({
+                post_id: post._id,
+                type: 'enter_image_detail'
+            }), {credentials: 'same-origin'});
+            wx.previewImage({
+                current: fconf.qiniu.site + post.pic_id,
+                urls: [fconf.qiniu.site + post.pic_id]
+            });
+        }
     }
     more = (e) => {
         e.stopPropagation();
@@ -105,17 +108,20 @@ class TopCard extends React.Component {
         else
             return '-d720';
     }
-    input = () => {
+    input = (e) => {
+        e.stopPropagation();
         if (this.props.post.user_id == window.user_id)
             this.setState({input: 1});
     }
     handleInput = (title) => {
-        this.setState({input: 0});
         var { post, dispatch } = this.props;
-        dispatch(set_title({
-            _id: post._id,
-            title
-        }));
+        setTimeout(()=>{
+            dispatch(set_title({
+                _id: post._id,
+                title
+            }));
+            this.setState({input: 0})
+        }, 0);
     }
     render() {
         var { user, post, audio, playing, loading, time } = this.props;

@@ -6,10 +6,9 @@ import CSSModules from 'react-css-modules';
 class TitleInput extends React.Component {
     constructor(props) {
         super();
-        this.state = { title: props.title }
-    }
-    shouldComponentUpdate(props) {
-        return false;
+        this.state = {
+            title: props.post.title || ''
+        }
     }
     componentDidMount() {
         this.refs.input.focus();
@@ -18,11 +17,8 @@ class TitleInput extends React.Component {
         })
     }
     handleChange = (event) => {
-        console.log(event.target.value.length);
         if (event.target.value.length <= 15) {
             this.setState({title: event.target.value});
-        } else {
-            event.target.value = this.state.title;
         }
     }
     render() {
@@ -30,8 +26,8 @@ class TitleInput extends React.Component {
         return (
             <input
                 ref='input'
-                styleName='title-input'
                 type='text'
+                styleName='title-input'
                 value={this.state.title}
                 onChange={this.handleChange}/>
         );
