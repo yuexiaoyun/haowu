@@ -1,4 +1,6 @@
 import { Model as UserPostPing } from '../../mongodb_models/user_post_ping'
+import co from 'co'
+import { updateScore } from '../../models/Score'
 
 module.exports = function *() {
     var q = {
@@ -8,6 +10,7 @@ module.exports = function *() {
     }
     var d = q;
     yield UserPostPing.update(q, d, {upsert: true});
+    co(updateScore(this.query.post_id));
     this.body = {
         result: 'ok'
     };
