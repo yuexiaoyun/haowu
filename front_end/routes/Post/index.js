@@ -53,9 +53,9 @@ class Post extends React.Component {
         var { post, user } = this.props;
         if (post && user) {
             var link = fconf.site + '/app/post/' + post._id;
-            var title = post.title || user.nickname + '分享了一件好物';
+            var title = post.title || '分享了一件好物';
             setShareInfo({
-                title: title + ' | 物记，好物有声',
+                title: title + ` | ${user.nickname}的物记`,
                 link,
                 imgUrl: fconf.qiniu.site + post.pic_id + '-b80'
             });

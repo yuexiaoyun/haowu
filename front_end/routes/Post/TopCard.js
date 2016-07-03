@@ -17,7 +17,7 @@ import { createAction } from 'redux-actions'
 import styles from './TopCard.css'
 import CSSModules from 'react-css-modules'
 
-import btnEditMe from '../../files/btn_edit_me.png';
+import btnTitleDetails from '../../files/btn_title_details.png';
 
 class TopCard extends React.Component {
     constructor() {
@@ -138,11 +138,10 @@ class TopCard extends React.Component {
                         onClick={this.preview}/>
                     {(post.title || post.user_id == window.user_id) && <div styleName='title' onClick={this.input}>
                         { this.state.input == 1 && <TitleInput post={post} handleInput={this.handleInput}/>}
-                        { this.state.input != 1 && (post.title || <div>
-                                <img src={btnEditMe} styleName='edit'/>
-                                <span styleName='title-set'>好标题让人更愿意听你的分享</span>
-                            </div>)
-                        }
+                        { this.state.input != 1 && <div>
+                            <img src={btnTitleDetails} styleName='edit'/>
+                            {post.title || '好标题让人更愿意听你的分享'}
+                        </div>}
                     </div>}
                 </div>
                 <div styleName='audio-line'>

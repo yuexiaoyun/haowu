@@ -21,7 +21,7 @@ class Detail extends React.Component {
     componentDidMount() {
         var { user } = this.props;
         if (user) {
-            window.setTitle(user.nickname + '的主页');
+            window.setTitle(user.nickname + '的物记');
             this.setShareInfo();
         }
         this.load();
@@ -35,7 +35,7 @@ class Detail extends React.Component {
     componentDidUpdate() {
         var { user } = this.props;
         if (user) {
-            window.setTitle(user.nickname + '的主页');
+            window.setTitle(user.nickname + '的物记');
             this.setShareInfo();
         }
     }
