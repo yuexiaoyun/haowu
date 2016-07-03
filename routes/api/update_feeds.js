@@ -1,4 +1,4 @@
-import { Model as Post } from '../../mongodb_models/post';
+import { Model as Post, findPostsByIds } from '../../mongodb_models/post';
 import { Model as User, findUsersByIds } from '../../mongodb_models/user';
 import { Model as Audio } from '../../mongodb_models/audio';
 import { Model as UserFeed } from '../../mongodb_models/user_feed';
@@ -100,16 +100,12 @@ module.exports = function*() {
             pids = _.first(doc.posts, min);
         yield doc.save();
     }
-    var q = {
-        _id: { $in: pids },
-        status: { $ne: 0 }
-    };
 
     // 取到本次的Feed流，并按照pids里面给的原始顺序重排
-    var posts = yield Post.find(q).sort({_id:-1}).exec();
+    var posts = yield findPostsByIds(this.session.user_id, pids);
     var post_map = _.object(posts.map(post=>post._id), posts);
     posts = pids.map((_id) => post_map[_id]);
-    posts = _.compact(posts);
+    posts = _.filter(posts, post=>(post.status != 0));
     var feed_end = (posts.length > 0 || !this.query.beforeid) ? 0 : 1;
 
     // 获取Post的作者信息
@@ -127,7 +123,7 @@ module.exports = function*() {
         actions: [
             createAction('update_feeds')({
                 users,
-                posts: posts.map(post=>Post.toBrowser(post, this.session.user_id)),
+                posts,
                 audios: audios.map(audio=>Audio.toBrowser(audio, this.session.user_id)),
                 concat: !!this.query.beforeid,
                 feed_end,

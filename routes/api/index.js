@@ -15,6 +15,7 @@ router.get('/read', require('./read'));
 router.get('/delete_post', require('./delete_post'));
 router.get('/update_notifications', require('./update_notifications'));
 router.get('/set_intro', require('./set_intro'));
+router.get('/set_title', require('./set_title'));
 router.get('/like', require('./like'));
 router.get('/pub_reply', require('./pub_reply'));
 router.get('/pub_comment', require('./pub_comment'));

@@ -1,4 +1,3 @@
-var qs = require('querystring');
 var conf = require('../conf');
 var mongoose = require('mongoose');
 var mongo = require('../utility/mongo');

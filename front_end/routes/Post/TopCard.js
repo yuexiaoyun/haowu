@@ -2,18 +2,22 @@ import React from 'react';
 import { hashHistory } from 'react-router';
 import fconf from '../../fconf';
 import { fromObjectId } from '../../utility/format_time';
-import PopupHelper from '../../utility/PopupHelper'
 import update from '../../utility/update';
-import Loader from '../components/Loader'
 import { play, stop } from '../../utility/audio_manager';
-import { sub, like } from '../../actions';
+import { sub, like, set_title } from '../../actions';
 import qs from 'querystring';
 import wx from 'weixin-js-sdk';
+
+import Loader from '../components/Loader'
+import PopupHelper from '../../utility/PopupHelper'
+import TitleInput from './TitleInput'
 
 import { connect } from 'react-redux'
 import { createAction } from 'redux-actions'
 import styles from './TopCard.css'
 import CSSModules from 'react-css-modules'
+
+import btnEditMe from '../../files/btn_edit_me.png';
 
 class TopCard extends React.Component {
     constructor() {
@@ -101,6 +105,18 @@ class TopCard extends React.Component {
         else
             return '-d720';
     }
+    input = () => {
+        if (this.props.post.user_id == window.user_id)
+            this.setState({input: 1});
+    }
+    handleInput = (title) => {
+        this.setState({input: 0});
+        var { post, dispatch } = this.props;
+        dispatch(set_title({
+            _id: post._id,
+            title
+        }));
+    }
     render() {
         var { user, post, audio, playing, loading, time } = this.props;
         var d = Math.floor((post.length + 500) / 1000);
@@ -114,6 +130,14 @@ class TopCard extends React.Component {
                         styleName='picture-img'
                         style={post.w > post.h ? {height: '100%'} : {width: '100%'}}
                         onClick={this.preview}/>
+                    {(post.title || post.user_id == window.user_id) && <div styleName='title' onClick={this.input}>
+                        { this.state.input == 1 && <TitleInput post={post} handleInput={this.handleInput}/>}
+                        { this.state.input != 1 && (post.title || <div>
+                                <img src={btnEditMe} styleName='edit'/>
+                                <span styleName='title-set'>好标题让人更愿意听你的分享</span>
+                            </div>)
+                        }
+                    </div>}
                 </div>
                 <div styleName='audio-line'>
                     <div styleName='audio-line-tab'>

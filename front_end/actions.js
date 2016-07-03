@@ -23,3 +23,7 @@ export var sub = createOptimistAction('sub', payload=>(`/api/${payload.sub ? 'su
 export var set_intro = createOptimistAction('set_intro', payload=>('/api/set_intro?' + qs.stringify({
     intro: payload.intro
 })));
+export var set_title = createOptimistAction('set_title', payload=>('/api/set_title?' + qs.stringify({
+    _id: payload._id,
+    title: payload.title
+})));

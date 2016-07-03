@@ -147,6 +147,22 @@ export var posts = handleActions({
         } else {
             return state;
         }
+    },
+    set_title: (state, action) => {
+        var { _id, title } = action.payload;
+        var post = state[_id];
+        if (post) {
+            post = {
+                ...post,
+                title
+            }
+            return {
+                ...state,
+                [_id]: post
+            }
+        } else {
+            return state;
+        }
     }
 }, {});
 

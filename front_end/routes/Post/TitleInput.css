@@ -1,0 +1,10 @@
+.title-input {
+    display: inline-block;
+    background-color: rgba(0, 0, 0, 0);
+    margin: 10px auto 24px;
+    max-width: 240px;
+    height: 20px;
+    font-size: 14px;
+    border: 0px;
+    color: #ffffff
+}

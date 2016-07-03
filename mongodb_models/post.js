@@ -1,6 +1,7 @@
 var conf = require('../conf');
 var mongoose = require('mongoose');
 var mongo = require('../utility/mongo');
+var ObjectID = require('bson/lib/bson/objectid')
 
 // 主贴
 var schema = new mongoose.Schema({
@@ -16,6 +17,8 @@ var schema = new mongoose.Schema({
     w: { type: Number },
     // 精确的原图高度
     h: { type: Number },
+    // 标题
+    title: { type: String },
     // 所有点了赞的用户的user_id
     likes: [{ type: String }],
     // status=0：已被删除
@@ -31,6 +34,46 @@ schema.index({ rank0: 1 });
 
 var Model = mongo.conn.model('post', schema);
 module.exports.Model = Model;
+
+module.exports.findPosts = function *(user_id, q, as) {
+    var aggrs = [{
+        $match: q
+    }, {
+        $project: {
+            _id: 1,
+            user_id: 1,
+            pic_id: 1,
+            audio_id: 1,
+            length: 1,
+            w: 1,
+            h: 1,
+            title: 1,
+            me_like: {
+                $setIsSubset: [[user_id], '$likes']
+            },
+            like_count: {
+                $size: '$likes'
+            }
+        }
+    }, ...(as || [])];
+    var docs = yield Model.aggregate(aggrs).exec();
+    console.log(docs);
+    return docs;
+}
+
+module.exports.findPostsByIds = function *(user_id, ids) {
+    var q = {
+        _id: {
+            $in: ids.map(id=>new ObjectID(id))
+        }
+    }
+    return yield module.exports.findPosts(user_id, q);
+}
+
+module.exports.findPostById = function*(user_id, id) {
+    var docs = yield module.exports.findPostsByIds(user_id, [id]);
+    return docs.length > 0 ? docs[0] : null;
+}
 
 Model.toBrowser = (doc, user_id) => {
     doc = doc.toObject();

@@ -18,6 +18,29 @@
 .picture-dummy {
     margin-top: 100%;
 }
+.title {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    height: 36px;
+    line-height: 36px;
+    padding: 0px 10px;
+    font-size: 12px;
+    color: #ffffff;
+}
+.title-set {
+    display: inline-block;
+    color: #999999;
+}
+.edit {
+    float: left;
+    width: 20px;
+    height: 20px;
+    margin-top: 8px;
+    margin-right: 5px;
+}
 .audio-line {
     composes: clear-fix from '../common_styles/base.css';
     width: 100%;

@@ -57,14 +57,18 @@ module.exports = function*() {
         user_id: this.session.user_id,
     }));
 
+    post = post.toObject();
+    post.me_like = false
+    post.like_count = 0;
+    delete post.likes;
+
     this.body = {
         result: 'ok',
         actions: [
             createAction('pub_post')({
-                posts: [Post.toBrowser(post, this.session.user_id)],
+                posts: [post],
                 users: [user]
             })
         ]
     };
-    console.log(this.body);
 }

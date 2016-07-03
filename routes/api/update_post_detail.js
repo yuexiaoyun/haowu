@@ -1,5 +1,5 @@
 import { Model as User, findUsersByIds } from '../../mongodb_models/user';
-import { Model as Post } from '../../mongodb_models/post';
+import { Model as Post, findPostById } from '../../mongodb_models/post';
 import { Model as Audio } from '../../mongodb_models/audio';
 import { Model as Comment } from '../../mongodb_models/comment';
 import { createAction } from 'redux-actions';
@@ -7,8 +7,8 @@ import _ from 'underscore';
 
 module.exports = function*() {
     // 获取原始Post
-    var post = yield Post.findOne({_id: this.query._id, status: {$ne: 0}}).exec();
-    if (!post)
+    var post = yield findPostById(this.session.user_id, this.query._id);
+    if (!post || post.status == 0)
         this.throw(404);
 
     // 获取评论、回复和所有评论、回复、点赞中出现的user_id对应的用户
@@ -41,7 +41,7 @@ module.exports = function*() {
         actions: [
             createAction('update_post_detail')({
                 users,
-                posts: [Post.toBrowser(post, this.session.user_id)],
+                posts: [post],
                 audios: audios.map(audio=>Audio.toBrowser(audio, this.session.user_id)),
                 comments
             })

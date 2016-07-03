@@ -30,9 +30,7 @@ module.exports = function*() {
         .compact()
         .uniq()
         .value();
-    var posts = yield Post.find({
-        _id: { $in: post_ids }
-    }).exec();
+    var posts = yield findPostsByIds(this.session.user_id, post_ids);
 
     // 获取通知区域和通知区域的Post出现的所有语音
     var audio_ids = _.chain([
@@ -72,7 +70,7 @@ module.exports = function*() {
                     subids: user.subids.reverse(),
                     notifications,
                     notification_end,
-                    posts: posts.map(post=>Post.toBrowser(post, this.session.user_id)),
+                    posts,
                     audios: audios.map(audio=>Audio.toBrowser(audio, this.session.user_id))
                 })
             ]
@@ -86,7 +84,7 @@ module.exports = function*() {
                     notifications,
                     notification_end,
                     concat: 1,
-                    posts: posts.map(post=>Post.toBrowser(post, this.session.user_id)),
+                    posts,
                     audios: audios.map(audio=>Audio.toBrowser(audio, this.session.user_id))
                 })
             ]
