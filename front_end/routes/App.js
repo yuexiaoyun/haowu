@@ -44,7 +44,7 @@ class App extends React.Component {
                     <div styleName='triangle-container'>
                         <div styleName='triangle-down' />
                     </div>
-                </div> }
+                </div> || null }
                 <nav styleName="bar">
                     <span styleName={"bar-tab-item"} onClick={()=>{
                         hashHistory.replace('/home/' + Date.parse(new Date()));
