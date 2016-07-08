@@ -11,16 +11,9 @@ var menu = {
         name: '送物换物',
         media_id: 'egOrCsB_0y-VIJsP2uYkaNmPCJaDTTUQOL0QRqPPQ08'
     }, {
-        name: '关于',
-        sub_button: [{
-            type: 'media_id',
-            name: '意见反馈',
-            media_id: 'egOrCsB_0y-VIJsP2uYkaDQZm3eehAhRmP8FZzPk0ys'
-        }, {
-            type: "view_limited",
-            name: "关于物记",
-            media_id: 'egOrCsB_0y-VIJsP2uYkaNmkmw-7YshZc7R8gzVCWzI'
-        }]
+        type: "view_limited",
+        name: "关于",
+        media_id: 'egOrCsB_0y-VIJsP2uYkaNmkmw-7YshZc7R8gzVCWzI'
     }]
 };
 
