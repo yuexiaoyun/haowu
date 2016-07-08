@@ -9,7 +9,7 @@ var menu = {
     }, {
         type: 'media_id',
         name: '送物换物',
-        media_id: 'egOrCsB_0y-VIJsP2uYkaNmPCJaDTTUQOL0QRqPPQ08'
+        media_id: 'egOrCsB_0y-VIJsP2uYkaMYd0ndtKwwEXRQeNfq-MW8'
     }, {
         type: "view_limited",
         name: "关于",
