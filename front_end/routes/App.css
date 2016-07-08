@@ -10,6 +10,7 @@
     width: 100%;
     height: 49px;
     padding: 0;
+    display: table;
     table-layout: fixed;
     &:before {
         content: '';
@@ -38,10 +39,58 @@
     display: table-cell;
     width: 1%;
     height: 49px;
-    color: #929292;
     text-align: center;
     vertical-align: middle;
 }
+.icon {
+    width: 30px;
+    height: 30px;
+}
+.take-photo-shadow {
+    position: absolute;
+    z-index: 11;
+    bottom: 0;
+    left: 50%;
+    margin-left: -32px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: #f7f7f8;
+    box-shadow: 0 -1px 2px rgba(0,0,0,0.3);
+}
+.take-photo-container {
+    position: absolute;
+    z-index: 12;
+    left: 0;
+    right: 0;
+    top: 10px;
+    bottom: 0;
+    background-color: #f7f7f8;
+}
+
+.take-photo {
+    position: absolute;
+    z-index: 13;
+    top: -5px;
+    left: 50%;
+    margin-left: -22px;
+    width: 44px;
+    height: 44px;
+    background-size: 44px 44px;
+    background-image: url('../files/btn_tabbar_photo.png');
+}
+.take-photo:active {
+    position: absolute;
+    z-index: 13;
+    top: -5px;
+    left: 50%;
+    margin-left: -22px;
+    width: 44px;
+    height: 44px;
+    background-size: 44px 44px;
+    background-image: url('../files/btn_tabbar_photo_pressed.png');
+}
+
 .badge {
     position: absolute;
     left: 50%;

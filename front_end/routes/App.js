@@ -4,6 +4,13 @@ import { hashHistory } from 'react-router';
 import { createAction } from 'redux-actions';
 import wx from 'weixin-js-sdk';
 
+import btnTabbarHome from '../files/btn_tabbar_home.png'
+import btnTabbarHomeSelected from '../files/btn_tabbar_home_selected.png'
+import btnTabbarMe from '../files/btn_tabbar_me.png'
+import btnTabbarMeSelected from '../files/btn_tabbar_me_selected.png'
+import btnTabbarPhoto from '../files/btn_tabbar_photo.png'
+import btnTabbarPhotoPressed from '../files/btn_tabbar_photo_pressed.png'
+
 import styles from './App.css';
 import CSSModules from 'react-css-modules';
 import { connect } from 'react-redux';
@@ -34,19 +41,21 @@ class App extends React.Component {
                     <span styleName={"bar-tab-item"} onClick={()=>{
                         hashHistory.replace('/home/' + Date.parse(new Date()));
                     }}>
-                        <span styleName='setting-icon' className={"image-btn_tabbar_home" +
-                            (location.pathname.substring(0, 5)=='/home' ? '_selected' : '')} />
+                        <img styleName='icon'
+                            src={(location.pathname.substring(0, 5)=='/home' ? btnTabbarHomeSelected : btnTabbarHome)} />
                         { badge>0 && <span styleName="badge">{badge}</span>
                         || feed_empty && <div styleName='new' /> }
                     </span>
-                    <span styleName={"bar-tab-item"} onClick={this.take_photo}>
-                        <span styleName='setting-icon' className="image-btn_tabbar_photo"></span>
+                    <span styleName={"bar-tab-item"}>
+                        <div styleName='take-photo-shadow' />
+                        <div styleName='take-photo-container' />
+                        <span styleName='take-photo' onClick={this.take_photo}/>
                     </span>
                     <span styleName={"bar-tab-item"} onClick={()=>{
                         hashHistory.replace('/detail/' + window.user_id);
                     }}>
-                        <span styleName='setting-icon' className={"image-btn_tabbar_me"
-                        + (location.pathname=='/detail/' + window.user_id ? '_selected' : '')} />
+                        <img styleName='icon'
+                            src={(location.pathname=='/detail/'+window.user_id ? btnTabbarMeSelected : btnTabbarMe)} />
                     </span>
                 </nav>
             </div>
