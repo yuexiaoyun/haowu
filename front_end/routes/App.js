@@ -26,17 +26,25 @@ class App extends React.Component {
                 hashHistory.push('pub');
             }
         });
+        update('/api/hide_tooltip');
+        this.props.dispatch(createAction('update_tooltip')(0));
     }
     componentDidMount() {
         update('/api/update_badge');
     }
     render() {
-        var { children, location, badge, feed_empty } = this.props;
+        var { children, location, badge, feed_empty, tooltip } = this.props;
         var current_tab = 0;
         return (
             <div>
                 {children}
                 <div style={{width: '100%', height: '49px', clear:'both', overflow:'hidden'}} />
+                { tooltip && location.pathname.substring(0, 5)=='/home' && <div styleName='tooltip-container'>
+                    <div styleName='tooltip'>发个好物~说出真实的自己</div>
+                    <div styleName='triangle-container'>
+                        <div styleName='triangle-down' />
+                    </div>
+                </div> }
                 <nav styleName="bar">
                     <span styleName={"bar-tab-item"} onClick={()=>{
                         hashHistory.replace('/home/' + Date.parse(new Date()));
@@ -65,9 +73,11 @@ class App extends React.Component {
 
 var get_badge_count = state => state.badge.count;
 var get_new = state => state.feed_ids.length == 0;
+var get_tooltip = state => state.tooltip;
 var mapStateToProps = createStructuredSelector({
     badge: get_badge_count,
-    feed_empty: get_new
+    feed_empty: get_new,
+    tooltip: get_tooltip
 });
 
 export default connect(mapStateToProps)(

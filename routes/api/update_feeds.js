@@ -127,7 +127,8 @@ module.exports = function*() {
                 audios: audios.map(audio=>Audio.toBrowser(audio, this.session.user_id)),
                 concat: !!this.query.beforeid,
                 feed_end,
-            })
+            }),
+            createAction('update_tooltip')(doc.tooltip_showed ? 0 : 1)
         ]
     }
 }

@@ -335,11 +335,16 @@ export var audios = handleActions({
     }
 }, {});
 
+
 export var badge = handleActions({
     update_badge: (state, action) => ({
         count: action.payload.count,
         uid: action.payload.users.length > 0 ? action.payload.users[0]._id : null
     })
+}, {});
+
+export var tooltip = handleActions({
+    update_tooltip: (state, action) => action.payload
 }, 0);
 
 export var pendings = handleActions({

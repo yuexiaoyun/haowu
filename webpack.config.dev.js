@@ -25,5 +25,5 @@ module.exports = {
             loader: "base64-image"
         }]
     },
-    devtool: 'cheap-module-source-map'
+    devtool: '#cheap-module-eval-source-map'
 };
