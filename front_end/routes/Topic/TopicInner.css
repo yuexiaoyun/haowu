@@ -7,7 +7,7 @@
 }
 .progress {
     height: 20px;
-    background-color: #ff6b6b;
+    background-color: rgba(51, 204, 153, 0.8);
 }
 .number-container {
     position: absolute;
@@ -80,4 +80,15 @@
     left: 0;
     right: 0;
     background-color: rgba(0, 0, 0, 0.7);
+    background-size: 30px 30px;
+    background-position: 15px 15px;
+    background-repeat: no-repeat;
+}
+.icon-div-playing {
+    composes: icon-div;
+    background-image: url('../../files/btn_stop_zhuanji.png')
+}
+.icon-div-paused {
+    composes: icon-div;
+    background-image: url('../../files/btn_play_zhuanji.png')
 }

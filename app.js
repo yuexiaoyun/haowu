@@ -23,7 +23,7 @@ require('babel-register')();
 
 var app = koa();
 require('koa-qs')(app);
-if (conf.debug) {
+if (process.env.DEBUG == 'app') {
     var js_file = '/assets/main.js';
 } else {
     var assets = fs.readFileSync('./front_end/templates/webpack-assets.json');
@@ -53,7 +53,7 @@ app.use(logger());
 
 app.use(gzip());
 app.use(mount('/agent', wechat(conf.wechat_token).middleware(require('./routes/agent'))));
-if (conf.debug) {
+if (process.env.DEBUG == 'app') {
     var webpack = require('webpack');
     var webpack_config = require('./webpack.config.dev.js');
     var compiler = webpack(webpack_config);

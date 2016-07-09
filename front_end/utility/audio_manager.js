@@ -21,30 +21,37 @@ export function play(id, post_id, user_id) {
         player.pause();
     var url = fconf.qiniu.site + id + '_mp3';
     player = new Audio(url);
-    current_id = id;
-    player.load();
-    store.dispatch(createAction('load')(id));
-    player.addEventListener('canplaythrough', () => {
-        if (player) {
-            player.play();
-            console.log('canplaythrough: ' + id);
-            var audio = store.getState().audios[id];
-            if (!audio || !audio.me_read) {
-                store.dispatch(read({
-                    audio_id: id,
-                    post_id: post_id,
-                    user_id: user_id
-                }));
+    (player => {
+        current_id = id;
+        player.load();
+        store.dispatch(createAction('load')(id));
+        player.addEventListener('canplaythrough', () => {
+            if (player && id == current_id) {
+                player.play();
+                console.log('canplaythrough: ' + id);
+                player.addEventListener('play', () => {
+                    if (player && id == current_id) {
+                        console.log('play: ' + id);
+                        var audio = store.getState().audios[id];
+                        if (!audio || !audio.me_read) {
+                            store.dispatch(read({
+                                audio_id: id,
+                                post_id: post_id,
+                                user_id: user_id
+                            }));
+                        }
+                        store.dispatch(createAction('canplay')(id));
+                        timer = setInterval(() => {
+                            store.dispatch(createAction('playing')(id));
+                        }, 100);
+                    }
+                });
             }
-            store.dispatch(createAction('canplay')(id));
-            timer = setInterval(() => {
-                store.dispatch(createAction('playing')(id));
-            }, 100);
-        }
-    });
-    player.addEventListener('ended', () => {
-        stop(id);
-    });
+        });
+        player.addEventListener('ended', () => {
+            stop(id);
+        });
+    })(player);
 }
 
 export function stop(id) {
