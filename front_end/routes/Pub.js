@@ -88,4 +88,4 @@ var styles = {
     }
 }
 
-module.exports = connect(state=>(state))(Pub);
+export default module.exports = connect(state=>(state))(Pub);

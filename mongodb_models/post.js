@@ -58,7 +58,6 @@ module.exports.findPosts = function *(user_id, q, as) {
         }
     }, ...(as || [])];
     var docs = yield Model.aggregate(aggrs).exec();
-    console.log(docs);
     return docs;
 }
 

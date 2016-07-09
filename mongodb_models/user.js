@@ -67,7 +67,6 @@ module.exports.findUsers = function *(user_id, q) {
             }
         }
     }]).exec();
-    console.log(docs);
     return docs;
 }
 

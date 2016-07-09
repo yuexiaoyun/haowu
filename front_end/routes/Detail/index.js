@@ -94,6 +94,6 @@ var mapStateToProps = createStructuredSelector({
     post_list: get_post_list
 });
 
-export default connect(mapStateToProps)(
+export default module.exports = connect(mapStateToProps)(
     Detail
 );

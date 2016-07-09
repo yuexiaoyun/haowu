@@ -13,10 +13,6 @@ import wx from 'weixin-js-sdk';
 
 import App from './routes/App'
 import Home from './routes/Home'
-import Notifications from './routes/Notifications/index'
-import Pub from './routes/Pub'
-import Detail from './routes/Detail/index'
-import Post from './routes/Post/index'
 
 import SubList from './routes/UserList/SubList'
 import MeSubList from './routes/UserList/MeSubList'
@@ -76,17 +72,32 @@ wx.ready(()=>{
 render(
     <Provider store={store}>
         <Router history={hashHistory} render={applyRouterMiddleware(useScroll())}>
-            <Route path="/pub" component={Pub} />
-            <Route path="/post/:id" component={Post} />
-            <Route path="/sub_list" component={SubList} />
+            <Route path="/pub" getComponents={(nextState, cb)=>{
+                require.ensure([], (require)=>{
+                    cb(null, require('./routes/Pub'))
+                });
+            }}/>
+            <Route path="/post/:id" getComponents={(nextState, cb)=>{
+                require.ensure([], (require)=>{
+                    cb(null, require('./routes/Post/index'))
+                });
+            }}/>
+            <Route path="/notifications" getComponents={(nextState, cb)=>{
+                require.ensure([], (require)=>{
+                    cb(null, require('./routes/Notifications/index'))
+                });
+            }}/>
             <Route path="/me_sub_list" component={MeSubList} />
             <Route path="/like_list/:id" component={LikeList} />
             <Route path="/read_list/:id" component={ReadList} />
-            <Route path="/notifications" component={Notifications} />
             <Route path="/" component={App} >
                 <Route path="home" component={Home} />
                 <Route path="home/:time" component={Home} />
-                <Route path="detail/:id" component={Detail} />
+                <Route path="detail/:id" getComponents={(nextState, cb)=>{
+                    require.ensure([], (require)=>{
+                        cb(null, require('./routes/Detail/index'))
+                    });
+                }}/>
                 <Redirect from="/me/notifications" to="home" />
                 <IndexRedirect to="home" />
             </Route>

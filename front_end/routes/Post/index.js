@@ -304,6 +304,6 @@ var mapStateToProps = createStructuredSelector({
     comments: get_comments,
     feed_empty: get_new
 });
-export default connect(mapStateToProps)(
+export default module.exports = connect(mapStateToProps)(
     CSSModules(Post, styles)
 );

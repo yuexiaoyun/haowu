@@ -54,7 +54,7 @@ class Notifications extends React.Component {
     }
 }
 
-export default connect(state => ({
+export default module.exports = connect(state => ({
     notifications: state.notifications,
     notification_end: state.notification_end
 }))(Notifications);
