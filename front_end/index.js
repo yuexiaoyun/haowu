@@ -14,11 +14,6 @@ import wx from 'weixin-js-sdk';
 import App from './routes/App'
 import Home from './routes/Home'
 
-import SubList from './routes/UserList/SubList'
-import MeSubList from './routes/UserList/MeSubList'
-import LikeList from './routes/UserList/LikeList'
-import ReadList from './routes/UserList/ReadList'
-
 import PopupHelper from './utility/PopupHelper'
 import * as reducers from './reducers'
 import { setStore as s1 } from './utility/update'
@@ -87,9 +82,21 @@ render(
                     cb(null, require('./routes/Notifications/index'))
                 });
             }}/>
-            <Route path="/me_sub_list" component={MeSubList} />
-            <Route path="/like_list/:id" component={LikeList} />
-            <Route path="/read_list/:id" component={ReadList} />
+            <Route path="/me_sub_list" getComponents={(nextState, cb)=>{
+                require.ensure([], (require)=>{
+                    cb(null, require('./routes/UserList/MeSubList'))
+                });
+            }}/>
+            <Route path="/like_list/:id" getComponents={(nextState, cb)=>{
+                require.ensure([], (require)=>{
+                    cb(null, require('./routes/UserList/LikeList'))
+                });
+            }}/>
+            <Route path="/read_list/:id" getComponents={(nextState, cb)=>{
+                require.ensure([], (require)=>{
+                    cb(null, require('./routes/UserList/ReadList'))
+                });
+            }}/>
             <Route path="/" component={App} >
                 <Route path="home" component={Home} />
                 <Route path="home/:time" component={Home} />

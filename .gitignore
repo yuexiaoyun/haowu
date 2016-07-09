@@ -42,5 +42,6 @@ assets/
 front_end/dist/
 front_end/images/build/
 *.dat
+webpack-assets.json
 
 .DS_Store

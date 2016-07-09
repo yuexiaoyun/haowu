@@ -18,6 +18,6 @@ var mapStateToProps = createSelector(
     }
 )
 
-export default connect(mapStateToProps)(
+export default module.exports = connect(mapStateToProps)(
     UserList
 );
