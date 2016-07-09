@@ -1,15 +1,7 @@
 var webpack = require('webpack');
-var AssetsPlugin = require('assets-webpack-plugin');
-var path = require('path');
 
 module.exports = {
     entry: './front_end/index.js',
-    output: {
-        path: './static/scripts/',
-        filename: '[hash].main.min.js',
-        chunkFilename: '[chunkHash].min.js',
-        publicPath: '/static/scripts/'
-    },
     module: {
         loaders: [{
             test: /\.js$/,
@@ -28,8 +20,5 @@ module.exports = {
             test: /\.png$|\.jpg$/,
             loader: "base64-image"
         }]
-    },
-    plugins: [new AssetsPlugin({
-        path: path.join(__dirname, 'front_end', 'templates')
-    })]
+    }
 };

@@ -14,19 +14,27 @@ var gzip = require('koa-gzip');
 var wechat = require('co-wechat');
 var Jade = require('koa-jade');
 var fs = require('fs');
+var webpackDevMiddleware = require('koa-webpack-middleware').devMiddleware;
+var c2k = require('koa-connect');
+var co = require('co');
 
 require('babel-polyfill');
 require('babel-register')();
 
 var app = koa();
 require('koa-qs')(app);
-var assets = fs.readFileSync('./front_end/templates/webpack-assets.json');
-assets = JSON.parse(assets.toString());
-console.log(assets);
+if (conf.debug) {
+    var js_file = '/assets/main.js';
+} else {
+    var assets = fs.readFileSync('./front_end/templates/webpack-assets.json');
+    assets = JSON.parse(assets.toString());
+    var js_file = assets.main.js;
+}
+
 var jade = new Jade({
     viewPath: './front_end/templates',
     locals: {
-        js_file: assets.main.js
+        js_file: js_file
     },
     debug: false,
     pretty: false,
@@ -45,10 +53,24 @@ app.use(logger());
 
 app.use(gzip());
 app.use(mount('/agent', wechat(conf.wechat_token).middleware(require('./routes/agent'))));
-if (conf.debug)
+if (conf.debug) {
+    var webpack = require('webpack');
+    var webpack_config = require('./webpack.config.dev.js');
+    var compiler = webpack(webpack_config);
+    var middleware = webpackDevMiddleware(compiler, {
+        publicPath: '/assets/'
+    });
     app.use(mount('/internal_login', require('./routes/internal_login')));
+    app.use(function *(next) {
+        var n = co.wrap(function *() {
+            yield *next;
+        });
+        yield middleware(this, n);
+    });
+} else {
+    app.use(mount('/assets', serve('assets', {maxAge: ms('10y')})));
+}
 app.use(mount('/login', require('./routes/login')));
-app.use(mount('/static', serve('static', {maxAge: ms('10y')})));
 app.use(function *(next) {
     if (!this.session.user_id) {
         var origin = conf.site + '/login?' + qs.stringify({
