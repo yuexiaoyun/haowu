@@ -15,9 +15,26 @@ import styles from './TopicInner.css'
 import CSSModules from 'react-css-modules'
 
 class PostSmallCard extends React.Component {
+    componentDidMount() {
+        if (this.props.active)
+            this.handleActive();
+    }
     componentDidUpdate(prevProps) {
-        if (!prevProps.active && this.props.active)
-            findDOMNode(this).scrollIntoViewIfNeeded(false);
+        var { post, active, autoplay } = this.props;
+        if (!prevProps.active && active)
+            this.handleActive();
+        else if (active) {
+            if (prevProps.autoplay && !autoplay)
+                stop(post.audio_id)
+            else if (!prevProps.autoplay && autoplay)
+                play(post.audio_id, post._id, post.user_id);
+        }
+    }
+    handleActive = () => {
+        var { post, autoplay } = this.props;
+        if (autoplay)
+            play(post.audio_id, post._id, post.user_id);
+        findDOMNode(this).scrollIntoViewIfNeeded(false);
     }
     render() {
         var { post, active, playing, onClick } = this.props;
@@ -40,38 +57,25 @@ class Topic extends React.Component {
         super();
         this.state = { autoplay: true }
     }
-    componentDidMount() {
-        this.play();
-    }
     componentDidUpdate(prevProps) {
-        var { index, current_length, post_list } = this.props;
+        var { index, current_length, post_list, audio_player } = this.props;
         var { autoplay } = this.state;
         if (autoplay) {
-            if (prevProps.index != index) {
-                this.play();
-            } else if (prevProps.current_length > current_length) {
+            if (prevProps.index == index && prevProps.current_length > current_length) {
                 index = index + 1;
                 if (index < post_list.length)
                     this.props.select(index);
-                else
+                else {
+                    this.setState({autoplay: false});
                     this.props.select(0);
+                }
             }
         }
-    }
-    play = () => {
-        var { post } = this.props;
-        play(post.audio_id, post._id, post.user_id);
     }
     onIconClick = (i, post) => {
         var { index } = this.props;
         if (i == index) {
-            if (this.state.autoplay) {
-                this.setState({autoplay: false});
-                stop(post.audio_id);
-            } else {
-                this.setState({autoplay: true});
-                this.play();
-            }
+            this.setState({autoplay: !this.state.autoplay});
         } else {
             this.props.select(i);
         }
@@ -101,6 +105,7 @@ class Topic extends React.Component {
                             active={index == i}
                             onClick={()=>this.onIconClick(i, post)}
                             playing={audio_player.id == post.audio_id}
+                            autoplay={this.state.autoplay}
                         />)) }
                     </div>
                 </div>

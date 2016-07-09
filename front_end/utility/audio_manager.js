@@ -42,7 +42,9 @@ export function play(id, post_id, user_id) {
                         }
                         store.dispatch(createAction('canplay')(id));
                         timer = setInterval(() => {
-                            store.dispatch(createAction('playing')(id));
+                            if (player && id == current_id) {
+                                store.dispatch(createAction('playing')(id));
+                            }
                         }, 100);
                     }
                 });
