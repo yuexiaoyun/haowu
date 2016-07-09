@@ -1,0 +1,39 @@
+.root {
+    background-color: #dfdfdd;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100px 100px;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    width: 100%;
+}
+.picture-img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    -webkit-transform: translate(-50%,-50%);
+}
+.picture-dummy {
+    margin-top: 100%;
+}
+.title {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0px 12px;
+    font-size: 12px;
+    color: #999999;
+}
+.edit {
+    float: left;
+    width: 20px;
+    height: 20px;
+    margin-top: 5px;
+    margin-right: 5px;
+}

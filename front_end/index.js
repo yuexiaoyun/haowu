@@ -105,6 +105,11 @@ render(
                         cb(null, require('./routes/Detail/index'))
                     });
                 }}/>
+                <Route path="topic/:id" getComponents={(nextState, cb)=>{
+                    require.ensure([], (require)=>{
+                        cb(null, require('./routes/Topic/index'))
+                    });
+                }}/>
                 <Redirect from="/me/notifications" to="home" />
                 <IndexRedirect to="home" />
             </Route>

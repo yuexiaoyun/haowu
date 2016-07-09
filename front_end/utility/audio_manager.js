@@ -25,20 +25,22 @@ export function play(id, post_id, user_id) {
     player.load();
     store.dispatch(createAction('load')(id));
     player.addEventListener('canplaythrough', () => {
-        player.play();
-        console.log('canplaythrough: ' + id);
-        var audio = store.getState().audios[id];
-        if (!audio || !audio.me_read) {
-            store.dispatch(read({
-                audio_id: id,
-                post_id: post_id,
-                user_id: user_id
-            }));
+        if (player) {
+            player.play();
+            console.log('canplaythrough: ' + id);
+            var audio = store.getState().audios[id];
+            if (!audio || !audio.me_read) {
+                store.dispatch(read({
+                    audio_id: id,
+                    post_id: post_id,
+                    user_id: user_id
+                }));
+            }
+            store.dispatch(createAction('canplay')(id));
+            timer = setInterval(() => {
+                store.dispatch(createAction('playing')(id));
+            }, 100);
         }
-        store.dispatch(createAction('canplay')(id));
-        timer = setInterval(() => {
-            store.dispatch(createAction('playing')(id));
-        }, 100);
     });
     player.addEventListener('ended', () => {
         stop(id);
@@ -48,7 +50,6 @@ export function play(id, post_id, user_id) {
 export function stop(id) {
     if (id != current_id)
         return;
-    store.dispatch(createAction('ended')(id));
     if (timer) {
         clearInterval(timer);
         timer = null;
@@ -56,4 +57,5 @@ export function stop(id) {
     player.pause();
     player = null;
     current_id = null;
+    store.dispatch(createAction('ended')(id));
 }
