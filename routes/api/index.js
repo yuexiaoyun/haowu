@@ -20,6 +20,7 @@ router.get('/like', require('./like'));
 router.get('/pub_reply', require('./pub_reply'));
 router.get('/pub_comment', require('./pub_comment'));
 router.get('/hide_tooltip', require('./hide_tooltip'));
+router.get('/update_topic', require('./update_topic'));
 /*
 router.get('/delete_comment', function *() {
     // 获取原评论信息

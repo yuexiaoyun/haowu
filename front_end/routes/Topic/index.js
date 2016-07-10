@@ -18,19 +18,22 @@ class Topic extends React.Component {
         super();
         this.state = { index : 0 };
     }
-    widthNDpr = () => {
-        return qs.stringify({
-            dpr: window.devicePixelRatio,
-            width: window.innerWidth
-        })
-    }
     componentDidMount() {
+        this.setTitle();
+        update('/api/update_topic?_id=' + this.props.params.id);
+    }
+    componentDidUpdate() {
+        this.setTitle();
+    }
+    setTitle = ()=>{
         window.setTitle('专辑');
-        setShareInfo({
-            title: '测试专辑',
-            link: fconf.site + '/app/topic/1'
-        });
-        update('/api/update_feeds?min=10&' + this.widthNDpr());
+        var { title } = this.props;
+        if (title) {
+            setShareInfo({
+                title: `${title} - 物记专辑`,
+                link: fconf.site + '/app/topic/' + this.props.params.id
+            });
+        }
     }
     render() {
         var { post_ids } = this.props;
@@ -41,6 +44,19 @@ class Topic extends React.Component {
     }
 }
 
-export default module.exports = connect(state => ({
-    post_ids: state.feed_ids,
-}))(Topic);
+var mapStateToProps = (state, props) => {
+    var topic = state.topics[props.params.id];
+    if (topic) {
+        return {
+            post_ids: topic.posts,
+            title: topic.title
+        }
+    } else {
+        return {
+        }
+    }
+}
+
+export default module.exports = connect(mapStateToProps)(
+    Topic
+);

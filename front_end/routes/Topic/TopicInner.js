@@ -83,9 +83,9 @@ class Topic extends React.Component {
         }
     }
     render() {
-        var { post, post_list, user, index, total_length, current_length, audio_player } = this.props;
+        var { post, post_list, user, title, index, total_length, current_length, audio_player } = this.props;
         var progress = (current_length * 100 / total_length).toFixed(2);
-        var current = moment(current_length + 500).format('mm:ss');
+        var current = moment(current_length + 500).format('mm:ss') + ' ' + title;
         var total = moment(total_length + 500).format('mm:ss');
         return (
             <div>

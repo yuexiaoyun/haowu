@@ -2,6 +2,11 @@ import { handleActions } from 'redux-actions';
 import _ from 'underscore';
 
 export audio_player from './ducks/audio_player';
+export posts from './ducks/posts';
+export users from './ducks/users';
+export audios from './ducks/audios';
+export topics from './ducks/topics';
+
 export var local_pic_id = handleActions({
     take_pic: (state, action) => (action.payload)
 }, null);
@@ -76,154 +81,6 @@ export var subids = handleActions({
     update_notifications: (state, action) => action.payload.subids || state
 }, []);
 
-// 帖子的ID与内容对应
-function update_posts(state, action) {
-    var { posts } = action.payload;
-    posts = posts.map(post => {
-        var p = state[post._id];
-        if (p) {
-            post = {
-                ...p,
-                ...post
-            }
-        }
-        return post;
-    });
-    return {
-        ...state, ..._.object(posts.map(post=>post._id), posts)
-    }
-}
-export var posts = handleActions({
-    update_feeds: update_posts,
-    update_user_detail: update_posts,
-    update_post_detail: update_posts,
-    update_notifications: update_posts,
-    pub_post: update_posts,
-    like: (state, action) => {
-        var id = action.payload;
-        var post = state[id];
-        if (post && !post.me_like) {
-            post = {...post, me_like: true, like_count: post.like_count + 1}
-            return {
-                ...state,
-                [id]: post
-            }
-        } else {
-            return state;
-        }
-    },
-    update_post_like_uids: (state, action) => {
-        var {_id, users, likes} = action.payload;
-        var post = state[_id];
-        if (post)  {
-            post = {
-                ...post,
-                me_like: likes.indexOf(window.user_id) >= 0,
-                like_count: likes.length,
-                likes
-            }
-            return {
-                ...state,
-                [_id]: post
-            }
-        } else {
-            return state;
-        }
-    },
-    set_title: (state, action) => {
-        var { _id, title } = action.payload;
-        var post = state[_id];
-        if (post) {
-            post = {
-                ...post,
-                title
-            }
-            return {
-                ...state,
-                [_id]: post
-            }
-        } else {
-            return state;
-        }
-    }
-}, {});
-
-// 用户的ID与内容对应
-function update_users(state, action) {
-    var { users } = action.payload;
-    users = users.map(user => {
-        var u = state[user._id];
-        if (u) {
-            user = {
-                ...u,
-                ...user
-            }
-        }
-        return user;
-    });
-    return {
-        ...state, ..._.object(users.map(user=>user._id), users)
-    };
-}
-export var users = handleActions({
-    update_post_like_uids: update_users,
-    update_audio_read_uids: update_users,
-    update_feeds: update_users,
-    update_user_detail: update_users,
-    update_post_detail: update_users,
-    update_notifications: update_users,
-    update_badge: update_users,
-    pub_post: update_users,
-    set_intro: (state, action) => {
-        var { intro } = action.payload;
-        var user = state[window.user_id];
-        if (user) {
-            user = {
-                ...user,
-                intro
-            }
-            return {
-                ...state,
-                [window.user_id]: user
-            }
-        } else {
-            return state;
-        }
-    },
-    read: (state, action) => {
-        var { user_id } = action.payload;
-        var user = state[user_id];
-        if (user) {
-            user = {
-                ...user,
-                reads_count: user.reads_count + 1
-            }
-            return {
-                ...state,
-                [user_id]: user
-            }
-        } else {
-            return state;
-        }
-    },
-    sub: (state, action) => {
-        var { user_id, sub } = action.payload;
-        var user = state[user_id];
-        if (user) {
-            user = {
-                ...user,
-                subbed: sub
-            };
-            return {
-                ...state,
-                [user_id]: user
-            }
-        } else {
-            return state;
-        }
-    }
-}, {});
-
 // 帖子详情页的ID与内容对应
 export var post_details = handleActions({
     update_post_detail: (state, action) => {
@@ -260,63 +117,6 @@ export var post_details = handleActions({
         }
     }
 }, {});
-
-// 某一个具体语音的听过次数和我是否听过
-function update_audios(state, action) {
-    var { audios } = action.payload;
-    audios = audios.map(audio => {
-        var a = state[audio.audio_id] || {};
-        audio = {
-            ...a,
-            ...audio
-        }
-        return audio;
-    });
-    return { ...state, ..._.object(audios.map(audio=>audio.audio_id), audios) }
-}
-
-export var audios = handleActions({
-    update_feeds: update_audios,
-    update_user_detail: update_audios,
-    update_post_detail: update_audios,
-    update_notifications: update_audios,
-    read: (state, action) => {
-        var { audio_id } = action.payload;
-        var audio = state[audio_id];
-        if (!audio) {
-            audio = {
-                me_read: true,
-                read_count: 1
-            }
-        } else if (!audio.me_read){
-            audio = {
-                ...audio,
-                me_read: true,
-                read_count: audio.read_count + 1
-            }
-        }
-        return {
-            ...state,
-            [audio_id]: audio
-        };
-    },
-    update_audio_read_uids: (state, action) => {
-        var {audio_id, users, reads} = action.payload;
-        var audio = state[audio_id] || {};
-        var audio = {
-            ...audio,
-            audio_id: audio_id,
-            me_read: reads.indexOf(window.user_id) >= 0,
-            read_count: reads.length,
-            reads
-        }
-        return {
-            ...state,
-            [audio_id]: audio
-        };
-    }
-}, {});
-
 
 export var badge = handleActions({
     update_badge: (state, action) => ({
