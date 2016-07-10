@@ -51,6 +51,7 @@ module.exports.findPosts = function *(user_id, q, as) {
             h: 1,
             title: 1,
             status: 1,
+            comment_reply_count: 1,
             me_like: {
                 $setIsSubset: [[user_id], '$likes']
             },

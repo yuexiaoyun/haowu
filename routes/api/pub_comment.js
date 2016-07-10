@@ -46,7 +46,7 @@ module.exports = function*() {
         result: 'ok',
         new_id: comment._id,
         actions: [
-            createAction('update_comment')(comment)
+            createAction('new_comment_reply')(comment)
         ]
     };
 }

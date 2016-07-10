@@ -93,7 +93,7 @@ export var post_details = handleActions({
             [post_id]: {comments}
         }
     },
-    update_comment: (state, action) => {
+    new_comment_reply: (state, action) => {
         var post_detail = state[action.payload.post_id];
         if (!post_detail)
             return state;

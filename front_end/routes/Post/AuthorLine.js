@@ -82,7 +82,9 @@ class TopCard extends React.Component {
                     onClick={()=>hashHistory.push('/detail/' + user._id)}/>
                 <div styleName='more' onClick={this.more}/>
                 <div styleName={like_class} onClick={this.like}/>
-                { showComment && <div styleName='comment' onClick={this.comment}/> }
+                { showComment && <div styleName='comment' onClick={this.comment}>
+                { post.comment_reply_count > 0 && post.comment_reply_count }
+                </div>}
                 <span styleName='nickname'>{user.nickname}</span>
                 <span className='text-secondary'>{ fromObjectId(post._id) }</span>
             </div>

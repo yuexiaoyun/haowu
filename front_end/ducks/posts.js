@@ -71,5 +71,21 @@ export default handleActions({
         } else {
             return state;
         }
+    },
+    new_comment_reply: (state, action) => {
+        var { post_id } = action.payload;
+        var post = state[post_id];
+        if (post) {
+            post = {
+                ...post,
+                comment_reply_count: (post.comment_reply_count || 0) + 1
+            }
+            return {
+                ...state,
+                [post_id]: post
+            }
+        } else {
+            return state;
+        }
     }
 }, {});
