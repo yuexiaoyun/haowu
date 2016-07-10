@@ -59,6 +59,7 @@
     "redux-optimist": "0.0.2",
     "redux-optimist-promise": "0.7.1",
     "redux-promise": "0.5.3",
+    "redux-thunk": "2.1.0",
     "reselect": "2.5.1",
     "style-loader": "0.13.1",
     "uglify": "0.1.5",

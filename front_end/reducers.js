@@ -1,25 +1,7 @@
 import { handleActions } from 'redux-actions';
 import _ from 'underscore';
 
-export var audio_player = handleActions({
-    load: (state, action) => ({
-        id: action.payload,
-        play_state: 'loading'
-    }),
-    canplay: (state, action) => ({
-        id: action.payload,
-        play_state: 'playing',
-        start: new Date(),
-        time: 0
-    }),
-    playing: (state, action) => ({
-        id: action.payload,
-        play_state: 'playing',
-        start: state.start,
-        time: new Date() - state.start
-    }),
-    ended: (state, action) => ({})
-}, {});
+export audio_player from './ducks/audio_player';
 export var local_pic_id = handleActions({
     take_pic: (state, action) => (action.payload)
 }, null);

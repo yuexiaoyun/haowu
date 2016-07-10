@@ -8,7 +8,9 @@ import { Provider } from 'react-redux'
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { createAction } from 'redux-actions';
 import optimist from 'redux-optimist';
+import thunk from 'redux-thunk';
 import optimistPromiseMiddleware from 'redux-optimist-promise';
+import { audioPlayerMiddleware } from './ducks/audio_player';
 import wx from 'weixin-js-sdk';
 
 import App from './routes/App'
@@ -17,7 +19,6 @@ import Home from './routes/Home'
 import PopupHelper from './utility/PopupHelper'
 import * as reducers from './reducers'
 import { setStore as s1 } from './utility/update'
-import { setStore as s2 } from './utility/audio_manager'
 
 import './utility/set_title'
 import './less/sm.less'
@@ -35,12 +36,16 @@ if (entry.substring(0, 5) == '/post') {
         entry = entry.substring(0, i);
     setTimeout(()=>hashHistory.push(entry), 0);
 }
-let store = (applyMiddleware(
+
+let store = applyMiddleware(
+    audioPlayerMiddleware,
     optimistPromiseMiddleware()
-)(createStore))(optimist(combineReducers(reducers)), {},
-    window.devToolsExtension && window.devToolsExtension());
+)(createStore)(
+    optimist(combineReducers(reducers)), {},
+    window.devToolsExtension && window.devToolsExtension()
+);
+
 s1(store);
-s2(store);
 
 wx.config(window.js_params);
 wx.error(function (res) {

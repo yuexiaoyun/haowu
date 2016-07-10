@@ -6,7 +6,6 @@ import _ from 'underscore';
 
 import PicDetail from '../Post/PicDetail'
 import AuthorLine from '../Post/AuthorLine'
-import { stop, play } from '../../utility/audio_manager';
 
 import { connect } from 'react-redux'
 import { createAction } from 'redux-actions'
@@ -20,20 +19,11 @@ class PostSmallCard extends React.Component {
             this.handleActive();
     }
     componentDidUpdate(prevProps) {
-        var { post, active, autoplay } = this.props;
+        var { active } = this.props;
         if (!prevProps.active && active)
             this.handleActive();
-        else if (active) {
-            if (prevProps.autoplay && !autoplay)
-                stop(post.audio_id)
-            else if (!prevProps.autoplay && autoplay)
-                play(post.audio_id, post._id, post.user_id);
-        }
     }
     handleActive = () => {
-        var { post, autoplay } = this.props;
-        if (autoplay)
-            play(post.audio_id, post._id, post.user_id);
         findDOMNode(this).scrollIntoViewIfNeeded(false);
     }
     render() {
@@ -55,29 +45,41 @@ PostSmallCard = CSSModules(PostSmallCard, styles)
 class Topic extends React.Component {
     constructor() {
         super();
-        this.state = { autoplay: true }
+    }
+    componentDidMount() {
+        var playlist = this.props.post_list.map((post) => {
+            return {
+                audio_id: post.audio_id,
+                post_id: post._id,
+                user_id: post.user_id
+            }
+        });
+        this.props.dispatch(createAction('set_playlist')(playlist));
+    }
+    componentWillUnmount() {
+        this.props.dispatch(createAction('set_playlist')(null));
     }
     componentDidUpdate(prevProps) {
-        var { index, current_length, post_list, audio_player } = this.props;
-        var { autoplay } = this.state;
-        if (autoplay) {
-            if (prevProps.index == index && prevProps.current_length > current_length) {
-                index = index + 1;
-                if (index < post_list.length)
-                    this.props.select(index);
-                else {
-                    this.setState({autoplay: false});
-                    this.props.select(0);
-                }
+        var { audio_player, post_list } = this.props;
+        if (audio_player.id != prevProps.audio_player.id) {
+            for (var i in post_list) {
+                var post = post_list[i];
+                if (post.audio_id == audio_player.id)
+                    this.props.select(i);
             }
         }
     }
     onIconClick = (i, post) => {
-        var { index } = this.props;
-        if (i == index) {
-            this.setState({autoplay: !this.state.autoplay});
+        var { index, post_list, audio_player, dispatch } = this.props;
+        if (i == index && audio_player.id == post.audio_id) {
+            dispatch(createAction('stop')(post.audio_id));
         } else {
-            this.props.select(i);
+            var post = post_list[i];
+            dispatch(createAction('play')({
+                audio_id: post.audio_id,
+                post_id: post._id,
+                user_id: post.user_id
+            }));
         }
     }
     render() {
@@ -105,7 +107,6 @@ class Topic extends React.Component {
                             active={index == i}
                             onClick={()=>this.onIconClick(i, post)}
                             playing={audio_player.id == post.audio_id}
-                            autoplay={this.state.autoplay}
                         />)) }
                     </div>
                 </div>

@@ -3,25 +3,21 @@ import fconf from '../../fconf';
 import * as actions from '../../actions';
 import { connect } from 'react-redux'
 import { createAction } from 'redux-actions'
-import { play, stop } from '../../utility/audio_manager'
 import classNames from 'classnames'
 
 class AudioPlayer extends React.Component {
-    componentWillUnmount() {
-        if (this.props.playing || this.props.loading)
-            this.stop_play();
-    }
     play_audio = (e) => {
         e.stopPropagation();
-        var { audio_id, playing, loading } = this.props;
-        if (playing || loading)
-            this.stop_play();
-        else
-            play(audio_id, this.props.post_id, this.props.user_id);
-    }
-    stop_play = () => {
-        var { audio_id } = this.props;
-        stop(audio_id);
+        var { audio_id, post_id, user_id, playing, loading, dispatch } = this.props;
+        if (playing || loading) {
+            dispatch(createAction('stop')(audio_id));
+        } else {
+            dispatch(createAction('play')({
+                audio_id,
+                post_id,
+                user_id
+            }));
+        }
     }
     render() {
         var { read, length, audio_id, playing, loading, i } = this.props;

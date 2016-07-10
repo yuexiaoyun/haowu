@@ -2,7 +2,6 @@ import React from 'react';
 import { hashHistory } from 'react-router';
 import fconf from '../../fconf';
 import update from '../../utility/update';
-import { play, stop } from '../../utility/audio_manager';
 import qs from 'querystring';
 
 import Loader from '../components/Loader'
@@ -19,17 +18,17 @@ class TopCard extends React.Component {
         super();
         this.state = {}
     }
-    componentWillUnmount() {
-        var { post, playing, loading } = this.props;
-        if (playing || loading)
-            stop(post.audio_id);
-    }
     play = () => {
         var { post, playing, loading } = this.props;
-        if (playing || loading)
-            stop(post.audio_id);
-        else
-            play(post.audio_id, post._id, post.user_id);
+        if (playing || loading) {
+            this.props.dispatch(createAction('stop')(post.audio_id));
+        } else {
+            this.props.dispatch(createAction('play')({
+                audio_id: post.audio_id,
+                post_id: post._id,
+                user_id: post.user_id
+            }));
+        }
     }
     render() {
         var { user, post, audio, playing, loading, time } = this.props;
