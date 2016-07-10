@@ -26,7 +26,9 @@ export default handleActions({
         start: state.start,
         time: new Date() - state.start
     }),
-    onEnded: (state, action) => ({})
+    onEnded: (state, action) => ({
+        playlist: state.playlist
+    })
 }, {});
 
 export var audioPlayerMiddleware = store => next => {

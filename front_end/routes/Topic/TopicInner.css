@@ -47,6 +47,7 @@
 .triangle-right {
     float: right;
     margin-right: 10px;
+    margin-left: 15px;
     margin-top: 24px;
     width: 0;
     height: 0;
@@ -58,6 +59,7 @@
     height: 60px;
     overflow-x: scroll;
     white-space: nowrap;
+    padding-right: -15px;
 }
 .icon-list::-webkit-scrollbar {
     height: 0;
