@@ -25,6 +25,8 @@ var schema = new mongoose.Schema({
     // status=1：正常状态
     // status=2：已屏蔽；其他人在主Feed流里不可见
     status: { type: Number },
+    // 冗余：评论和回复的总数
+    comment_reply_count: { type: Number },
     // 基础权重评分
     rank0: { type: Number}
 });

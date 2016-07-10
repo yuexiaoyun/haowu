@@ -31,7 +31,7 @@ export function *updateScore(_id) {
     var feed_views = (yield UserFeed.count({posts: _id})) + 5;
     rank0 /=  feed_views;
 
-    if (ping_count > 0) {
+    if (false) {
         console.log('语音长度权重: ' + length);
         console.log('听过次数权重: ' + reads);
         console.log('评论权重: ' + uid_count);
@@ -39,6 +39,8 @@ export function *updateScore(_id) {
         console.log('阅读次数（分母): ' + feed_views);
     }
 
+    post.comment_reply_count = comments.length + replies.length;
+    console.log('评论回复总数：' + post.comment_reply_count);
     post.rank0 = rank0;
     yield post.save();
 }
