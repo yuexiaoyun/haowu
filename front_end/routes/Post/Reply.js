@@ -2,7 +2,7 @@ import React from 'react';
 import { findDOMNode } from 'react-dom';
 import fconf from '../../fconf';
 
-import AudioPlayer from '../components/AudioPlayer';
+import AudioPlayer from '../common/AudioPlayer';
 import NameSpan from './NameSpan'
 
 import { connect } from 'react-redux'

@@ -1,0 +1,68 @@
+.audioplayer {
+    position: relative;
+    display: inline-block;
+    padding-left: 36px;
+    padding-right: 10px;
+    height: 24px;
+    line-height: 24px;
+    border-radius: 12px;
+    color: #ffffff;
+}
+.audioplayer-unread {
+    composes: audioplayer;
+    background-color: #ff6b6b;
+}
+.audioplayer-read {
+    composes: audioplayer;
+    background-color: #999999;
+}
+.audio-loader {
+    position: absolute;
+    left: 6px;
+    top: 4px;
+    width: 16px;
+    height: 16px;
+}
+.loader-image {
+    width: 16px;
+    height: 16px;
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
+}
+.audio {
+    composes: loader-image;
+    background-image: url('../../files/btn_home_play3.png');
+}
+.audio-loading {
+    composes: loader-image;
+    animation: loader-animation 1s linear infinite;
+    -webkit-animation: loader-animation 1s linear infinite;
+    background-image: url('../../files/image_loading_play_home.png');
+}
+@keyframes playing {
+    0%, 100% {
+        background-image: url('../../files/btn_home_play1.png')
+    }
+    33% {
+        background-image: url('../../files/btn_home_play2.png')
+    }
+    66% {
+        background-image: url('../../files/btn_home_play3.png')
+    }
+}
+@-webkit-keyframes playing {
+    0%, 100% {
+        background-image: url('../../files/btn_home_play1.png')
+    }
+    33% {
+        background-image: url('../../files/btn_home_play2.png')
+    }
+    66% {
+        background-image: url('../../files/btn_home_play3.png')
+    }
+}
+.audio-playing {
+    composes: loader-image;
+    animation: playing 1s linear infinite;
+    -webkit-animation: playing 1s linear infinite;
+}

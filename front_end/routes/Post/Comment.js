@@ -4,7 +4,7 @@ import { hashHistory } from 'react-router';
 import fconf from '../../fconf';
 import { fromObjectId } from '../../utility/format_time';
 
-import AudioPlayer from '../components/AudioPlayer';
+import AudioPlayer from '../common/AudioPlayer';
 import NameSpan from './NameSpan'
 import Reply from './Reply'
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import AudioPlayer from '../components/AudioPlayer';
+import AudioPlayer from '../common/AudioPlayer';
 import { hashHistory } from 'react-router';
 import { createAction } from 'redux-actions';
 import fconf from '../../fconf';

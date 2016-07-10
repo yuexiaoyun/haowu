@@ -2,7 +2,7 @@ import React from 'react';
 import { hashHistory } from 'react-router';
 import fconf from '../../fconf';
 import * as actions from '../../actions';
-import AudioPlayer from './AudioPlayer';
+import AudioPlayer from '../common/AudioPlayer';
 import classNames from 'classnames';
 import { connect } from 'react-redux'
 import { createAction } from 'redux-actions'
