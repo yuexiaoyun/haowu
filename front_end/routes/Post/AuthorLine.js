@@ -47,6 +47,11 @@ class TopCard extends React.Component {
             dispatch(like(post._id));
         }
     }
+    comment = (e)=> {
+        e.stopPropagation();
+        var { post } = this.props;
+        hashHistory.push('/comments/' + post._id);
+    }
     deletePost = () => {
         PopupHelper.confirm('您确认要删除么', '删除', ()=>{
             var { post } = this.props;
@@ -64,15 +69,20 @@ class TopCard extends React.Component {
         });
     }
     render() {
-        var { user, post } = this.props;
+        var { user, post, showComment } = this.props;
+        var like_class;
+        if (post.me_like) {
+            like_class = this.state.like ? 'like-hl-amazing' : 'like-hl';
+        } else {
+            like_class = 'like';
+        }
         return (
-            <div styleName="root" onClick={()=>hashHistory.push('/detail/' + user._id)}>
-                <img styleName='avatar' src={user.headimgurl} />
-                <div styleName='more-buttons' className='image-btn_more' onClick={this.more}/>
-                <div
-                    styleName={post.me_like && this.state.like ? 'amazing-animate' : 'more-buttons'}
-                    className={post.me_like ? 'image-btn_like_details_HL' : 'image-btn_like_details'}
-                    onClick={this.like}/>
+            <div styleName="root">
+                <img styleName='avatar' src={user.headimgurl}
+                    onClick={()=>hashHistory.push('/detail/' + user._id)}/>
+                <div styleName='more' onClick={this.more}/>
+                <div styleName={like_class} onClick={this.like}/>
+                { showComment && <div styleName='comment' onClick={this.comment}/> }
                 <span styleName='nickname'>{user.nickname}</span>
                 <span className='text-secondary'>{ fromObjectId(post._id) }</span>
             </div>

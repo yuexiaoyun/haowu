@@ -110,7 +110,7 @@ class Topic extends React.Component {
                         />)) }
                     </div>
                 </div>
-                <AuthorLine post={post} user={user} />
+                <AuthorLine post={post} user={user} showComment={true}/>
             </div>
         )
     }
