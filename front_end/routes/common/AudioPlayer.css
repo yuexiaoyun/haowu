@@ -33,6 +33,18 @@
     composes: loader-image;
     background-image: url('../../files/btn_home_play3.png');
 }
+@keyframes loader-animation {
+    100% {
+        transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+    }
+}
+@-webkit-keyframes loader-animation {
+    100% {
+        transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+    }
+}
 .audio-loading {
     composes: loader-image;
     animation: loader-animation 1s linear infinite;
