@@ -14,10 +14,6 @@ import { createSelector, createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
 class Topic extends React.Component {
-    constructor() {
-        super();
-        this.state = { index : 0 };
-    }
     componentDidMount() {
         this.setTitle();
         update('/api/update_topic?_id=' + this.props.params.id);
@@ -36,9 +32,9 @@ class Topic extends React.Component {
         }
     }
     render() {
-        var { post_ids } = this.props;
+        var { post_ids, location } = this.props;
         if (post_ids && post_ids.length > 0)
-            return <TopicInner {...this.props} index={this.state.index} select={i=>this.setState({index: i})}/>;
+            return <TopicInner {...this.props} action={location.action}/>;
         else
             return <div />;
     }

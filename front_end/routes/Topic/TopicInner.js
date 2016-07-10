@@ -59,26 +59,14 @@ class Topic extends React.Component {
     componentWillUnmount() {
         this.props.dispatch(createAction('set_playlist')(null));
     }
-    componentDidUpdate(prevProps) {
-        var { audio_player, post_list } = this.props;
-        if (audio_player.id != prevProps.audio_player.id) {
-            for (var i in post_list) {
-                var post = post_list[i];
-                if (post.audio_id == audio_player.id)
-                    this.props.select(i);
-            }
-        }
-    }
     onIconClick = (i, post) => {
         var { index, post_list, audio_player, dispatch } = this.props;
         if (i == index && audio_player.id == post.audio_id) {
             dispatch(createAction('stop')(post.audio_id));
         } else {
-            var post = post_list[i];
-            dispatch(createAction('play')({
-                audio_id: post.audio_id,
-                post_id: post._id,
-                user_id: post.user_id
+            dispatch(createAction('set_index')({
+                index: i,
+                play: true
             }));
         }
     }
@@ -117,7 +105,7 @@ class Topic extends React.Component {
 }
 
 var get_post_list = (state, props) => props.post_ids.map(id=>state.posts[id]);
-var get_index = (state, props) => props.index;
+var get_index = state => (state.audio_player.index || 0);
 var get_post = createSelector(
     [get_post_list, get_index],
     (post_list, index) => post_list[index]
@@ -151,6 +139,7 @@ var get_user = createSelector(
     (post, users) => post && users[post.user_id]
 )
 var mapStateToProps = createStructuredSelector({
+    index: get_index,
     post_list: get_post_list,
     post: get_post,
     user: get_user,

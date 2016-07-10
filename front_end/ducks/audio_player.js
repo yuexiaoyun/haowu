@@ -7,13 +7,19 @@ export default handleActions({
         ...state,
         playlist: action.payload
     }),
+    set_index: (state, action) => ({
+        ...state,
+        index: action.payload.index
+    }),
     play: (state, action) => ({
         playlist: state.playlist,
+        index: state.index,
         id: action.payload.audio_id,
         play_state: 'loading'
     }),
     onPlay: (state, action) => ({
         playlist: state.playlist,
+        index: state.index,
         id: state.id,
         play_state: 'playing',
         start: new Date(),
@@ -21,15 +27,19 @@ export default handleActions({
     }),
     onTimeupdate: (state, action) => ({
         playlist: state.playlist,
+        index: state.index,
         id: state.id,
         play_state: 'playing',
         start: state.start,
         time: new Date() - state.start
     }),
     onEnded: (state, action) => ({
-        playlist: state.playlist
+        playlist: state.playlist,
+        index: state.index
     })
-}, {});
+}, {
+    index: 0
+});
 
 export var audioPlayerMiddleware = store => next => {
     var player = new Audio();
@@ -43,21 +53,23 @@ export var audioPlayerMiddleware = store => next => {
         store.dispatch(createAction('onTimeupdate')());
     });
     player.addEventListener('ended', ()=>{
-        var { playlist, id } = store.getState().audio_player;
+        var { playlist, id, index } = store.getState().audio_player;
         if (playlist) {
-            console.log(playlist);
-            for (var i = 0; i < playlist.length; i++) {
-                var item = playlist[i];
-                if (item.audio_id == id) {
-                    i++;
-                    if (i < playlist.length) {
-                        console.log(i);
-                        // iOS和Android的限制，ended的时候必须立即开始播放下一个，否则连播会失效
-                        console.log(playlist[i]);
-                        store.dispatch(createAction('play')(playlist[i]));
-                        return;
-                    }
+            var item = playlist[index];
+            if (item.audio_id == id) {
+                index++;
+                if (index < playlist.length) {
+                    store.dispatch(createAction('set_index')({
+                        index,
+                        play: true
+                    }));
+                } else {
+                    store.dispatch(createAction('set_index')({
+                        index: 0,
+                        play: false
+                    }));
                 }
+                return;
             }
         }
         store.dispatch(createAction('onEnded')());
@@ -77,6 +89,12 @@ export var audioPlayerMiddleware = store => next => {
             player.pause();
             player.src = null;
             store.dispatch(createAction('onEnded')());
+        } else if (action.type == 'set_index') {
+            var { index, play } = action.payload;
+            var { playlist } = store.getState().audio_player;
+            if (play) {
+                store.dispatch(createAction('play')(playlist[index]));
+            }
         }
         return next(action);
     }
