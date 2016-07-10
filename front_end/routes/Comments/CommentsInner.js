@@ -134,7 +134,7 @@ class CommentsInner extends React.Component {
             reply={this.reply} />;
     }
     render() {
-        var { post, user, users, edit_title, comments } = this.props;
+        var { post, post_detail, user, users, emptyView, edit_title, comments } = this.props;
         var { record, err } = this.state;
         return (
             <div onClick={this.clear_reply}>
@@ -154,6 +154,7 @@ class CommentsInner extends React.Component {
                         { comments.others.map(this.renderComment) }
                     </div>
                 }
+                { post_detail && post_detail.comments.length == 0 && emptyView }
                 { this.state.inputing != 1 &&
                     <div className={`${record?'comment-input-audio':'comment-input-text'}`} />}
                 { post && edit_title != 1 && this.renderInput() }

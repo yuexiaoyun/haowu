@@ -82,6 +82,11 @@ render(
                     cb(null, require('./routes/Post/index'))
                 });
             }}/>
+            <Route path="/comments/:id" getComponent={(nextState, cb)=>{
+                require.ensure([], (require)=>{
+                    cb(null, require('./routes/Comments/index'))
+                });
+            }}/>
             <Route path="/notifications" getComponent={(nextState, cb)=>{
                 require.ensure([], (require)=>{
                     cb(null, require('./routes/Notifications/index'))
