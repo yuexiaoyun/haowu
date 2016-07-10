@@ -69,11 +69,13 @@ export var notifications = handleActions({
         else
             return notifications
     },
+    clear_notifications: (state, action) => [],
     delete_post: (state, action) => _.filter(state, item=>(item.target!=action.payload))
 }, []);
 
 export var notification_end = handleActions({
-    update_notifications: (state, action) => action.payload.notification_end || 0
+    update_notifications: (state, action) => action.payload.notification_end || 0,
+    clear_notifications: (state, action) => 0
 }, 0);
 
 // 自己的被订阅列表

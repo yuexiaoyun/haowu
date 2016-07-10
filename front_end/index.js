@@ -72,32 +72,34 @@ wx.ready(()=>{
 render(
     <Provider store={store}>
         <Router history={hashHistory} render={applyRouterMiddleware(useScroll())}>
-            <Route path="/pub" getComponents={(nextState, cb)=>{
+            <Route path="/pub" getComponent={(nextState, cb)=>{
                 require.ensure([], (require)=>{
                     cb(null, require('./routes/Pub'))
                 });
             }}/>
-            <Route path="/post/:id" getComponents={(nextState, cb)=>{
+            <Route path="/post/:id" getComponent={(nextState, cb)=>{
                 require.ensure([], (require)=>{
                     cb(null, require('./routes/Post/index'))
                 });
             }}/>
-            <Route path="/notifications" getComponents={(nextState, cb)=>{
+            <Route path="/notifications" getComponent={(nextState, cb)=>{
                 require.ensure([], (require)=>{
                     cb(null, require('./routes/Notifications/index'))
                 });
+            }} onEnter={()=>{
+                store.dispatch(createAction('clear_notifications')(0));
             }}/>
-            <Route path="/me_sub_list" getComponents={(nextState, cb)=>{
+            <Route path="/me_sub_list" getComponent={(nextState, cb)=>{
                 require.ensure([], (require)=>{
                     cb(null, require('./routes/UserList/MeSubList'))
                 });
             }}/>
-            <Route path="/like_list/:id" getComponents={(nextState, cb)=>{
+            <Route path="/like_list/:id" getComponent={(nextState, cb)=>{
                 require.ensure([], (require)=>{
                     cb(null, require('./routes/UserList/LikeList'))
                 });
             }}/>
-            <Route path="/read_list/:id" getComponents={(nextState, cb)=>{
+            <Route path="/read_list/:id" getComponent={(nextState, cb)=>{
                 require.ensure([], (require)=>{
                     cb(null, require('./routes/UserList/ReadList'))
                 });
@@ -105,15 +107,17 @@ render(
             <Route path="/" component={App} >
                 <Route path="home" component={Home} />
                 <Route path="home/:time" component={Home} />
-                <Route path="detail/:id" getComponents={(nextState, cb)=>{
+                <Route path="detail/:id" getComponent={(nextState, cb)=>{
                     require.ensure([], (require)=>{
                         cb(null, require('./routes/Detail/index'))
                     });
                 }}/>
-                <Route path="topic/:id" getComponents={(nextState, cb)=>{
+                <Route path="topic/:id" getComponent={(nextState, cb)=>{
                     require.ensure([], (require)=>{
                         cb(null, require('./routes/Topic/index'))
                     });
+                }} onEnter={()=>{
+                    store.dispatch(createAction('clear_notifications')())
                 }}/>
                 <Redirect from="/me/notifications" to="home" />
                 <IndexRedirect to="home" />
