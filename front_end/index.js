@@ -91,8 +91,6 @@ render(
                 require.ensure([], (require)=>{
                     cb(null, require('./routes/Notifications/index'))
                 });
-            }} onEnter={()=>{
-                store.dispatch(createAction('clear_notifications')(0));
             }}/>
             <Route path="/me_sub_list" getComponent={(nextState, cb)=>{
                 require.ensure([], (require)=>{

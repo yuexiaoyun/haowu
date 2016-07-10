@@ -14,6 +14,11 @@ class Notifications extends React.Component {
         super(props);
         this.state = {}
     }
+    componentWillMount() {
+        if (this.props.location.action == 'PUSH') {
+            this.props.dispatch(createAction('clear_notifications')(0));
+        }
+    }
     componentDidMount() {
         this.props.dispatch(createAction('update_badge')({
             count: 0,

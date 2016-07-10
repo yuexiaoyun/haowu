@@ -52,6 +52,9 @@ class ListContainer extends React.Component {
         window.addEventListener('resize', this.scrollListener);
         this.scrollListener();
     }
+    componentDidUpdate() {
+        this.scrollListener();
+    }
     componentWillUnmount() {
         window.removeEventListener('scroll', this.scrollListener);
         window.removeEventListener('resize', this.scrollListener);
