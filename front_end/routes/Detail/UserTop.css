@@ -9,14 +9,22 @@
     height: 1px;
     border-bottom: 1px solid #dfdfdd;
 }
-.intro-base {
+.intro-container {
     display: inline-block;
-    margin: 10px auto 24px;
-    max-width: 240px;
-    line-height: 20px;
-    height: 20px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    max-width: 260px;
+}
+.intro-base {
+    line-height: 16px;
+    height: 16px;
     font-size: 12px;
+    padding-left: 21px;
     vertical-align: middle;
+    background-image: url('../../files/btn_edit_me.png');
+    background-position: 0px 0px;
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
 }
 .intro {
     composes: intro-base;
@@ -25,9 +33,4 @@
 .intro-null {
     composes: intro-base;
     color: #999999;
-}
-.intro-edit {
-    width: 20px;
-    height: 20px;
-    margin-right: 5px;
 }

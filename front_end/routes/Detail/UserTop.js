@@ -7,8 +7,6 @@ import UserInfo from './UserInfo';
 import IntroInput from './IntroInput';
 import NotificationIcon from './NotificationIcon';
 
-import btnEditMe from '../../files/btn_edit_me.png';
-
 import { connect } from 'react-redux';
 import styles from './UserTop.css'
 import CSSModules from 'react-css-modules';
@@ -38,8 +36,7 @@ class UserTop extends React.Component {
         var { user } = this.props;
         var className = user.intro ? 'intro' : 'intro-null';
         return (
-            <div>
-                { user._id == window.user_id && <img styleName='intro-edit' src={btnEditMe} /> }
+            <div styleName='intro-container'>
                 <div styleName={className} onClick={this.input}>
                     { user.intro || user._id == window.user_id && '我的爱好；我的个性...或者我希望聊的' || 'Ta很懒，还没有个人介绍' }
                 </div>

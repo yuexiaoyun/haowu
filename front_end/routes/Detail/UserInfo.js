@@ -31,10 +31,10 @@ class UserInfo extends React.Component {
                 <div styleName='nickname'>
                     {user.nickname}
                 </div>
-                <div styleName='reads' className='image-icon_me_fatieshu'>
+                <div styleName='post-count'>
                     {user.post_count || 0}
                 </div>
-                <div styleName='reads' className='image-icon_home_listened'>
+                <div styleName='read-count'>
                     {user.reads_count || 0}
                 </div>
             </div>
