@@ -3,8 +3,8 @@ import UserList from './UserList'
 
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
-import { get_users } from '../../reselectors'
 
+var get_users = state => state.users;
 var get_post = (state, props) => state.posts[props.params.id];
 var get_url = (state, props) => ('/api/update_post_like_uids?_id=' + props.params.id);
 

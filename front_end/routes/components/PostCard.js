@@ -49,10 +49,10 @@ class PostCard extends React.Component {
             return '-c334';
     }
     render() {
-        var { user, post, audio } = this.props;
+        var { user, post, audio, children } = this.props;
         var read_count = audio && audio.read_count || 0;
         return (
-            <div className="card" ref='card'>
+            <div className="card">
                 <div className="picture image-image_default_home"
                     style={{
                         height: this.picHeight()
@@ -79,6 +79,7 @@ class PostCard extends React.Component {
                     <img className='avatar' src={user.headimgurl} />
                     <span className='nickname'>{user.nickname}</span>
                 </a> }
+                { children }
             </div>
         );
     }

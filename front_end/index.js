@@ -107,6 +107,11 @@ render(
                     cb(null, require('./routes/UserList/ReadList'))
                 });
             }}/>
+            <Route path="/edit_topic/:id" getComponent={(nextState, cb)=>{
+                require.ensure([], (require)=>{
+                    cb(null, require('./routes/EditTopic/index'))
+                });
+            }}/>
             <Route path="/" component={App} >
                 <Route path="home" component={Home} />
                 <Route path="home/:time" component={Home} />

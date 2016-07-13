@@ -7,8 +7,12 @@ import { connect } from 'react-redux';
 
 class __FeedList extends React.Component {
     renderPost = post => {
-        var { users, showUser, w } = this.props;
-        return <PostCard key={post._id} w={w} post={post} user={showUser && users[post.user_id] || null}/>;
+        var { users, showUser, w, PostCardChild } = this.props;
+        return (
+            <PostCard key={post._id} w={w} post={post} user={showUser && users[post.user_id] || null}>
+                { PostCardChild && <PostCardChild post={post} /> }
+            </PostCard>
+        );
     }
     render() {
         var {post_div_list, w, users, showUser} = this.props;

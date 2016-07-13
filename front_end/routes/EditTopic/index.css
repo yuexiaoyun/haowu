@@ -1,0 +1,112 @@
+.root {
+    position: relative;
+}
+
+.icon-list-container {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 104px;
+    padding-left: 8px;
+    padding-right: 8px;
+    position: fixed;
+    z-index: 10;
+    background-color: #ffffff;
+}
+.input-line {
+    height: 44px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 15px;
+    border-bottom: 1px solid #dfdfdd;
+}
+.input-ctrl {
+    width: 100%;
+    border: none;
+    font-size: 14px;
+    background-color: #ffffff;
+}
+.icon-list {
+    height: 60px;
+    overflow-x: scroll;
+    white-space: nowrap;
+}
+.icon-list::-webkit-scrollbar {
+    height: 0;
+}
+.icon-container {
+    display: inline-block;
+    position: relative;
+    margin-top: 13px;
+    width: 34px;
+    height: 34px;
+    margin-right: 6px;
+}
+.icon {
+    width: 30px;
+    height: 30px;
+    box-sizing: content-box;
+    border: 2px solid #ffffff;
+}
+.icon-active {
+    composes: icon;
+    border: 2px solid #ff6b6b;
+}
+.send {
+    float: right;
+    margin-left: 10px;
+    margin-top: 15px;
+    width: 67px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: #ffffff;
+    background-color: #ff6b6b;
+}
+.send-disabled {
+    composes: send;
+    background-color: #999999;
+}
+.content {
+    margin-top: 104px;
+}
+.post-card-child-current {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    border: 2px solid #ff6b6b;
+    box-sizing: padding-box;
+    border-radius: 5px;
+}
+.post-card-child-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+}
+.post-card-child {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 20px;
+    height: 20px;
+    margin: 8px 8px 20px 20px;
+    padding-top: 2px;
+    font-size: 12px;
+    border-radius: 9px;
+    text-align: center;
+    border: 2px solid #ffffff;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+}
+.post-card-child-selected {
+    composes: post-card-child;
+    padding-top: 2px;
+    font-size: 12px;
+    text-align: center;
+    background-color: #ff6b6b;
+    color: #ffffff;
+}

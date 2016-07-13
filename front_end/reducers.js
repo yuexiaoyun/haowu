@@ -6,6 +6,7 @@ export posts from './ducks/posts';
 export users from './ducks/users';
 export audios from './ducks/audios';
 export topics from './ducks/topics';
+export topic_editor from './ducks/topic_editor';
 
 export var local_pic_id = handleActions({
     take_pic: (state, action) => (action.payload)
