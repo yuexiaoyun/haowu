@@ -4,8 +4,8 @@
     padding-top: 7px;
     padding-bottom: 8px;
     padding-left: 10px;
-    padding-right: 20px;
-    border-bottom: 1px solid #dfdfdd;
+    padding-right: 10px;
+    border-top: 1px solid #dfdfdd;
 }
 .avatar {
     float: left;
@@ -17,7 +17,6 @@
     float: right;
     width: 16px;
     height: 16px;
-    margin-top: 22px;
     background-size: 16px 16px;
     background-position: 0 0;
     background-image: url('../../files/btn_edit_me.png');
