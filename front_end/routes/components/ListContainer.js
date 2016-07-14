@@ -14,6 +14,11 @@ function topPosition(domElt) {
 }
 
 class ListContainer extends React.Component {
+    static propTypes = {
+        loadMore: React.PropTypes.func.isRequired,
+        hasMore: React.PropTypes.bool.isRequired,
+        id: React.PropTypes.string.isRequired
+    }
     render() {
         return (
             <div>

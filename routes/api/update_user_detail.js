@@ -1,6 +1,7 @@
 import { Model as Post, findPosts } from '../../mongodb_models/post';
 import { Model as User, findUsers, findUserById } from '../../mongodb_models/user';
 import { Model as Audio } from '../../mongodb_models/audio';
+import { Model as Topic } from '../../mongodb_models/topic';
 import { createAction } from 'redux-actions';
 
 import _ from 'underscore';
@@ -23,6 +24,11 @@ module.exports = function*() {
         audio_id: { $in: audio_ids },
     }).select('audio_id reads').exec();
 
+    // 获取用户的专辑列表
+    var topics = yield Topic.find({
+        user_id: this.session.user_id
+    }).exec();
+
     if (this.session.user_id == this.query._id) {
         var users = yield findUsers(this.session.user_id, {
             subids: this.session.user_id
@@ -39,6 +45,7 @@ module.exports = function*() {
             createAction('update_user_detail')({
                 users,
                 posts,
+                topics,
                 audios: audios.map(audio=>Audio.toBrowser(audio, this.session.user_id))
             })
         ]

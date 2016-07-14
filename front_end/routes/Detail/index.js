@@ -8,10 +8,13 @@ import UserTop from './UserTop';
 import EmptyView from '../common/EmptyView';
 import FeedList from '../components/FeedList';
 import Loader from '../components/Loader';
+import ListContainer from '../components/ListContainer';
 
+import emptyImage from '../../files/image_zhuanji_404.png'
+
+import { createAction } from 'redux-actions'
 import { connect } from 'react-redux';
 import { createSelector, createStructuredSelector } from 'reselect';
-import { get_posts } from '../../reselectors'
 
 class Detail extends React.Component {
     constructor() {
@@ -19,20 +22,12 @@ class Detail extends React.Component {
         this.state = {};
     }
     componentDidMount() {
-        var { user } = this.props;
-        if (user) {
-            window.setTitle(user.nickname + '的物记');
-            this.setShareInfo();
-        }
-        this.load();
-    }
-    load = () => {
-        var id = this.props.params.id;
-        var url = '/api/update_user_detail?_id=' + id;
-        this.setState({err: null});
-        update(url).catch((err) => this.setState({err}));
+        this.setTitleAndShareInfo();
     }
     componentDidUpdate() {
+        this.setTitleAndShareInfo();
+    }
+    setTitleAndShareInfo = () => {
         var { user } = this.props;
         if (user) {
             window.setTitle(user.nickname + '的物记');
@@ -55,43 +50,79 @@ class Detail extends React.Component {
         });
     }
     handleHeight = (height) => {
-        console.log('height: ' + height);
-        this.setState({topHeight: height});
+        if (this.state.topHeight != height)
+            this.setState({topHeight: height});
+    }
+    load = () => {
+        var id = this.props.params.id;
+        var url = '/api/update_user_detail?_id=' + id;
+        return update(url);
+    }
+    renderPostList() {
+        var { user, post_list } = this.props;
+        var ta = user && user._id == window.user_id && '我' || 'Ta';
+        return post_list.length > 0
+            && <FeedList post_list={post_list} />
+            || <EmptyView topHeight={this.state.topHeight} emptyText={`${ta}还没有发布过好物`}/>
+    }
+    renderTopicList() {
+        var { user, topic_list } = this.props;
+        var ta = user && user._id == window.user_id && '我' || 'Ta';
+        return <EmptyView
+            topHeight={this.state.topHeight}
+            emptyText={`${ta}还没有发布过专辑`}
+            emptyImage={emptyImage}
+            />
     }
     render() {
-        var { user, post_list } = this.props;
-        var { err } = this.state;
-        var ta = user && user._id == window.user_id && '我' || 'Ta';
-        if (user) {
-            return (
-                <div>
-                    <UserTop user={user} handleHeight={this.handleHeight}/>
-                    { !post_list && !err && <Loader /> }
-                    { !post_list && err && this.state.topHeight &&
-                        <EmptyView topHeight={this.state.topHeight} emptyText='加载失败，点击重试' onClick={this.load}/>}
-                    { post_list && post_list.length > 0 && <FeedList post_list={post_list} /> }
-                    { post_list && post_list.length == 0 && this.state.topHeight &&
-                        <EmptyView topHeight={this.state.topHeight} emptyText={`${ta}还没有发布过好物`}/>}
-                </div>
-            );
-        } else if (!err) {
-            return <Loader />;
-        } else {
-            return <EmptyView emptyText={'加载失败，点击重试'} onClick={this.load}/>;
-        }
+        var { user, post_list, current_tab, location, dispatch } = this.props;
+        var fullfilled = !!(user && post_list);
+        return (
+            <ListContainer id={location.key} hasMore={!fullfilled} loadMore={this.load}>
+                { user && <UserTop
+                    user={user}
+                    handleHeight={this.handleHeight}
+                    currentTab={current_tab}
+                    setCurrentTab={(current_tab)=>{
+                        dispatch(createAction('set_route_state')({
+                            key: location.key,
+                            value: {
+                                current_tab
+                            }
+                        }));
+                    }}
+                    /> }
+                { current_tab == 0 && user && post_list && this.renderPostList() }
+                { current_tab == 1 && user && post_list && this.renderTopicList() }
+            </ListContainer>
+        );
     }
 }
 
+var get_posts = state => state.posts;
 var get_user = (state, props) => state.users[props.params.id];
 var get_post_ids = (state, props) => state.user_post_ids[props.params.id];
 var get_post_list = createSelector(
     [get_post_ids, get_posts],
     (post_ids, posts) => post_ids && post_ids.map(id=>posts[id]) || null
-)
+);
+var get_topics = state => state.topics;
+var get_topic_ids = (state, props) => state.user_topic_ids[props.params.id];
+var get_topic_list = createSelector(
+    [get_topic_ids, get_topics],
+    (topic_ids, topics) => topic_ids && topic_ids.map(id=>topics[id]) || null
+);
+var get_current_tab = (state, props) => {
+    var key = props.location.key;
+    var value = state.route_state[key];
+    return value ? value.current_tab : 0;
+};
 
 var mapStateToProps = createStructuredSelector({
     user: get_user,
-    post_list: get_post_list
+    post_list: get_post_list,
+    topic_list: get_topic_list,
+    current_tab: get_current_tab
 });
 
 export default module.exports = connect(mapStateToProps)(

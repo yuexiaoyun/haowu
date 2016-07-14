@@ -12,6 +12,12 @@ import styles from './UserTop.css'
 import CSSModules from 'react-css-modules';
 
 class UserTop extends React.Component {
+    static propTypes = {
+        user: React.PropTypes.object.isRequired,
+        currentTab: React.PropTypes.number.isRequired,
+        setCurrentTab: React.PropTypes.func.isRequired,
+        handleHeight: React.PropTypes.func.isRequired
+    }
     constructor() {
         super();
         this.state = {};
@@ -44,7 +50,8 @@ class UserTop extends React.Component {
         );
     }
     render() {
-        var { user } = this.props;
+        var { user, currentTab, setCurrentTab } = this.props;
+        var ta = user && user._id == window.user_id && '我' || 'Ta';
         return (
             <div ref='root' styleName='root'>
                 { window.sub_status != 1 && <FollowLine /> }
@@ -54,7 +61,16 @@ class UserTop extends React.Component {
                 { this.state.input ?
                     <IntroInput user={user} handleInput={this.handleInput}/> :
                     this.renderIntro() }
-                <div styleName='d3' />
+                <div styleName='tabs'>
+                    <div styleName='tab' onClick={()=>setCurrentTab(0)}>
+                        {ta}的发布
+                        { currentTab == 0 && <div styleName='tab-current' /> }
+                    </div>
+                    <div styleName='tab' onClick={()=>setCurrentTab(1)}>
+                        {ta}的专辑
+                        { currentTab == 1 && <div styleName='tab-current' /> }
+                    </div>
+                </div>
             </div>
         );
     }

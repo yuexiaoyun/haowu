@@ -23,13 +23,10 @@ require('babel-register')();
 
 var app = koa();
 require('koa-qs')(app);
-if (process.env.DEBUG == 'app') {
-    var js_file = '/assets/main.js';
-} else {
-    var assets = fs.readFileSync('./front_end/templates/webpack-assets.json');
-    assets = JSON.parse(assets.toString());
-    var js_file = assets.main.js;
-}
+
+var assets = fs.readFileSync('./front_end/templates/webpack-assets.json');
+assets = JSON.parse(assets.toString());
+var js_file = assets.main.js;
 
 var jade = new Jade({
     viewPath: './front_end/templates',
@@ -53,23 +50,8 @@ app.use(logger());
 
 app.use(gzip());
 app.use(mount('/agent', wechat(conf.wechat_token).middleware(require('./routes/agent'))));
-if (process.env.DEBUG == 'app') {
-    var webpack = require('webpack');
-    var webpack_config = require('./webpack.config.dev.js');
-    var compiler = webpack(webpack_config);
-    var middleware = webpackDevMiddleware(compiler, {
-        publicPath: '/assets/'
-    });
-    app.use(mount('/internal_login', require('./routes/internal_login')));
-    app.use(function *(next) {
-        var n = co.wrap(function *() {
-            yield *next;
-        });
-        yield middleware(this, n);
-    });
-} else {
-    app.use(mount('/assets', serve('assets', {maxAge: ms('10y')})));
-}
+app.use(mount('/assets', serve('assets', {maxAge: ms('10y')})));
+app.use(mount('/internal_login', require('./routes/internal_login')));
 app.use(mount('/login', require('./routes/login')));
 app.use(function *(next) {
     if (!this.session.user_id) {
