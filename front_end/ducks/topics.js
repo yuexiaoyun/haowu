@@ -25,5 +25,12 @@ export default handleActions({
             [topic._id]: topic
         }
     },
+    pub_topic: (state, action) => {
+        var { topic } = action.payload;
+        return {
+            ...state,
+            [topic._id]: topic
+        }
+    },
     update_user_detail: update_topics
 }, {});

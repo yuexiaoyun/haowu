@@ -6,7 +6,7 @@ export default handleActions({
     pub_post: (state, action) => {
         return {
             ...state,
-            [window.user_id]: []
+            [window.user_id]: null
         }
     },
     update_user_detail: (state, action) => {

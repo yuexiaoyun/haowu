@@ -88,8 +88,8 @@ class Detail extends React.Component {
         );
     }
     render() {
-        var { user, post_list, current_tab, location, dispatch } = this.props;
-        var fullfilled = !!(user && post_list);
+        var { user, post_list, topic_list, current_tab, location, dispatch } = this.props;
+        var fullfilled = !!(user && post_list && topic_list);
         return (
             <ListContainer id={location.key} hasMore={!fullfilled} loadMore={this.load}>
                 { user && <UserTop
@@ -106,7 +106,7 @@ class Detail extends React.Component {
                     }}
                     /> }
                 { current_tab == 0 && user && post_list && this.renderPostList() }
-                { current_tab == 1 && user && post_list && this.renderTopicList() }
+                { current_tab == 1 && user && topic_list && this.renderTopicList() }
             </ListContainer>
         );
     }

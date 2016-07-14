@@ -1,21 +1,23 @@
 .root {
     position: relative;
-    height: 40px;
-    margin-bottom: 15px;
+    height: 75px;
+    padding-top: 7px;
+    padding-bottom: 8px;
     padding-left: 10px;
     padding-right: 20px;
+    border-bottom: 1px solid #dfdfdd;
 }
 .avatar {
     float: left;
-    height: 40px;
-    width: 40px;
+    height: 60px;
+    width: 60px;
     margin-right: 15px;
 }
 .edit {
     float: right;
     width: 16px;
     height: 16px;
-    margin-top: 12px;
+    margin-top: 22px;
     background-size: 16px 16px;
     background-position: 0 0;
     background-image: url('../../files/btn_edit_me.png');
@@ -25,13 +27,15 @@
     margin-right: 20px;
 }
 .title {
+    margin-top: 2px;
+    margin-bottom: 16px;
     height: 20px;
-    line-height: 20px;
+    line-height: 18px;
     font-size: 14px;
     color: #666666;
 }
 .numbers {
-    width: 100%;
+    width: 80%;
     height: 20px;
     display: table;
     table-layout: fixed;
@@ -61,10 +65,10 @@
 .play {
     position: absolute;
     left: 10px;
-    top: 0;
-    width: 40px;
-    height: 40px;
-    background-position: 5px 5px;
+    top: 7px;
+    width: 60px;
+    height: 60px;
+    background-position: 15px 15px;
     background-size: 30px 30px;
     background-repeat: no-repeat;
     background-image: url('../../files/btn_play_zhuanji.png');
