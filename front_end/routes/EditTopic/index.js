@@ -4,6 +4,7 @@ import { hashHistory } from 'react-router';
 import update from '../../utility/update';
 import setShareInfo from '../../utility/set_share_info';
 import fconf from '../../fconf';
+import qs from 'querystring';
 
 import EmptyView from '../common/EmptyView';
 import FeedList from '../components/FeedList';
@@ -113,6 +114,15 @@ class EditTopic extends React.Component {
         var url = '/api/update_user_detail?_id=' + id;
         this.setState({err: null});
         update(url).catch((err) => this.setState({err}));
+    }
+    send = () => {
+        var { topic_editor } = this.props;
+        console.log(topic_editor);
+        update('/api/pub_topic?' + qs.stringify({
+            post_ids: topic_editor.post_ids.join(','),
+            title: topic_editor.title
+        }));
+        hashHistory.go(-1);
     }
     render() {
         var { topic_post_list, post_list, topic_editor, dispatch } = this.props;

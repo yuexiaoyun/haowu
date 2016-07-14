@@ -7,7 +7,7 @@ import fconf from '../../fconf';
 import UserTop from './UserTop';
 import EmptyView from '../common/EmptyView';
 import FeedList from '../components/FeedList';
-import Loader from '../components/Loader';
+import TopicCard from './TopicCard';
 import ListContainer from '../components/ListContainer';
 
 import emptyImage from '../../files/image_zhuanji_404.png'
@@ -15,6 +15,8 @@ import emptyImage from '../../files/image_zhuanji_404.png'
 import { createAction } from 'redux-actions'
 import { connect } from 'react-redux';
 import { createSelector, createStructuredSelector } from 'reselect';
+import styles from './index.css'
+import CSSModules from 'react-css-modules';
 
 class Detail extends React.Component {
     constructor() {
@@ -68,11 +70,22 @@ class Detail extends React.Component {
     renderTopicList() {
         var { user, topic_list } = this.props;
         var ta = user && user._id == window.user_id && '我' || 'Ta';
-        return <EmptyView
-            topHeight={this.state.topHeight}
-            emptyText={`${ta}还没有发布过专辑`}
-            emptyImage={emptyImage}
-            />
+        var me = user && user._id == window.user_id;
+        console.log(topic_list);
+        return (
+            <div>
+                { me && <div styleName='pub-topic-container'>
+                    <div styleName='pub-topic' onClick={()=>hashHistory.push('/pub_topic')}>新建专辑</div>
+                </div> }
+                { topic_list.length > 0
+                    ? topic_list.map(topic=><TopicCard key={topic._id} topic={topic} />)
+                    : <EmptyView
+                    topHeight={this.state.topHeight + (me ? 34 : 0)}
+                    emptyText={`${ta}还没有发布过专辑`}
+                    emptyImage={emptyImage}
+                    /> }
+            </div>
+        );
     }
     render() {
         var { user, post_list, current_tab, location, dispatch } = this.props;
@@ -126,5 +139,5 @@ var mapStateToProps = createStructuredSelector({
 });
 
 export default module.exports = connect(mapStateToProps)(
-    Detail
+    CSSModules(Detail, styles)
 );

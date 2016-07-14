@@ -112,6 +112,11 @@ render(
                     cb(null, require('./routes/EditTopic/index'))
                 });
             }}/>
+            <Route path="/pub_topic" getComponent={(nextState, cb)=>{
+                require.ensure([], (require)=>{
+                    cb(null, require('./routes/EditTopic/index'))
+                });
+            }}/>
             <Route path="/" component={App} >
                 <Route path="home" component={Home} />
                 <Route path="home/:time" component={Home} />
