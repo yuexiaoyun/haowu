@@ -10,6 +10,7 @@ import EmptyView from '../common/EmptyView';
 import FeedList from '../components/FeedList';
 import Loader from '../components/Loader';
 
+import { createAction } from 'redux-actions';
 import { connect } from 'react-redux';
 import { createSelector, createStructuredSelector } from 'reselect';
 import styles from './index.css'
@@ -18,7 +19,8 @@ import {
     topicEditorAdd,
     topicEditorRemove,
     topicEditorSetTitle,
-    topicEditorSelect
+    topicEditorSelect,
+    setTopicEditor
 } from '../../ducks/topic_editor'
 
 class PostCardChild extends React.Component {
@@ -105,7 +107,12 @@ class EditTopic extends React.Component {
         this.state = { focus: 0 };
     }
     componentDidMount() {
-        window.setTitle('新建专辑');
+        var { location, params, dispatch, topic } = this.props;
+        if (location.action == 'PUSH') {
+            dispatch(setTopicEditor(topic));
+        }
+        var title = params.id ? '编辑专辑' : '新建专辑';
+        window.setTitle(title);
         setShareInfo();
         this.load();
     }
@@ -116,13 +123,23 @@ class EditTopic extends React.Component {
         update(url).catch((err) => this.setState({err}));
     }
     send = () => {
-        var { topic_editor } = this.props;
-        console.log(topic_editor);
-        update('/api/pub_topic?' + qs.stringify({
-            post_ids: topic_editor.post_ids.join(','),
-            title: topic_editor.title
-        }));
-        hashHistory.go(-1);
+        var { topic_post_list, topic_editor, params } = this.props;
+        if (topic_post_list.length > 1 && topic_editor.title.length > 0) {
+            if (params.id) {
+                var url = '/api/edit_topic?' + qs.stringify({
+                    post_ids: topic_editor.post_ids.join(','),
+                    title: topic_editor.title,
+                    _id: params.id
+                });
+            } else {
+                var url = '/api/pub_topic?' + qs.stringify({
+                    post_ids: topic_editor.post_ids.join(','),
+                    title: topic_editor.title
+                });
+            }
+            update(url);
+            hashHistory.go(-1);
+        }
     }
     render() {
         var { topic_post_list, post_list, topic_editor, dispatch } = this.props;
@@ -181,11 +198,13 @@ var get_topic_post_list = createSelector(
     [get_topic_editor, get_posts],
     (topic_editor, posts) => topic_editor.post_ids.map(id=>posts[id])
 )
+var get_topic = (state, props) => props.params.id ? state.topics[props.params.id] : null;
 
 var mapStateToProps = createStructuredSelector({
     post_list: get_post_list,
     topic_post_list: get_topic_post_list,
-    topic_editor: get_topic_editor
+    topic_editor: get_topic_editor,
+    topic: get_topic
 });
 
 export default module.exports = connect(mapStateToProps)(

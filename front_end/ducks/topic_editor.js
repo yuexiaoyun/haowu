@@ -28,6 +28,17 @@ export default handleActions({
             ...state,
             title: action.payload
         }
+    },
+    set_topic_editor: (state, action) => {
+        var { posts, title } = action.payload || {
+            posts: [],
+            title: ''
+        };
+        return {
+            post_ids: posts,
+            title,
+            index: -1
+        }
     }
 }, {
     post_ids: [],
@@ -35,6 +46,7 @@ export default handleActions({
     index: -1
 });
 
+export var setTopicEditor = createAction('set_topic_editor');
 export var topicEditorAdd = createAction('topic_editor_add');
 export var topicEditorRemove = createAction('topic_editor_remove');
 export var topicEditorSelect = createAction('topic_editor_select');

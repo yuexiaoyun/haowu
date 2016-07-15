@@ -17,7 +17,7 @@ class TopicCard extends React.Component {
         super();
     }
     edit = () => {
-
+        hashHistory.push('/edit_topic/' + this.props.topic._id);
     }
     delete = () => {
         var { dispatch, topic } = this.props;

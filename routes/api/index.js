@@ -23,5 +23,6 @@ router.get('/pub_comment', require('./pub_comment'));
 router.get('/hide_tooltip', require('./hide_tooltip'));
 router.get('/update_topic', require('./update_topic'));
 router.get('/pub_topic', require('./pub_topic'));
+router.get('/edit_topic', require('./edit_topic'));
 
 module.exports = router.routes();
