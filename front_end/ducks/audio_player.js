@@ -3,10 +3,17 @@ import fconf from '../fconf';
 import { read } from '../actions';
 
 export default handleActions({
-    set_playlist: (state, action) => ({
-        ...state,
-        playlist: action.payload
-    }),
+    set_playlist: (state, action) => {
+        if (state.playlist != action.payload) {
+            return {
+                ...state,
+                index: 0,
+                playlist: action.payload
+            }
+        } else {
+            return state;
+        }
+    },
     set_index: (state, action) => ({
         ...state,
         index: action.payload.index
