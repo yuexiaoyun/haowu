@@ -9,7 +9,9 @@ var schema = new mongoose.Schema({
     // 标题
     title: { type: String },
     // post列表
-    posts: [{ type: String }]
+    posts: [{ type: String }],
+    // status=0: 删除
+    status: { type: Number }
 }, {
     timestamps: true
 });

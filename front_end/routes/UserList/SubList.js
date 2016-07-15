@@ -3,7 +3,9 @@ import UserList from './UserList'
 
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
-import { get_subids, get_users } from '../../reselectors'
+
+var get_subids = state => state.subids;
+var get_users = state => state.users;
 
 var mapStateToProps = createSelector(
     [get_subids, get_users],

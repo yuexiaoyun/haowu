@@ -5,7 +5,6 @@ import { createAction } from 'redux-actions';
 import fconf from '../../fconf';
 import qs from 'querystring';
 
-import { get_subids, get_audios } from '../../reselectors';
 import styles from './NotificationCard.css';
 import CSSModules from 'react-css-modules';
 import { connect } from 'react-redux';
@@ -103,6 +102,8 @@ class NotificationCard extends React.Component {
     }
 }
 
+var get_subids = state => state.subids;
+var get_audios = state => state.audios;
 var get_user = (state, props) => state.users[props.notification.user_id2];
 var get_post = (state, props) => state.posts[props.notification.target];
 

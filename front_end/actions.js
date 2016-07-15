@@ -27,3 +27,4 @@ export var set_title = createOptimistAction('set_title', payload=>('/api/set_tit
     _id: payload._id,
     title: payload.title
 })));
+export var delete_topic = createOptimistAction('delete_topic', payload=>('/api/delete_topic?_id=' + payload));

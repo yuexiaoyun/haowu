@@ -4,14 +4,36 @@ import moment from 'moment'
 import _ from 'underscore';
 import { hashHistory } from 'react-router';
 
+import PopupHelper from '../../utility/PopupHelper';
+
 import { connect } from 'react-redux'
 import { createSelector, createStructuredSelector } from 'reselect';
+import { delete_topic } from '../../actions';
 import styles from './TopicCard.css'
 import CSSModules from 'react-css-modules'
 
 class TopicCard extends React.Component {
     constructor() {
         super();
+    }
+    edit = () => {
+
+    }
+    delete = () => {
+        var { dispatch, topic } = this.props;
+        PopupHelper.confirm('你确认要删除么', '删除', ()=>{
+            dispatch(delete_topic(topic._id));
+        });
+    }
+    more = (e) => {
+        e.stopPropagation();
+        PopupHelper.menu([{
+            text: '编辑',
+            f: this.edit
+        }, {
+            text: '删除',
+            f: this.delete
+        }]);
     }
     render() {
         var { topic, post_list, total_length, read_count } = this.props;
@@ -20,7 +42,7 @@ class TopicCard extends React.Component {
             <div styleName='root' onClick={()=>hashHistory.push('/topic/' + topic._id)}>
                 <img styleName='avatar' src={fconf.qiniu.site + post_list[0].pic_id + '-b80'} />
                 <div styleName='play' />
-                <div styleName='edit' />
+                { topic.user_id == window.user_id && <div styleName='edit' onClick={this.more}/> }
                 <div styleName='content'>
                     <div styleName='title'>{topic.title}</div>
                     <div styleName='numbers'>

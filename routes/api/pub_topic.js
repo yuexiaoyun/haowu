@@ -7,6 +7,7 @@ module.exports = function*() {
     topic.user_id = this.session.user_id;
     topic.posts = this.query.post_ids.split(',');
     topic.title = this.query.title;
+    topic.status = 1;
     yield topic.save();
     this.body = {
         result: 'ok',

@@ -27,6 +27,7 @@ module.exports = function*() {
     // 获取用户的专辑列表
     var topics = yield Topic.find({
         user_id: this.query._id,
+        status: 1
     }).sort({
         _id: -1
     }).exec();
