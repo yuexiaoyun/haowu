@@ -10,10 +10,7 @@ export topic_editor from './ducks/topic_editor';
 export user_post_ids from './ducks/user_post_ids';
 export user_topic_ids from './ducks/user_topic_ids';
 export route_state from './ducks/route_state';
-
-export var local_pic_id = handleActions({
-    take_pic: (state, action) => (action.payload)
-}, null);
+export local_pic_id from './ducks/local_pic_id';
 
 // 首页feed的id列表
 export var feed_ids = handleActions({

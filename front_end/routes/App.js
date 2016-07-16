@@ -2,7 +2,6 @@ import React from 'react';
 import update from '../utility/update'
 import { hashHistory } from 'react-router';
 import { createAction } from 'redux-actions';
-import wx from 'weixin-js-sdk';
 
 import btnTabbarHome from '../files/btn_tabbar_home.png'
 import btnTabbarHomeSelected from '../files/btn_tabbar_home_selected.png'
@@ -11,6 +10,8 @@ import btnTabbarMeSelected from '../files/btn_tabbar_me_selected.png'
 import btnTabbarPhoto from '../files/btn_tabbar_photo.png'
 import btnTabbarPhotoPressed from '../files/btn_tabbar_photo_pressed.png'
 
+import { takePhoto } from '../ducks/local_pic_id';
+
 import styles from './App.css';
 import CSSModules from 'react-css-modules';
 import { connect } from 'react-redux';
@@ -18,16 +19,7 @@ import { createStructuredSelector } from 'reselect';
 
 class App extends React.Component {
     take_photo = () => {
-        wx.chooseImage({
-            count: 1,
-            success: res => {
-                var path = res.localIds[0];
-                this.props.dispatch(createAction('take_pic')(path));
-                hashHistory.push('pub');
-            }
-        });
-        update('/api/hide_tooltip');
-        this.props.dispatch(createAction('update_tooltip')(0));
+        this.props.dispatch(takePhoto(true));
     }
     componentDidMount() {
         update('/api/update_badge');

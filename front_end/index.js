@@ -39,7 +39,8 @@ if (entry.substring(0, 5) == '/post') {
 
 let store = applyMiddleware(
     audioPlayerMiddleware,
-    optimistPromiseMiddleware()
+    optimistPromiseMiddleware(),
+    thunk,
 )(createStore)(
     optimist(combineReducers(reducers)), {},
     window.devToolsExtension && window.devToolsExtension()
