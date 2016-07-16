@@ -15,6 +15,7 @@ import { connect } from 'react-redux';
 import { createSelector, createStructuredSelector } from 'reselect';
 import styles from './index.css'
 import CSSModules from 'react-css-modules'
+import { takePhoto } from '../../ducks/local_pic_id'
 import {
     topicEditorAdd,
     topicEditorRemove,
@@ -141,6 +142,17 @@ class EditTopic extends React.Component {
             hashHistory.go(-1);
         }
     }
+    renderTopItem = () => {
+        var { dispatch } = this.props;
+        return (
+            <div className={styles['pub-post-container']} onClick={()=>dispatch(takePhoto(false))}>
+                <div className={styles['pub-post']}>添加好物</div>
+            </div>
+        );
+    }
+    getTopItemHeight = () => {
+        return 50;
+    }
     render() {
         var { topic_post_list, post_list, topic_editor, dispatch } = this.props;
         var { err } = this.state;
@@ -175,7 +187,12 @@ class EditTopic extends React.Component {
                         </div>
                     </div>
                     <div styleName='content'>
-                        <FeedList post_list={post_list} PostCardChild={PostCardChild}/>
+                        <FeedList
+                            renderTopItem={this.renderTopItem}
+                            getTopItemHeight={this.getTopItemHeight}
+                            post_list={post_list}
+                            PostCardChild={PostCardChild}
+                            />
                     </div>
                 </div>
             );

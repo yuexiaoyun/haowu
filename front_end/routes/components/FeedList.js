@@ -9,8 +9,23 @@ import { createSelector, createStructuredSelector } from 'reselect'
 import { connect } from 'react-redux';
 
 class FeedList extends React.Component {
+    static propTypes = {
+        post_list: React.PropTypes.array.isRequired,
+        users: React.PropTypes.array.isRequired,
+        showUser: React.PropTypes.bool.isRequired,
+        PostCardChild: React.PropTypes.func,
+        renderTopItem: React.PropTypes.func,
+        getTopItemHeight: React.PropTypes.func
+    }
     renderItem = (i, w) => {
-        var { post_list, users, showUser, PostCardChild } = this.props;
+        var { post_list, users, showUser, PostCardChild, renderTopItem } = this.props;
+        if (renderTopItem) {
+            if (i == 0) {
+                return renderTopItem();
+            } else {
+                i = i - 1;
+            }
+        }
         var post = post_list[i];
         var user = showUser && users[post.user_id] || null;
         return (
@@ -20,15 +35,25 @@ class FeedList extends React.Component {
         );
     }
     getItemHeight = (i, w) => {
-        var { post_list, showUser } = this.props;
+        var { post_list, showUser, renderTopItem, getTopItemHeight } = this.props;
+        if (renderTopItem) {
+            if (i == 0) {
+                return getTopItemHeight();
+            } else {
+                i = i - 1;
+            }
+        }
         var post = post_list[i];
         return 86 + post.h * w / post.w
     }
+    getItemCount = () => {
+        var { post_list, renderTopItem } = this.props;
+        return (post_list && post_list.length || 0) + (renderTopItem ? 1: 0);
+    }
     render() {
-        var { post_list } = this.props;
         return (
             <Feed
-                count={post_list && post_list.length || 0}
+                count={this.getItemCount()}
                 renderItem={this.renderItem}
                 getItemHeight={this.getItemHeight} />
         );
