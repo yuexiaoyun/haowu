@@ -1,6 +1,7 @@
 .root {
     padding: 16px 15px;
     line-height: 30px;
+    border-top: 5px solid #f1f1f1;
 }
 .avatar {
     float: left;

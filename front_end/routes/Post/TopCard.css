@@ -67,7 +67,8 @@
     z-index: 8;
 }
 .audio-length {
-    margin-top: 12px;
+    margin-top: 7px;
+    margin-bottom: 10px;
     height: 14px;
     overflow: visible;
     text-align: center;
