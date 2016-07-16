@@ -74,8 +74,8 @@ class Detail extends React.Component {
         console.log(topic_list);
         return (
             <div>
-                { me && <div styleName='pub-topic-container'>
-                    <div styleName='pub-topic' onClick={()=>hashHistory.push('/pub_topic')}>新建专辑</div>
+                { me && <div styleName='pub-topic-container' onClick={()=>hashHistory.push('/pub_topic')}>
+                    <div styleName='pub-topic'>新建专辑</div>
                 </div> }
                 { topic_list.length > 0
                     ? topic_list.map(topic=><TopicCard key={topic._id} topic={topic} />)
