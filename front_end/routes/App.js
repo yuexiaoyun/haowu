@@ -19,7 +19,7 @@ import { createStructuredSelector } from 'reselect';
 
 class App extends React.Component {
     take_photo = () => {
-        this.props.dispatch(takePhoto(true));
+        this.props.dispatch(takePhoto(false));
     }
     componentDidMount() {
         update('/api/update_badge');

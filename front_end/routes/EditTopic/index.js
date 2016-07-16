@@ -145,7 +145,7 @@ class EditTopic extends React.Component {
     renderTopItem = () => {
         var { dispatch } = this.props;
         return (
-            <div className={styles['pub-post-container']} onClick={()=>dispatch(takePhoto(false))}>
+            <div className={styles['pub-post-container']} onClick={()=>dispatch(takePhoto(true))}>
                 <div className={styles['pub-post']}>添加好物</div>
             </div>
         );

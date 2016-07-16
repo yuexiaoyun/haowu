@@ -7,14 +7,14 @@ export default handleActions({
     take_pic: (state, action) => (action.payload)
 }, null);
 
-export var takePhoto = (home) => {
+export var takePhoto = (add) => {
     return dispatch => {
         wx.chooseImage({
             count: 1,
             success: res => {
                 var path = res.localIds[0];
                 dispatch(createAction('take_pic')(path));
-                hashHistory.push('/pub?home=' + home);
+                hashHistory.push('/pub?add=' + add);
             }
         });
         update('/api/hide_tooltip');

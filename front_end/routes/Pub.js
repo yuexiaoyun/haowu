@@ -4,6 +4,7 @@ import { parse_online_json } from '../utility/fetch_utils';
 import update from '../utility/update';
 import showProgress from '../utility/show_progress';
 import screenSize from '../utility/screen_size';
+import { topicEditorAdd } from '../ducks/topic_editor';
 import { hashHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
@@ -30,7 +31,7 @@ class Pub extends React.Component {
         });
     }
     pub = () => {
-        var { audio_id } = this.state;
+        var { audio_id, location, dispatch } = this.state;
         if (audio_id) {
             showProgress('发布中', Promise.all([
                 this.refs.recorder.upload_voice(),
@@ -41,8 +42,13 @@ class Pub extends React.Component {
                     pic_id: data[1],
                     length: this.state.d
                 });
-                return update(url);
-            }).then(()=> {
+                return update(url, (data) => {
+                    if (location.query && location.query.add) {
+                        dispatch(topicEditorAdd(data.id));
+                    }
+                    return data;
+                });
+            }).then((data)=> {
                 hashHistory.go(-1);
                 return '发布成功';
             }).catch(err => {

@@ -64,6 +64,7 @@ module.exports = function*() {
 
     this.body = {
         result: 'ok',
+        id: post._id,
         actions: [
             createAction('pub_post')({
                 posts: [post],
