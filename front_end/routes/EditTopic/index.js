@@ -158,7 +158,7 @@ class EditTopic extends React.Component {
         var { err } = this.state;
         if (post_list) {
             return (
-                <div styleName='root'>
+                <div styleName='root' style={{minHeight: window.innerHeight}}>
                     <div styleName='icon-list-container'>
                         <div styleName='input-line' >
                             <input
