@@ -2,6 +2,7 @@ import { Model as User, findUsersByIds } from '../../mongodb_models/user';
 import { Model as Post, findPostById } from '../../mongodb_models/post';
 import { Model as Audio } from '../../mongodb_models/audio';
 import { Model as Comment } from '../../mongodb_models/comment';
+import { Model as Topic } from '../../mongodb_models/topic';
 import { createAction } from 'redux-actions';
 import _ from 'underscore';
 
@@ -36,6 +37,12 @@ module.exports = function*() {
         audio_id: { $in: audio_ids },
     }).select('audio_id reads').exec();
 
+    // TODO: 所属专辑的index
+    var topics = yield Topic.find({
+        status: 1,
+        posts: this.query._id
+    }).select('_id title').exec();
+
     this.body = {
         result: 'ok',
         actions: [
@@ -43,7 +50,8 @@ module.exports = function*() {
                 users,
                 posts: [post],
                 audios: audios.map(audio=>Audio.toBrowser(audio, this.session.user_id)),
-                comments
+                comments,
+                topics
             })
         ]
     }

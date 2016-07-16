@@ -3,15 +3,18 @@
     background-color: #f1f1f1;
 }
 .icon-list-container {
-    top: 0;
-    left: 0;
-    right: 0;
     height: 104px;
     padding-left: 8px;
     padding-right: 8px;
+    background-color: #ffffff;
+}
+.icon-list-container-fixed {
+    composes: icon-list-container;
     position: fixed;
     z-index: 10;
-    background-color: #ffffff;
+    top: 0;
+    left: 0;
+    right: 0;
 }
 .input-line {
     height: 44px;
@@ -118,17 +121,13 @@
     width: 20px;
     height: 20px;
     margin: 8px 8px 20px 20px;
-    padding-top: 2px;
-    font-size: 12px;
     border-radius: 9px;
-    text-align: center;
     border: 2px solid #ffffff;
     background-color: rgba(0, 0, 0, 0.2);
-    color: #ffffff;
 }
 .post-card-child-selected {
     composes: post-card-child;
-    padding-top: 2px;
+    padding-top: 1px;
     font-size: 12px;
     text-align: center;
     background-color: #ff6b6b;

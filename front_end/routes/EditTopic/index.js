@@ -155,11 +155,14 @@ class EditTopic extends React.Component {
     }
     render() {
         var { topic_post_list, post_list, topic_editor, dispatch } = this.props;
-        var { err } = this.state;
+        var { err, focus } = this.state;
+        const userAgent = window.navigator.userAgent || window.navigator.vendor || window.opera;
+        const isIPhone = userAgent.match(/iPhone/i);
+        var iPhone_focus = focus && isIPhone;
         if (post_list) {
             return (
                 <div styleName='root' style={{minHeight: window.innerHeight}}>
-                    <div styleName='icon-list-container'>
+                    <div styleName={iPhone_focus ? 'icon-list-container' : 'icon-list-container-fixed'}>
                         <div styleName='input-line' >
                             <input
                                 styleName='input-ctrl'
@@ -186,14 +189,14 @@ class EditTopic extends React.Component {
                             )) }
                         </div>
                     </div>
-                    <div styleName='content'>
+                    { !iPhone_focus && <div styleName='content'>
                         <FeedList
                             renderTopItem={this.renderTopItem}
                             getTopItemHeight={this.getTopItemHeight}
                             post_list={post_list}
                             PostCardChild={PostCardChild}
                             />
-                    </div>
+                    </div> }
                 </div>
             );
         } else if (!err) {

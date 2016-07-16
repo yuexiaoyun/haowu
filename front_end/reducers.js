@@ -11,6 +11,7 @@ export user_post_ids from './ducks/user_post_ids';
 export user_topic_ids from './ducks/user_topic_ids';
 export route_state from './ducks/route_state';
 export local_pic_id from './ducks/local_pic_id';
+export post_details from './ducks/post_details';
 export home from './ducks/home';
 
 // 自己的通知列表
@@ -35,43 +36,6 @@ export var notification_end = handleActions({
 export var subids = handleActions({
     update_notifications: (state, action) => action.payload.subids || state
 }, []);
-
-// 帖子详情页的ID与内容对应
-export var post_details = handleActions({
-    update_post_detail: (state, action) => {
-        var { comments } = action.payload;
-        var post_id = action.payload.posts[0]._id;
-        return {
-            ...state,
-            [post_id]: {comments}
-        }
-    },
-    new_comment_reply: (state, action) => {
-        var post_detail = state[action.payload.post_id];
-        if (!post_detail)
-            return state;
-        var comments = [];
-        var exists = false;
-        post_detail.comments.map((comment)=>{
-            if (comment._id == action.payload._id) {
-                exists = true;
-                comments.push(action.payload);
-            }
-            else
-                comments.push(comment);
-        });
-        if (!exists)
-            comments = [action.payload, ...comments];
-        post_detail = {
-            ...post_detail,
-            comments: comments
-        }
-        return {
-            ...state,
-            [action.payload.post_id]: post_detail
-        }
-    }
-}, {});
 
 export var badge = handleActions({
     update_badge: (state, action) => ({
