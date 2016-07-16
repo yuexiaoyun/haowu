@@ -14,12 +14,7 @@
     line-height: 16px;
     height: 16px;
     font-size: 12px;
-    padding-left: 21px;
     vertical-align: middle;
-    background-image: url('../../files/btn_edit_me.png');
-    background-position: 0px 0px;
-    background-size: 16px 16px;
-    background-repeat: no-repeat;
 }
 .intro {
     composes: intro-base;
@@ -28,6 +23,21 @@
 .intro-null {
     composes: intro-base;
     color: #999999;
+}
+.me {
+    padding-left: 21px;
+    background-image: url('../../files/btn_edit_me.png');
+    background-position: 0px 0px;
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
+}
+.intro-me {
+    composes: intro;
+    composes: me;
+}
+.intro-null-me {
+    composes: intro-null;
+    composes: me;
 }
 .tabs {
     display: table;

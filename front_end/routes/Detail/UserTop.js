@@ -41,6 +41,9 @@ class UserTop extends React.Component {
     renderIntro() {
         var { user } = this.props;
         var className = user.intro ? 'intro' : 'intro-null';
+        if (user._id == window.user_id) {
+            className = className + '-me';
+        }
         return (
             <div styleName='intro-container'>
                 <div styleName={className} onClick={this.input}>
