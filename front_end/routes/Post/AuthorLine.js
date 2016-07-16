@@ -81,7 +81,7 @@ class TopCard extends React.Component {
                 <img styleName='avatar' src={user.headimgurl}
                     onClick={()=>hashHistory.push('/detail/' + user._id)}/>
                 <div styleName='more' onClick={this.more}/>
-                <div styleName={like_class} onClick={this.like}/>
+                { showComment && <div styleName={like_class} onClick={this.like}/> }
                 { showComment && <div styleName='comment' onClick={this.comment}>
                 { post.comment_reply_count > 0 && post.comment_reply_count }
                 </div>}

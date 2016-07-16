@@ -1,3 +1,43 @@
+.count-container {
+    width: 90px;
+    border: 1px solid #dfdfdd;
+    border-radius: 14px;
+    margin: 5px auto 0px;
+    display: inline-block;
+    text-align: center;
+}
+.count {
+    display: inline-block;
+    height: 28px;
+    padding-top: 8px;
+    background-size: 16px 16px;
+    background-position: 6px 6px;
+    background-repeat: no-repeat;
+    font-size: 12px;
+    padding-left: 30px;
+    padding-right: 10px;
+    color: #666666
+}
+.like-count-container {
+    composes: count-container;
+    float: left;
+}
+.read-count-container {
+    composes: count-container;
+    float: right;
+}
+.like-count {
+    composes: count;
+    background-image: url('../../files/btn_like_details.png');
+}
+.like-count-liked {
+    composes: count;
+    background-image: url('../../files/btn_like_details_HL.png');
+}
+.read-count {
+    composes: count;
+    background-image: url('../../files/icon_me_yiting.png');
+}
 .audio-line {
     composes: clear-fix from '../common_styles/base.css';
     width: 100%;

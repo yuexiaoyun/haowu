@@ -8,6 +8,7 @@ import Loader from '../components/Loader'
 import PicDetail from './PicDetail'
 import AuthorLine from './AuthorLine'
 
+import { like } from '../../actions'
 import { connect } from 'react-redux'
 import { createAction } from 'redux-actions'
 import styles from './TopCard.css'
@@ -30,6 +31,16 @@ class TopCard extends React.Component {
             }));
         }
     }
+    like = (e) => {
+        e.stopPropagation();
+        var { post, dispatch } = this.props;
+        if (!post.me_like) {
+            this.setState({like: true});
+            dispatch(like(post._id));
+        } else {
+            hashHistory.push('/like_list/' + post._id);
+        }
+    }
     render() {
         var { user, post, audio, playing, loading, time } = this.props;
         var d = Math.floor((post.length + 500) / 1000);
@@ -45,10 +56,12 @@ class TopCard extends React.Component {
                     handleEditTitle={this.props.handleEditTitle} />
                 <div styleName='audio-line'>
                     <div styleName='audio-line-tab'>
-                        <span className='pull-right btn-default'
-                            onClick={()=>(read_count > 0 && hashHistory.push('/read_list/'+post.audio_id))}>
-                            { read_count }人听过
-                        </span>
+                        <div styleName='read-count-container'>
+                            <span styleName='read-count'
+                                onClick={()=>(read_count > 0 && hashHistory.push('/read_list/'+post.audio_id))}>
+                                { read_count }
+                            </span>
+                        </div>
                     </div>
                     <div styleName='audio-line-tab'>
                         <div
@@ -57,10 +70,12 @@ class TopCard extends React.Component {
                             className={`${(playing || loading) ? 'image-btn_play_stop' : 'image-btn_play_start'}`} />
                     </div>
                     <div styleName='audio-line-tab'>
-                        <span className='pull-left btn-default clearfix'
-                            onClick={()=>(like_count > 0 && hashHistory.push('/like_list/'+post._id))}>
-                            { like_count }人赞过
-                        </span>
+                        <div className='clear-fix' styleName='like-count-container'>
+                            <span styleName={post.me_like ? 'like-count-liked' : 'like-count'}
+                                onClick={this.like}>
+                                { like_count }
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div styleName='audio-length'>
