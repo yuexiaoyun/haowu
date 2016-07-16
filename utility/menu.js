@@ -7,14 +7,14 @@ var menu = {
         name: "进入物记",
         url: conf.site + '/app/home'
     }, {
+        type: 'view',
+        name: '制作专辑',
+        url: conf.site + '/app/pub_topic'
+    }, {
         type: 'media_id',
         name: '送物换物',
         media_id: 'egOrCsB_0y-VIJsP2uYkaMYd0ndtKwwEXRQeNfq-MW8'
-    }, {
-        type: "view_limited",
-        name: "关于",
-        media_id: 'egOrCsB_0y-VIJsP2uYkaNmkmw-7YshZc7R8gzVCWzI'
-    }]
+    }
 };
 
 co.wrap(function *() {
