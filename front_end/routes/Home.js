@@ -50,13 +50,15 @@ class Home extends React.Component {
     componentDidMount() {
         window.setTitle('物记');
         setShareInfo();
-        update('/api/update_topics');
     }
     componentDidUpdate(prevProps) {
         if (this.props.location.key != prevProps.location.key
             && this.props.current_tab == 0
             && !this.state.reloading)
             this.reload();
+    }
+    loadTopics() {
+        return update('/api/update_topics');
     }
     renderTab0() {
         var { post_list, badge, feed_end, current_tab, dispatch } = this.props;
@@ -69,6 +71,23 @@ class Home extends React.Component {
             </ListContainer>
         )
     }
+    renderTab1() {
+        var { post_list, badge, feed_end, current_tab, topic_list, dispatch } = this.props;
+        return (
+            <ListContainer id='feed1' hasMore={topic_list.length == 0} loadMore={this.loadTopics}>
+            {topic_list.map(topic=><TopicCard key={topic._id} topic={topic} />)}
+            </ListContainer>
+        )
+    }
+    setCurrentTab = (tab) => {
+        var { current_tab, dispatch } = this.props;
+        if (current_tab == 0 && tab == 0) {
+            if (!this.state.reloading)
+                this.reload();
+        } else {
+            dispatch(setCurrentTab(tab));
+        }
+    }
     render() {
         var { post_list, badge, feed_end, current_tab, topic_list, dispatch } = this.props;
         var { reloading, err } = this.state;
@@ -76,12 +95,12 @@ class Home extends React.Component {
             <div>
                 <Tabbar
                     currentTab={current_tab}
-                    setCurrentTab={(tab)=>dispatch(setCurrentTab(tab))}
+                    setCurrentTab={this.setCurrentTab}
                     tabs={[
                         '热门动态', '精选专辑'
                     ]} />
                 { current_tab == 0 && this.renderTab0() }
-                { current_tab == 1 && topic_list.map(topic=><TopicCard key={topic._id} topic={topic} />)}
+                { current_tab == 1 && this.renderTab1() }
             </div>
         );
     }
