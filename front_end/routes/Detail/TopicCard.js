@@ -21,7 +21,7 @@ class TopicCard extends React.Component {
     }
     delete = () => {
         var { dispatch, topic } = this.props;
-        PopupHelper.confirm('你确认要删除么', '删除', ()=>{
+        PopupHelper.confirm('确认删除么？（不会删除专辑中的好物）', '删除', ()=>{
             dispatch(delete_topic(topic._id));
         });
     }
