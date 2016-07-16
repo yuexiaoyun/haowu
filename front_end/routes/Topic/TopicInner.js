@@ -133,6 +133,7 @@ var get_read_count = createSelector(
         return _.chain(post_list)
             .map(post=>post.audio_id)
             .map(audio_id=>audios[audio_id])
+            .compact()
             .map(audio=>audio.read_count)
             .reduce((m, i) => (m+i), 0)
             .value();
