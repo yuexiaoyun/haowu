@@ -11,7 +11,9 @@ var schema = new mongoose.Schema({
     // post列表
     posts: [{ type: String }],
     // status=0: 删除
-    status: { type: Number }
+    status: { type: Number },
+    // mark=1才能在首页展示
+    mark: { type: Number }
 }, {
     timestamps: true
 });

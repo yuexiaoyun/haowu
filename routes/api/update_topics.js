@@ -8,7 +8,8 @@ import _ from 'underscore';
 
 module.exports = function*() {
     var topics = yield Topic.find({
-        status: 1
+        status: 1,
+        mark: 1
     }).sort({_id: -1}).exec();
     // 获取原始的Post列表
     var post_ids = _.chain(topics)
