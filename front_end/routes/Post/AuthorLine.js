@@ -86,6 +86,7 @@ class TopCard extends React.Component {
                 { post.comment_reply_count > 0 && post.comment_reply_count }
                 </div>}
                 <span styleName='nickname'>{user.nickname}</span>
+                <span className='text-secondary'>{ fromObjectId(post._id) }</span>
             </div>
         )
     }

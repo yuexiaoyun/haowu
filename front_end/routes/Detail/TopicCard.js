@@ -21,7 +21,7 @@ class TopicCard extends React.Component {
     }
     delete = () => {
         var { dispatch, topic } = this.props;
-        PopupHelper.confirm('确认删除么？（不会删除专辑中的好物）', '删除', ()=>{
+        PopupHelper.confirm('确认删除么？（专辑中的好物不会删除）', '删除', ()=>{
             dispatch(delete_topic(topic._id));
         });
     }
@@ -45,11 +45,11 @@ class TopicCard extends React.Component {
                 { topic.user_id == window.user_id && <div styleName='edit' onClick={this.more}/> }
                 <div styleName='content'>
                     <div styleName='title'>{topic.title}</div>
-                    <div styleName='numbers'>
-                        <div styleName='total-length'>{ total }</div>
-                        <div styleName='post-count'>{ post_list.length }</div>
-                        <div styleName='read-count'>{ read_count }</div>
+                    <div>
+                        <span styleName='number'>时长:{ total }</span>
+                        <span styleName='number'>贴数:{ post_list.length }</span>
                     </div>
+                    <div styleName='number'>已听:{ read_count }</div>
                 </div>
             </div>
         )
