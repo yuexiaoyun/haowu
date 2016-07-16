@@ -14,7 +14,7 @@ var menu = {
         type: 'media_id',
         name: '送物换物',
         media_id: 'egOrCsB_0y-VIJsP2uYkaMYd0ndtKwwEXRQeNfq-MW8'
-    }
+    }]
 };
 
 co.wrap(function *() {
