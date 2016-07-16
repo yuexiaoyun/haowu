@@ -1,11 +1,9 @@
 import React from 'react'
 import { hashHistory } from 'react-router'
 import update from '../../utility/update';
-import fconf from '../../fconf';
-
 import qs from 'querystring';
-import setShareInfo from '../../utility/set_share_info';
 
+import ListContainer from '../components/ListContainer';
 import TopicInner from './TopicInner';
 
 import styles from './index.css'
@@ -14,42 +12,22 @@ import { createSelector, createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
 class Topic extends React.Component {
-    componentDidMount() {
-        this.setTitle();
-        update('/api/update_topic?_id=' + this.props.params.id);
-    }
-    componentDidUpdate() {
-        this.setTitle();
-    }
-    setTitle = ()=>{
-        window.setTitle('专辑');
-        var { title } = this.props;
-        if (title) {
-            setShareInfo({
-                title: `${title} - 物记专辑`,
-                link: fconf.site + '/app/topic/' + this.props.params.id
-            });
-        }
+    load = () => {
+        return update('/api/update_topic?_id=' + this.props.params.id);
     }
     render() {
-        var { post_ids, location } = this.props;
-        if (post_ids && post_ids.length > 0)
-            return <TopicInner {...this.props} action={location.action}/>;
-        else
-            return <div />;
+        var { topic } = this.props;
+        return (
+            <ListContainer key={this.props.location.key} loadMore={this.load} hasMore={!topic} >
+                { topic && <TopicInner topic={topic} /> }
+            </ListContainer>
+        )
     }
 }
 
 var mapStateToProps = (state, props) => {
-    var topic = state.topics[props.params.id];
-    if (topic) {
-        return {
-            post_ids: topic.posts,
-            title: topic.title
-        }
-    } else {
-        return {
-        }
+    return {
+        topic: state.topics[props.params.id]
     }
 }
 

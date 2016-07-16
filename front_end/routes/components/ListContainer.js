@@ -35,7 +35,7 @@ class ListContainer extends React.Component {
                 dispatch(createAction('LOADING_SUCCESS')({id}));
             })
             .catch((err)=>{
-                console.log(err);
+                console.log(err.stack);
                 dispatch(createAction('LOADING_FAILED')({id}));
             });
     }
