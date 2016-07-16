@@ -11,26 +11,7 @@ export user_post_ids from './ducks/user_post_ids';
 export user_topic_ids from './ducks/user_topic_ids';
 export route_state from './ducks/route_state';
 export local_pic_id from './ducks/local_pic_id';
-
-// 首页feed的id列表
-export var feed_ids = handleActions({
-    pub_post: (state, action) => [action.payload.posts[0]._id, ...state],
-    update_feeds: (state, action) => {
-        var { posts, concat } = action.payload;
-        var ids = posts.map(post=>post._id);
-        if (concat)
-            return [...state, ...ids];
-        else
-            return [...ids, ...state];
-    },
-    delete_post: (state, action) => _.filter(state, item=>(item!=action.payload))
-}, []);
-
-// 首页feed是否已完全加载
-export var feed_end = handleActions({
-    update_feeds: (state, action) => action.payload.feed_end,
-    feed_end: (state, action) => action.payload
-}, 0);
+export home from './ducks/home';
 
 // 自己的通知列表
 export var notifications = handleActions({

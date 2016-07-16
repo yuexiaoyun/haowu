@@ -120,7 +120,6 @@ render(
             }}/>
             <Route path="/" component={App} >
                 <Route path="home" component={Home} />
-                <Route path="home/:time" component={Home} />
                 <Route path="detail/:id" getComponent={(nextState, cb)=>{
                     require.ensure([], (require)=>{
                         cb(null, require('./routes/Detail/index'))

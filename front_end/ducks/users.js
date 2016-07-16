@@ -27,6 +27,7 @@ export default handleActions({
     update_notifications: update_users,
     update_badge: update_users,
     update_topic: update_users,
+    update_topics: update_users,
     pub_post: update_users,
     set_intro: (state, action) => {
         var { intro } = action.payload;

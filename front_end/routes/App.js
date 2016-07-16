@@ -39,7 +39,7 @@ class App extends React.Component {
                 </div> || null }
                 <nav styleName="bar">
                     <span styleName={"bar-tab-item"} onClick={()=>{
-                        hashHistory.replace('/home/' + Date.parse(new Date()));
+                        hashHistory.replace('/home');
                     }}>
                         <img styleName='icon'
                             src={(location.pathname.substring(0, 5)=='/home' ? btnTabbarHomeSelected : btnTabbarHome)} />
@@ -64,7 +64,7 @@ class App extends React.Component {
 }
 
 var get_badge_count = state => state.badge.count;
-var get_new = state => state.feed_ids.length == 0;
+var get_new = state => state.home.feed_ids.length == 0;
 var get_tooltip = state => state.tooltip;
 var mapStateToProps = createStructuredSelector({
     badge: get_badge_count,

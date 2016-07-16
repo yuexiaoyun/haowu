@@ -18,6 +18,8 @@ function update_topics(state, action) {
 }
 
 export default handleActions({
+    update_topics: update_topics,
+    update_user_detail: update_topics,
     update_topic: (state, action) => {
         var { topic } = action.payload;
         return {
@@ -31,6 +33,5 @@ export default handleActions({
             ...state,
             [topic._id]: topic
         }
-    },
-    update_user_detail: update_topics
+    }
 }, {});

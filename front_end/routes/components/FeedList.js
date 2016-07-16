@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 class FeedList extends React.Component {
     static propTypes = {
         post_list: React.PropTypes.array.isRequired,
-        users: React.PropTypes.array.isRequired,
+        users: React.PropTypes.object.isRequired,
         showUser: React.PropTypes.bool.isRequired,
         PostCardChild: React.PropTypes.func,
         renderTopItem: React.PropTypes.func,

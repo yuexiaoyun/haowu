@@ -7,10 +7,13 @@ import qs from 'querystring';
 import ListContainer from './components/ListContainer';
 import Loader from './components/Loader';
 import FeedList from './components/FeedList';
+import Tabbar from './common/Tabbar';
+import TopicCard from './Detail/TopicCard';
 import NotificationEntry from './Home/NotificationEntry'
 
 import { hashHistory } from 'react-router';
 
+import { setCurrentTab } from '../ducks/home'
 import { connect } from 'react-redux';
 import { createAction } from 'redux-actions';
 import { createSelector, createStructuredSelector } from 'reselect';
@@ -47,14 +50,16 @@ class Home extends React.Component {
     componentDidMount() {
         window.setTitle('物记');
         setShareInfo();
+        update('/api/update_topics');
     }
     componentDidUpdate(prevProps) {
-        // 用户当前在首页，又点了一次底部TAB
-        if (this.props.params.time != prevProps.params.time && !this.state.reloading)
+        if (this.props.location.key != prevProps.location.key
+            && this.props.current_tab == 0
+            && !this.state.reloading)
             this.reload();
     }
-    render() {
-        var { post_list, badge, feed_end } = this.props;
+    renderTab0() {
+        var { post_list, badge, feed_end, current_tab, dispatch } = this.props;
         var { reloading, err } = this.state;
         return (
             <ListContainer id='feed' hasMore={feed_end == 0} loadMore={this.loadMore}>
@@ -62,14 +67,38 @@ class Home extends React.Component {
                 { reloading && post_list.length > 0 && <Loader /> }
                 <FeedList post_list={post_list} showUser={true}/>
             </ListContainer>
+        )
+    }
+    render() {
+        var { post_list, badge, feed_end, current_tab, topic_list, dispatch } = this.props;
+        var { reloading, err } = this.state;
+        return (
+            <div>
+                <Tabbar
+                    currentTab={current_tab}
+                    setCurrentTab={(tab)=>dispatch(setCurrentTab(tab))}
+                    tabs={[
+                        '热门动态', '精选专辑'
+                    ]} />
+                { current_tab == 0 && this.renderTab0() }
+                { current_tab == 1 && topic_list.map(topic=><TopicCard key={topic._id} topic={topic} />)}
+            </div>
         );
     }
 }
 
-var get_feed_ids = state => state.feed_ids;
-var get_feed_end = state => state.feed_end;
+var get_feed_ids = state => state.home.feed_ids;
+var get_feed_end = state => state.home.feed_end;
+var get_current_tab = state => state.home.current_tab;
 var get_posts = state => state.posts;
 var get_badge = state => state.badge;
+var get_topic_ids = state => state.home.topic_ids;
+var get_topics = state => state.topics;
+
+var get_topic_list = createSelector(
+    [get_topic_ids, get_topics],
+    (topic_ids, topics) => topic_ids.map(id=>topics[id])
+);
 
 var get_post_list = createSelector(
     [get_feed_ids, get_posts],
@@ -79,7 +108,9 @@ var get_post_list = createSelector(
 var mapStateToProps = createStructuredSelector({
     post_list: get_post_list,
     feed_end: get_feed_end,
-    badge: get_badge
+    badge: get_badge,
+    current_tab: get_current_tab,
+    topic_list: get_topic_list
 })
 
 module.exports = connect(mapStateToProps, null, null, {withRef: true})(

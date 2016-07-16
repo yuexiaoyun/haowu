@@ -242,7 +242,7 @@ var get_comments = (state, props) => {
     return { top, others }
 }
 
-var get_new = state => state.feed_ids.length == 0;
+var get_new = state => state.home.feed_ids.length == 0;
 var mapStateToProps = createStructuredSelector({
     users: get_users,
     comments: get_comments,

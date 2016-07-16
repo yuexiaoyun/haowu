@@ -6,6 +6,7 @@ import SubButton from './SubButton';
 import UserInfo from './UserInfo';
 import IntroInput from './IntroInput';
 import NotificationIcon from './NotificationIcon';
+import Tabbar from '../common/Tabbar';
 
 import { connect } from 'react-redux';
 import styles from './UserTop.css'
@@ -64,16 +65,13 @@ class UserTop extends React.Component {
                 { this.state.input ?
                     <IntroInput user={user} handleInput={this.handleInput}/> :
                     this.renderIntro() }
-                <div styleName='tabs'>
-                    <div styleName='tab' onClick={()=>setCurrentTab(0)}>
-                        {ta}的发布
-                        { currentTab == 0 && <div styleName='tab-current' /> }
-                    </div>
-                    <div styleName='tab' onClick={()=>setCurrentTab(1)}>
-                        {ta}的专辑
-                        { currentTab == 1 && <div styleName='tab-current' /> }
-                    </div>
-                </div>
+                <Tabbar
+                    currentTab={currentTab}
+                    setCurrentTab={setCurrentTab}
+                    tabs={[
+                        ta + '的发布',
+                        ta + '的专辑'
+                    ]} />
             </div>
         );
     }

@@ -24,6 +24,7 @@ export default handleActions({
     update_post_detail: update_posts,
     update_notifications: update_posts,
     update_topic: update_posts,
+    update_topics: update_posts,
     pub_post: update_posts,
     like: (state, action) => {
         var id = action.payload;

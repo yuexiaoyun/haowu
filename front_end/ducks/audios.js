@@ -21,6 +21,7 @@ export default handleActions({
     update_post_detail: update_audios,
     update_notifications: update_audios,
     update_topic: update_audios,
+    update_topics: update_audios,
     read: (state, action) => {
         var { audio_id } = action.payload;
         var audio = state[audio_id];
