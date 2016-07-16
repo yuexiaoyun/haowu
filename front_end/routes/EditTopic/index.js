@@ -124,7 +124,7 @@ class EditTopic extends React.Component {
         update(url).catch((err) => this.setState({err}));
     }
     send = () => {
-        var { topic_post_list, topic_editor, params } = this.props;
+        var { topic_post_list, topic_editor, params, location } = this.props;
         if (topic_post_list.length > 1 && topic_editor.title.length > 0) {
             if (params.id) {
                 var url = '/api/edit_topic?' + qs.stringify({
@@ -139,7 +139,11 @@ class EditTopic extends React.Component {
                 });
             }
             update(url);
-            hashHistory.go(-1);
+            if (location.query.from != 'me') {
+                hashHistory.replace(`/detail/${window.user_id}?tab=1`);
+            } else {
+                hashHistory.go(-1);
+            }
         }
     }
     renderTopItem = () => {

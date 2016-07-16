@@ -24,6 +24,16 @@ class Detail extends React.Component {
         this.state = {};
     }
     componentDidMount() {
+        var { location, dispatch } = this.props;
+        console.log(location);
+        if (location.query.tab && location.action == 'REPLACE') {
+            dispatch(createAction('set_route_state')({
+                key: location.key,
+                value: {
+                    current_tab: location.query.tab
+                }
+            }));
+        }
         this.setTitleAndShareInfo();
     }
     componentDidUpdate() {
@@ -74,7 +84,8 @@ class Detail extends React.Component {
         console.log(topic_list);
         return (
             <div>
-                { me && <div styleName='pub-topic-container' onClick={()=>hashHistory.push('/pub_topic')}>
+                { me && <div styleName='pub-topic-container'
+                    onClick={()=>hashHistory.push('/pub_topic?from=me')}>
                     <div styleName='pub-topic'>新建专辑</div>
                 </div> }
                 { topic_list.length > 0
