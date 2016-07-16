@@ -104,8 +104,6 @@ class Topic extends React.Component {
                     </div>
                 </PicDetail>
                 <div styleName='icon-list-container'>
-                    <div styleName='triangle-left' />
-                    <div styleName='triangle-right' />
                     <div styleName='icon-list'>
                         { post_list.map((post, i)=>(<PostSmallCard
                             post={post}
