@@ -31,7 +31,8 @@ class Pub extends React.Component {
         });
     }
     pub = () => {
-        var { audio_id, location, dispatch } = this.state;
+        var { audio_id } = this.state;
+        var { location, dispatch } = this.props;
         if (audio_id) {
             showProgress('发布中', Promise.all([
                 this.refs.recorder.upload_voice(),
