@@ -67,6 +67,11 @@ wx.ready(()=>{
         ]
     });
 });
+
+require.include('./routes/Detail/index');
+require.include('./routes/Post/index');
+require.include('./routes/Topic/index');
+
 render(
     <Provider store={store}>
         <Router history={hashHistory} render={applyRouterMiddleware(useScroll())}>

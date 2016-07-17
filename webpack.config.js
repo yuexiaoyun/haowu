@@ -16,6 +16,7 @@ module.exports = _.extend(config, {
     plugins: [
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
         new ExtractTextPlugin("[hash].[name].css"),
+        new webpack.optimize.LimitChunkCountPlugin({maxChunks: 2}),
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': '"production"'
         }),
