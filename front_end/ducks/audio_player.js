@@ -86,11 +86,14 @@ export var audioPlayerMiddleware = store => next => {
             var { audio_id, user_id, post_id } = action.payload;
             player.src = fconf.qiniu.site + audio_id + '_mp3';
             player.load();
-            store.dispatch(read({
-                audio_id,
-                post_id,
-                user_id
-            }));
+            var audio = store.getState().audios[audio_id];
+            if (!audio || !audio.me_read) {
+                store.dispatch(read({
+                    audio_id,
+                    post_id,
+                    user_id
+                }));
+            }
         } else if (action.type == 'stop') {
             var audio_id = action.payload;
             player.pause();
