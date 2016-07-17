@@ -58,7 +58,7 @@ class UserTop extends React.Component {
         var ta = user && user._id == window.user_id && '我' || 'Ta';
         return (
             <div ref='root' styleName='root'>
-                { window.sub_status != 1 && <FollowLine /> }
+                <FollowLine />
                 { user._id == window.user_id && <NotificationIcon /> }
                 <SubButton user={user} />
                 <UserInfo user={user} />

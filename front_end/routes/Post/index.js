@@ -10,6 +10,7 @@ import * as actions from '../../actions'
 
 import TopCard from './TopCard';
 import CommentsInner from '../Comments/CommentsInner';
+import FollowLine from '../Detail/FollowLine';
 
 import styles from './index.css'
 import CSSModules from 'react-css-modules';
@@ -61,6 +62,7 @@ class Post extends React.Component {
         var { record, err, edit_title } = this.state;
         return (
             <div styleName='root'>
+                <FollowLine />
                 { post && <TopCard
                     post={post}
                     user={user}

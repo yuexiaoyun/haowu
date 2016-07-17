@@ -48,6 +48,10 @@ export var tooltip = handleActions({
     update_tooltip: (state, action) => action.payload
 }, 0);
 
+export var close_clicked = handleActions({
+    update_close_clicked: (state, action) => action.payload
+}, 0);
+
 export var pendings = handleActions({
     LOADING_START: (state, action) => ({
         ...state,

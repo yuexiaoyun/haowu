@@ -6,6 +6,7 @@ import setShareInfo from '../../utility/set_share_info';
 import CommentsInner from './CommentsInner';
 import ListContainer from '../components/ListContainer';
 import EmptyView from '../common/EmptyView';
+import FollowLine from '../Detail/FollowLine';
 
 import styles from './index.css'
 import CSSModules from 'react-css-modules';
@@ -32,6 +33,7 @@ class Comments extends React.Component {
         var { post, user, post_detail, params } = this.props;
         return (
             <ListContainer id={`post_detail/${params.id}`} loadMore={this.load} hasMore={!post_detail}>
+                <FollowLine />
                 <CommentsInner
                     post={post}
                     user={user}

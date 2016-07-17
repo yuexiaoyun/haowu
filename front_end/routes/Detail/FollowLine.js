@@ -7,6 +7,9 @@ import CSSModules from 'react-css-modules';
 
 import qrcode from '../../files/qrcode.jpg';
 
+import { connect } from 'react-redux';
+import { createAction } from 'redux-actions';
+
 class FollowLine extends React.Component {
     popup = () => {
         PopupHelper.popup(
@@ -17,17 +20,32 @@ class FollowLine extends React.Component {
             </div>
         );
     }
-    shouldComponentUpdate(props) {
-        return false;
+    close = (e) => {
+        e.stopPropagation();
+        this.props.dispatch(createAction('update_close_clicked')(1));
     }
     render() {
-        return (
-            <div styleName='root' onClick={this.popup}>
-                <img styleName='qrcode' src={qrcode}/>
-                <div>点击识别二维码 关注“物记”</div>
-                <div>才能收到互动回复通知</div>
-            </div>
-        );
+        var { close_clicked } = this.props;
+        if (!close_clicked) {
+            return (
+                <div styleName='root' onClick={this.popup}>
+                    <div styleName='qrcode'/>
+                    <div styleName='close' onClick={this.close}/>
+                    <div>点击识别二维码 关注“物记”</div>
+                    <div>才能收到互动回复通知</div>
+                </div>
+            );
+        } else {
+            return null;
+        }
     }
 }
-export default CSSModules(FollowLine, styles);
+
+var mapStateToProps = (state) => {
+    return {
+        close_clicked: state.close_clicked
+    }
+}
+export default connect(mapStateToProps)(
+    CSSModules(FollowLine, styles)
+);

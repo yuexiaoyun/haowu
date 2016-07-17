@@ -4,6 +4,7 @@ import update from '../../utility/update';
 import qs from 'querystring';
 
 import ListContainer from '../components/ListContainer';
+import FollowLine from '../Detail/FollowLine';
 import TopicInner from './TopicInner';
 
 import styles from './index.css'
@@ -19,6 +20,7 @@ class Topic extends React.Component {
         var { topic } = this.props;
         return (
             <ListContainer key={this.props.location.key} loadMore={this.load} hasMore={!topic} >
+                <FollowLine />
                 { topic && <TopicInner topic={topic} /> }
             </ListContainer>
         )
