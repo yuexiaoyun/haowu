@@ -47,6 +47,10 @@ class PicDetail extends React.Component {
     }
     render() {
         var { post, user, children } = this.props;
+        var showTitle = !!post.title;
+        if (this.props.startEditTitle) {
+            showTitle = showTitle || (post.user_id == window.user_id)
+        }
         return (
             <div className="image-image_default_home" styleName='root'>
                 <div styleName='picture-dummy' />
@@ -54,7 +58,7 @@ class PicDetail extends React.Component {
                     styleName='picture-img'
                     style={post.w > post.h ? {height: '100%'} : {width: '100%'}}
                     onClick={this.preview}/>
-                {(post.title || post.user_id == window.user_id) && <div styleName='title' onClick={this.props.startEditTitle}>
+                {(showTitle) && <div styleName='title' onClick={this.props.startEditTitle || (()=>{}) }>
                     { this.props.edit_title == 1 && <TitleInput post={post} handleInput={this.props.handleEditTitle}/>}
                     { this.props.edit_title != 1 && <div>
                         <img src={btnTitleDetails} styleName='edit'/>
