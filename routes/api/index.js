@@ -25,5 +25,6 @@ router.get('/update_topic', require('./update_topic'));
 router.get('/update_topics', require('./update_topics'));
 router.get('/pub_topic', require('./pub_topic'));
 router.get('/edit_topic', require('./edit_topic'));
+router.get('/update_subbed_list', require('./update_subbed_list'));
 
 module.exports = router.routes();

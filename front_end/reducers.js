@@ -13,6 +13,7 @@ export route_state from './ducks/route_state';
 export local_pic_id from './ducks/local_pic_id';
 export post_details from './ducks/post_details';
 export home from './ducks/home';
+export list from './ducks/list';
 
 // 自己的通知列表
 export var notifications = handleActions({
@@ -31,11 +32,6 @@ export var notification_end = handleActions({
     update_notifications: (state, action) => action.payload.notification_end || 0,
     clear_notifications: (state, action) => 0
 }, 0);
-
-// 自己的被订阅列表
-export var subids = handleActions({
-    update_notifications: (state, action) => action.payload.subids || state
-}, []);
 
 export var badge = handleActions({
     update_badge: (state, action) => ({

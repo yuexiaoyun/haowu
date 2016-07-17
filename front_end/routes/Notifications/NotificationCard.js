@@ -32,12 +32,11 @@ class NotificationCard extends React.Component {
         );
     }
     renderSub = ()=>{
-        var { user, subids } = this.props;
-        var sub_count = subids && subids.length || 0;
+        var { user, me } = this.props;
         return (
             <div styleName="list-item-content">
                 <div styleName='nickname'>{user.nickname}</div>
-                <span styleName='comment-text'>{sub_count > 1 && `等${sub_count}人`}订阅了你</span>
+                <span styleName='comment-text'>{me.subbed_count > 1 && `等${me.subbed_count}人`}订阅了你</span>
             </div>
         );
     }
@@ -85,7 +84,7 @@ class NotificationCard extends React.Component {
             });
         }
         else if(notification.type == 'sub')
-            url = '/sub_list';
+            url = '/subbed_list/' + window.user_id;
 
         return (
             <div className={`list-item${new_item ? ' new_item' : ''}`} onClick={url ? ()=>hashHistory.push(url) : null}>
@@ -102,18 +101,18 @@ class NotificationCard extends React.Component {
     }
 }
 
-var get_subids = state => state.subids;
 var get_audios = state => state.audios;
+var get_me = state => state.users[window.user_id];
 var get_user = (state, props) => state.users[props.notification.user_id2];
 var get_post = (state, props) => state.posts[props.notification.target];
 
 var makeMapStateToProps = ()=>{
     return createSelector(
-        [get_user, get_post, get_subids, get_audios],
-        (user, post, subids, audios) => {
+        [get_user, get_post, get_audios, get_me],
+        (user, post, audios, me) => {
             var audio = post && audios[post.audio_id];
             return {
-                user, post, audio, subids
+                user, post, audio, me
             };
         }
     );

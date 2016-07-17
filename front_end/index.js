@@ -7,6 +7,7 @@ import useScroll from 'react-router-scroll';
 import { Provider } from 'react-redux'
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { createAction } from 'redux-actions';
+import { enableBatching } from 'redux-batched-actions';
 import optimist from 'redux-optimist';
 import thunk from 'redux-thunk';
 import optimistPromiseMiddleware from 'redux-optimist-promise';
@@ -41,7 +42,7 @@ let store = applyMiddleware(
     optimistPromiseMiddleware(),
     thunk,
 )(createStore)(
-    optimist(combineReducers(reducers)), {},
+    enableBatching(optimist(combineReducers(reducers))), {},
     window.devToolsExtension && window.devToolsExtension()
 );
 
@@ -89,9 +90,9 @@ render(
                     cb(null, require('./routes/Notifications/index'))
                 });
             }}/>
-            <Route path="/me_sub_list" getComponent={(nextState, cb)=>{
+            <Route path="/subbed_list/:id" getComponent={(nextState, cb)=>{
                 require.ensure([], (require)=>{
-                    cb(null, require('./routes/UserList/MeSubList'))
+                    cb(null, require('./routes/UserList/SubbedList'))
                 });
             }}/>
             <Route path="/like_list/:id" getComponent={(nextState, cb)=>{

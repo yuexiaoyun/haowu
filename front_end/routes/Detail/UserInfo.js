@@ -18,9 +18,6 @@ class UserInfo extends React.Component {
             urls: [user.headimgurl]
         });
     }
-    viewSubList = () => {
-        hashHistory.push('/me_sub_list');
-    }
     render() {
         var { user } = this.props;
         return (

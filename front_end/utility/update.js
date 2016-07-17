@@ -1,4 +1,5 @@
 import { parse_online_json } from './fetch_utils'
+import { batchActions } from 'redux-batched-actions';
 
 let store = null;
 
@@ -13,5 +14,5 @@ export default function update(url, inspector) {
             inspector && inspector(data);
             return data;
         })
-        .then(({actions}) => actions.map(action=>store.dispatch(action)));
+        .then(({actions}) => store.dispatch(batchActions(actions)));
 }

@@ -1,4 +1,5 @@
 import React from 'react'
+import { hashHistory } from 'react-router';
 import { set_intro } from '../../actions'
 
 import FollowLine from './FollowLine';
@@ -78,7 +79,8 @@ class UserTop extends React.Component {
                         <div styleName='number'>{user.sub_count || 0}</div>
                         <div styleName='tag'>订阅</div>
                     </div>
-                    <div styleName='number-cell'>
+                    <div styleName='number-cell'
+                        onClick={()=>(user.subbed_count > 0 && hashHistory.push('/subbed_list/' + user._id))}>
                         <div styleName='number'>{user.subbed_count || 0}</div>
                         <div styleName='tag'>粉丝</div>
                     </div>

@@ -55,8 +55,7 @@ module.exports = function*() {
             $set: {
                 clear_badge: new Date()
             }
-        }).select('clear_badge subids').exec();
-        user_ids = [...user_ids, ...user.subids];
+        }).select('clear_badge').exec();
     }
     var users = yield findUsersByIds(this.session.user_id, _.uniq(user_ids));
 
@@ -67,7 +66,6 @@ module.exports = function*() {
             actions: [
                 createAction('update_notifications')({
                     users,
-                    subids: user.subids.reverse(),
                     notifications,
                     notification_end,
                     posts,

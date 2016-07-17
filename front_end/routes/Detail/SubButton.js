@@ -14,9 +14,6 @@ class SubButton extends React.Component {
             user_id: user._id
         }));
     }
-    viewSubList = () => {
-        hashHistory.push('/me_sub_list');
-    }
     render() {
         var { user } = this.props;
         if (user._id != window.user_id) {

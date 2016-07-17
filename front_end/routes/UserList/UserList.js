@@ -7,7 +7,15 @@ import UserCard from './UserCard';
 
 export default class UserList extends React.Component {
     componentDidMount() {
-        window.setTitle(this.props.title);
+        this.setTitle();
+    }
+    componentDidUpdate() {
+        this.setTitle();
+    }
+    setTitle = () => {
+        var { title } = this.props;
+        if (title)
+            window.setTitle(title);
         setShareInfo();
     }
     load = () => {
