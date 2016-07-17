@@ -2,6 +2,7 @@ import { api as wechat } from '../wechat'
 import { Model as User } from '../../mongodb_models/user'
 import { Model as Post } from '../../mongodb_models/post'
 import { Model as Notification } from '../../mongodb_models/notification'
+import { updateCount } from '../../models/Count'
 import conf from '../../conf'
 
 module.exports = function*({user_id, post_id}) {
@@ -20,6 +21,7 @@ module.exports = function*({user_id, post_id}) {
                 user_id2: user_id,
                 uptime: new Date()
             }, { upsert: true }));
+            yield updateCount(post.user_id);
         }
     } catch(err) {
         console.log(err.stack);

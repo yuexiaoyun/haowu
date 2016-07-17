@@ -1,5 +1,6 @@
 import { Model as User } from '../../mongodb_models/user';
 import { Model as Notification } from '../../mongodb_models/notification';
+import { updateCount } from '../../models/Count'
 
 module.exports = function*() {
     var q = { _id: this.query._id };
@@ -20,6 +21,7 @@ module.exports = function*() {
             user_id2: this.session.user_id,
             uptime: new Date()
         }, { upsert: true }));
+        yield updateCount(this.session.user_id);
     }
     this.body = yield {
         result: 'ok'
