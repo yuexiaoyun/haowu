@@ -26,7 +26,7 @@ class FollowLine extends React.Component {
     }
     render() {
         var { close_clicked } = this.props;
-        if (!close_clicked) {
+        if (!close_clicked && window.sub_status != 1) {
             return (
                 <div styleName='root' onClick={this.popup}>
                     <div styleName='qrcode'/>
