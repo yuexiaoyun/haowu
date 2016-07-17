@@ -48,8 +48,8 @@ class Topic extends React.Component {
         super();
     }
     setTitle = ()=>{
-        window.setTitle('专辑');
         var { topic, post_list, user, post, read_count } = this.props;
+        window.setTitle(topic.title || '专辑');
         var share_info = {
             title: `${topic.title} | ${user.nickname}的物记专辑`,
             desc: `该专辑共有${post_list.length}件好物，已获${read_count}次收听`,
