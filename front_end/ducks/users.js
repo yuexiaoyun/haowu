@@ -67,6 +67,7 @@ export default handleActions({
         if (user) {
             user = {
                 ...user,
+                subbed_count: user.subbed_count + (sub ? 1 : (-1)),
                 subbed: sub
             };
             return {
