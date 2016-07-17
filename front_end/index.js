@@ -16,7 +16,6 @@ import wx from 'weixin-js-sdk';
 import App from './routes/App'
 import Home from './routes/Home'
 
-import PopupHelper from './utility/PopupHelper'
 import * as reducers from './reducers'
 import { setStore as s1 } from './utility/update'
 
@@ -49,9 +48,6 @@ let store = applyMiddleware(
 s1(store);
 
 wx.config(window.js_params);
-wx.error(function (res) {
-    PopupHelper.toast('当前版本暂不支持发布和分享功能！');
-});
 wx.ready(()=>{
     wx.hideMenuItems({
         menuList: [

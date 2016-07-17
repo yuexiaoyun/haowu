@@ -14,6 +14,7 @@ module.exports = _.extend(config, {
         publicPath: '/assets/'
     },
     plugins: [
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
         new ExtractTextPlugin("[hash].[name].css"),
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': '"production"'

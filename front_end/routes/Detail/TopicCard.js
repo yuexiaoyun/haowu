@@ -3,7 +3,6 @@ import fconf from '../../fconf';
 import moment from 'moment'
 import _ from 'underscore';
 import { hashHistory } from 'react-router';
-
 import PopupHelper from '../../utility/PopupHelper';
 
 import { connect } from 'react-redux'
