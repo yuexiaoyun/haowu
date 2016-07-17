@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
     entry: './front_end/index.js',
@@ -9,13 +10,11 @@ module.exports = {
             loader: 'babel-loader'
         }, {
             test: /\.less$/,
-            loader: "style!css!less"
+            loader: ExtractTextPlugin.extract("style-loader", "css-loader!less-loader")
         }, {
             test: /\.css$/,
-            loaders: [
-                'style?sourceMap',
-                'css?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]'
-            ]
+            loader: ExtractTextPlugin.extract('style?sourceMap',
+                'css?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]')
         }, {
             test: /\.png$|\.jpg$/,
             loader: "base64-image"

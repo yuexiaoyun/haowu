@@ -23,6 +23,7 @@
     "css-loader": "0.23.1",
     "debug": "2.2.0",
     "es6-promise": "3.2.1",
+    "extract-text-webpack-plugin": "^1.0.1",
     "gulp": "3.9.1",
     "gulp-imacss": "1.0.0",
     "gulp-nodemon": "2.0.7",

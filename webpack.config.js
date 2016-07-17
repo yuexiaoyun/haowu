@@ -4,6 +4,7 @@ var _  = require('underscore');
 var config = require('./webpack.config.common');
 var AssetsPlugin = require('assets-webpack-plugin');
 var path = require('path');
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = _.extend(config, {
     output: {
@@ -13,6 +14,7 @@ module.exports = _.extend(config, {
         publicPath: '/assets/'
     },
     plugins: [
+        new ExtractTextPlugin("[hash].[name].css"),
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': '"production"'
         }),

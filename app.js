@@ -26,12 +26,12 @@ require('koa-qs')(app);
 
 var assets = fs.readFileSync('./front_end/templates/webpack-assets.json');
 assets = JSON.parse(assets.toString());
-var js_file = assets.main.js;
 
 var jade = new Jade({
     viewPath: './front_end/templates',
     locals: {
-        js_file: js_file
+        js_file: assets.main.js,
+        css_file: assets.main.css
     },
     debug: false,
     pretty: false,
