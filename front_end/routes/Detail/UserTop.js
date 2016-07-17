@@ -75,7 +75,8 @@ class UserTop extends React.Component {
                         <div styleName='number'>{user.liked_count || 0}</div>
                         <div styleName='tag'>被赞</div>
                     </div>
-                    <div styleName='number-cell'>
+                    <div styleName='number-cell'
+                        onClick={()=>(user.sub_count > 0 && hashHistory.push('/sub_list/' + user._id))}>
                         <div styleName='number'>{user.sub_count || 0}</div>
                         <div styleName='tag'>订阅</div>
                     </div>

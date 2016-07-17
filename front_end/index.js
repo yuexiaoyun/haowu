@@ -95,6 +95,11 @@ render(
                     cb(null, require('./routes/UserList/SubbedList'))
                 });
             }}/>
+            <Route path="/sub_list/:id" getComponent={(nextState, cb)=>{
+                require.ensure([], (require)=>{
+                    cb(null, require('./routes/UserList/SubList'))
+                });
+            }}/>
             <Route path="/like_list/:id" getComponent={(nextState, cb)=>{
                 require.ensure([], (require)=>{
                     cb(null, require('./routes/UserList/LikeList'))
