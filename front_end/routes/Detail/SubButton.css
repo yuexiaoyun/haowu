@@ -1,6 +1,25 @@
-.root {
+.base {
     float: right;
-    margin-top: 20px;
-    margin-right: 10px;
-    padding: 0 15px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #ff6b6b;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 14px;
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
+    background-position: 7px 7px;
+    padding-right: 7px;
+    padding-left: 27px;
+}
+
+.sub {
+    composes: base;
+    background-image: url('../../files/btn_follow_white.png');
+}
+
+.subbed {
+    composes: base;
+    background-color: #cccccc;
+    background-image: url('../../files/icon_follower_white.png');
 }

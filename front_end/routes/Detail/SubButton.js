@@ -18,7 +18,7 @@ class SubButton extends React.Component {
         var { user } = this.props;
         if (user._id != window.user_id) {
             return (
-                <span className='btn-default' styleName='root' onClick={this.sub}>
+                <span styleName={user.subbed ? 'subbed' : 'sub'} onClick={this.sub}>
                     {user.subbed ? '已订阅' : '订阅'}
                 </span>
             )

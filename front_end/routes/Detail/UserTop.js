@@ -61,7 +61,9 @@ class UserTop extends React.Component {
             <div ref='root' styleName='root'>
                 <FollowLine />
                 { user._id == window.user_id && <NotificationIcon /> }
-                <SubButton user={user} />
+                <div styleName='sub-container'>
+                    <SubButton user={user} />
+                </div>
                 <UserInfo user={user} />
                 { this.state.input ?
                     <IntroInput user={user} handleInput={this.handleInput}/> :

@@ -7,6 +7,7 @@ import { sub, like } from '../../actions';
 import qs from 'querystring';
 
 import PopupHelper from '../../utility/PopupHelper'
+import SubButton from '../Detail/SubButton'
 
 import { connect } from 'react-redux'
 import { createAction } from 'redux-actions'
@@ -80,7 +81,9 @@ class TopCard extends React.Component {
             <div styleName="root">
                 <img styleName='avatar' src={user.headimgurl}
                     onClick={()=>hashHistory.push('/detail/' + user._id)}/>
-                <div styleName='more' onClick={this.more}/>
+                { (window.user_id == user._id || showComment)
+                    && <div styleName='more' onClick={this.more}/>
+                    || <SubButton user={user} />}
                 { showComment && <div styleName={like_class} onClick={this.like}/> }
                 { showComment && <div styleName='comment' onClick={this.comment}>
                 { post.comment_reply_count > 0 && post.comment_reply_count }

@@ -4,6 +4,10 @@
     overflow: hidden;
     text-align: center;
 }
+.sub-container {
+    margin-top: 20px;
+    margin-right: 10px;
+}
 .intro-container {
     display: inline-block;
     margin-top: 10px;
