@@ -8,8 +8,11 @@ export function *updateCount(_id) {
     var posts = yield Post.find({
         user_id: _id,
         status: { $ne: 0 }
-    }).select('audio_id').exec();
+    }).select('audio_id likes').exec();
     var post_count = posts.length;
+    var liked_count = _.chain(posts)
+        .map(post=>post.likes.length)
+        .reduce((m, i) => (m+i), 0);
 
     var audio_ids = posts.map(post=>post.audio_id);
     var reads_count = yield Audio.aggregate([{
@@ -26,6 +29,9 @@ export function *updateCount(_id) {
             count: { $sum: '$reads_count' }
         }
     }]).exec();
+    var sub_count = yield User.count({
+        subids: _id
+    });
     console.log(reads_count);
     console.log(post_count);
 
@@ -34,7 +40,9 @@ export function *updateCount(_id) {
     }, {
         $set: {
             post_count: post_count,
-            reads_count: reads_count[0] && reads_count[0].count || 0
+            reads_count: reads_count[0] && reads_count[0].count || 0,
+            sub_count: sub_count,
+            liked_count: liked_count
         }
     }));
 }

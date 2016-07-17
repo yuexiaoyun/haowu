@@ -14,24 +14,3 @@
     font-size: 18px;
     font-weight: normal;
 }
-.count {
-    margin: 5px auto 0px;
-    display: inline-block;
-    height: 28px;
-    padding-top: 8px;
-    background-size: 16px 16px;
-    background-position: 6px 6px;
-    background-repeat: no-repeat;
-    font-size: 12px;
-    padding-left: 30px;
-    padding-right: 10px;
-    color: #666666
-}
-.post-count {
-    composes: count;
-    background-image: url('../../files/icon_me_fatieshu.png');
-}
-.read-count {
-    composes: count;
-    background-image: url('../../files/icon_me_yiting.png');
-}

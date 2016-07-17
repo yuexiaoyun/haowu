@@ -31,12 +31,6 @@ class UserInfo extends React.Component {
                 <div styleName='nickname'>
                     {user.nickname}
                 </div>
-                <div styleName='post-count'>
-                    {user.post_count || 0}
-                </div>
-                <div styleName='read-count'>
-                    {user.reads_count || 0}
-                </div>
             </div>
         );
     }

@@ -33,6 +33,10 @@ var schema = new mongoose.Schema({
     post_count: { type: Number },
     // 冗余存放的被听数
     reads_count: { type: Number },
+    // 冗余存放的被赞数
+    liked_count: { type: Number },
+    // 冗余存放的订阅数
+    sub_count: { type: Number },
     // 签名：用户在App中编辑
     intro: { type: String },
     // 用户状态
@@ -60,10 +64,15 @@ module.exports.findUsers = function *(user_id, q) {
             headimgurl: 1,
             post_count: 1,
             reads_count: 1,
+            sub_count: 1,
+            liked_count: 1,
             intro: 1,
             status: 1,
             subbed: {
                 $setIsSubset: [[user_id], '$subids']
+            },
+            subbed_count: {
+                $size: '$subids'
             }
         }
     }]).exec();

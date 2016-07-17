@@ -3,13 +3,12 @@ import _ from 'underscore'
 
 export default handleActions({
     update_post_detail: (state, action) => {
-        var { comments, topics } = action.payload;
+        var { comments } = action.payload;
         var post_id = action.payload.posts[0]._id;
         return {
             ...state,
             [post_id]: {
-                comments,
-                topics
+                comments
             }
         }
     },

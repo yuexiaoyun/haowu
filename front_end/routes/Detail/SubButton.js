@@ -25,14 +25,8 @@ class SubButton extends React.Component {
                     {user.subbed ? '已订阅' : '订阅'}
                 </span>
             )
-        } else if (user.me_subids && user.me_subids.length > 0) {
-            return (
-                <span className='btn-default' styleName='root' onClick={this.viewSubList}>
-                    订阅{user.me_subids.length}人
-                </span>
-            )
         } else {
-            return <span />
+            return null;
         }
     }
 }

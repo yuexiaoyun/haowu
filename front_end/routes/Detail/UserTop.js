@@ -65,6 +65,24 @@ class UserTop extends React.Component {
                 { this.state.input ?
                     <IntroInput user={user} handleInput={this.handleInput}/> :
                     this.renderIntro() }
+                <div styleName='number-container'>
+                    <div styleName='number-cell'>
+                        <div styleName='number'>{user.reads_count || 0}</div>
+                        <div styleName='tag'>被听</div>
+                    </div>
+                    <div styleName='number-cell'>
+                        <div styleName='number'>{user.liked_count || 0}</div>
+                        <div styleName='tag'>被赞</div>
+                    </div>
+                    <div styleName='number-cell'>
+                        <div styleName='number'>{user.sub_count || 0}</div>
+                        <div styleName='tag'>订阅</div>
+                    </div>
+                    <div styleName='number-cell'>
+                        <div styleName='number'>{user.subbed_count || 0}</div>
+                        <div styleName='tag'>粉丝</div>
+                    </div>
+                </div>
                 <Tabbar
                     currentTab={currentTab}
                     setCurrentTab={setCurrentTab}
