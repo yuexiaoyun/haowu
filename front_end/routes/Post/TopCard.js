@@ -53,7 +53,12 @@ class TopCard extends React.Component {
                     user={user}
                     edit_title={this.props.edit_title}
                     startEditTitle={this.props.startEditTitle}
-                    handleEditTitle={this.props.handleEditTitle} />
+                    handleEditTitle={this.props.handleEditTitle} >
+                    { post.topics && post.topics.length > 0 && <div styleName='topic-title-item'
+                        onClick={ ()=>hashHistory.push('/topic/' + post.topics[0]._id)}>
+                        { post.topics[0].title }
+                    </div> }
+                </PicDetail>
                 <div styleName='audio-line'>
                     <div styleName='audio-line-tab'>
                         <div styleName='read-count-container'>

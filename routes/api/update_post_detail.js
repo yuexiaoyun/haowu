@@ -42,6 +42,7 @@ module.exports = function*() {
         status: 1,
         posts: this.query._id
     }).select('_id title').exec();
+    post.topics = topics;
 
     this.body = {
         result: 'ok',
@@ -50,8 +51,7 @@ module.exports = function*() {
                 users,
                 posts: [post],
                 audios: audios.map(audio=>Audio.toBrowser(audio, this.session.user_id)),
-                comments,
-                topics
+                comments
             })
         ]
     }

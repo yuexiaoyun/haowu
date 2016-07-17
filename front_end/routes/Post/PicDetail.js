@@ -11,7 +11,7 @@ import { createAction } from 'redux-actions'
 import styles from './PicDetail.css'
 import CSSModules from 'react-css-modules'
 
-import btnTitleDetails from '../../files/btn_title_details.png';
+import btnTitleDetails from '../../files/icon_title_details.png';
 
 class PicDetail extends React.Component {
     constructor() {
@@ -58,13 +58,13 @@ class PicDetail extends React.Component {
                     styleName='picture-img'
                     style={post.w > post.h ? {height: '100%'} : {width: '100%'}}
                     onClick={this.preview}/>
-                {(showTitle) && <div styleName='title' onClick={this.props.startEditTitle || (()=>{}) }>
-                    { this.props.edit_title == 1 && <TitleInput post={post} handleInput={this.props.handleEditTitle}/>}
+                { (showTitle) && <div styleName='title' onClick={this.props.startEditTitle || (()=>{}) }>
+                    { this.props.edit_title == 1 && <TitleInput post={post} handleInput={this.props.handleEditTitle}/> }
                     { this.props.edit_title != 1 && <div>
                         <img src={btnTitleDetails} styleName='edit'/>
                         {post.title || '好标题让人更愿意听你的分享'}
-                    </div>}
-                </div>}
+                    </div> }
+                </div> }
                 { children }
             </div>
         );
