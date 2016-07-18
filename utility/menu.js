@@ -12,8 +12,8 @@ var menu = {
         url: conf.site + '/app/pub_topic'
     }, {
         type: 'media_id',
-        name: '送物换物',
-        media_id: 'egOrCsB_0y-VIJsP2uYkaMYd0ndtKwwEXRQeNfq-MW8'
+        name: '加物记群',
+        media_id: 'egOrCsB_0y-VIJsP2uYkaLO-is5lq-zxmwemKulrzTA'
     }]
 };
 
