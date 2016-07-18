@@ -4,6 +4,7 @@ import { Model as Notification } from '../../mongodb_models/notification'
 import { updateScore } from '../../models/Score'
 import conf from '../../conf'
 import co from 'co'
+import qs from 'querystring'
 
 import moment from 'moment'
 
@@ -29,10 +30,15 @@ module.exports = function*({user_id, nickname, post_id, post_user_id, comment}) 
     }).select('openid sub_status').exec();
 
     if (doc && doc.openid && doc.sub_status == 1) {
+        var url = conf.site + '/app/post/' + post_id + '?' + qs.stringify({
+            user_id,
+            comment_id: comment._id.toString()
+        });
+        console.log(url);
         console.log(yield wechat.sendTemplate(
             doc.openid,
             'cxJCSZV2RJnSc2h9dZRZ7dYfXxSiT4mGtiZSN2GEChU',
-            conf.site + '/app/home',
+            url,
             '#FF0000', {
                 first: {
                     value: '你收到一条评论回复通知。',
