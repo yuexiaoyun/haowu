@@ -68,7 +68,7 @@
 }
 .send-disabled {
     composes: send;
-    background-color: #999999;
+    background-color: #cccccc;
 }
 .content {
     padding-top: 104px;
