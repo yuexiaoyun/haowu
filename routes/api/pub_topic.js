@@ -8,6 +8,7 @@ module.exports = function*() {
     topic.posts = this.query.post_ids.split(',');
     topic.title = this.query.title;
     topic.status = 1;
+    topic.mark = 0;
     yield topic.save();
     this.body = {
         result: 'ok',
