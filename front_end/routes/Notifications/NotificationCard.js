@@ -50,14 +50,19 @@ class NotificationCard extends React.Component {
         );
     }
     renderCommentReply = ()=>{
-        var { user, notification } = this.props;
-        var action = {
-            comment: '评论',
-            reply: '回复'
-        }[notification.type] || '';
+        var { user, notification, post } = this.props;
+        if (notification.type == 'reply') {
+            var action = '回复了你';
+        } else if (post.user_id == window.user_id) {
+            var action = '评论了你';
+        } else if (post.user_id == user._id) {
+            var action = '补充了评论';
+        } else {
+            var action = '参与了评论';
+        }
         return (
             <div styleName="list-item-content">
-                <div styleName='nickname'>{user.nickname}{action}了你</div>
+                <div styleName='nickname'>{user.nickname}{action}</div>
                 { notification.audio_id && <AudioPlayer audio_id={notification.audio_id} length={notification.d} /> }
                 { notification.text && notification.text != '' && <span styleName='comment-text'>
                     {notification.text}

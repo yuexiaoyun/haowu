@@ -33,15 +33,14 @@ module.exports = function*() {
     comment.uptime = new Date();
     yield comment.save();
 
-    if (this.session.user_id != post.user_id) {
-        co(notifyComment({
-            user_id: this.session.user_id,
-            nickname: this.session.userInfo.nickname,
-            post_id: this.query.post_id,
-            post_user_id: post.user_id,
-            comment
-        })).catch(err=>console.log(err.stack));
-    }
+    co(notifyComment({
+        user_id: this.session.user_id,
+        nickname: this.session.userInfo.nickname,
+        post_id: this.query.post_id,
+        post_user_id: post.user_id,
+        comment
+    })).catch(err=>console.log(err.stack));
+    
     this.body = {
         result: 'ok',
         new_id: comment._id,
