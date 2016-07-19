@@ -65,11 +65,11 @@ class CommentsInner extends React.Component {
         }
     }
     handleChange = (event) => {
-        if (event.target.value.length <= 140) {
+        if (event.target.value.length <= 400) {
             this.setState({input: event.target.value});
         } else {
             var { reply_user } = this.props;
-            var txt = `${reply_user ? '评论' : '回复'}不能超过140字`;
+            var txt = `${reply_user ? '评论' : '回复'}不能超过400字`;
             PopupHelper.toast(txt);
         }
     }
