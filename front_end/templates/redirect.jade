@@ -7,5 +7,6 @@ html
   body(ontouchstart='')
   script.
     var entry = window.location.pathname.substring(4);
+    var search = window.location.search;
     if (entry && entry.length > 0)
-       window.location.replace('/app#' + entry);
+       window.location.replace('/app#' + entry + search);
