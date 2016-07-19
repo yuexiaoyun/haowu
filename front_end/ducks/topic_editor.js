@@ -50,4 +50,11 @@ export var setTopicEditor = createAction('set_topic_editor');
 export var topicEditorAdd = createAction('topic_editor_add');
 export var topicEditorRemove = createAction('topic_editor_remove');
 export var topicEditorSelect = createAction('topic_editor_select');
-export var topicEditorSetTitle = createAction('topic_editor_set_title');
+export var topicEditorSetTitle = (title) => {
+    return dispatch => {
+        if (title.length > 15) {
+            return;
+        }
+        dispatch(createAction('topic_editor_set_title')(title));
+    }
+}

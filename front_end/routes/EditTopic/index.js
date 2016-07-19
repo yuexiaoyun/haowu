@@ -170,7 +170,7 @@ class EditTopic extends React.Component {
                         <div styleName='input-line' >
                             <input
                                 styleName='input-ctrl'
-                                placeholder='为专辑取个好听的标题~'
+                                placeholder='给专辑取一个吸引人的标题（15字内）'
                                 value={topic_editor.title}
                                 onFocus={()=>this.setState({focus: 1})}
                                 onBlur={()=>this.setState({focus: 0})}
